@@ -20,6 +20,7 @@ export default function DocumentList() {
   const pickDocument = async () => {
     let result = await DocumentPicker.getDocumentAsync({
       copyToCacheDirectory: false,
+      type: "application/pdf",
     });
     copyFileToAppDirectory(result);
   };
@@ -46,8 +47,10 @@ export default function DocumentList() {
       const decodedUri = decodeURIComponent(sourceUri);
       const fileName = decodedUri.substring(decodedUri.lastIndexOf("/") + 1);
       // Create a destination file URI in the application's document directory
-      const destinationUri =
-        FileSystem.documentDirectory + "docudash/" + fileName;
+      const destinationUri = encodeURI(
+        FileSystem.documentDirectory + "docudash/" + fileName
+      );
+      console.log(sourceUri, destinationUri);
       // Copy the file to the application directory
       await FileSystem.copyAsync({
         from: sourceUri,

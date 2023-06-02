@@ -18,6 +18,7 @@ import { useAppSettings } from "./src/components/AppSettings";
 import { AlertsProvider } from "react-native-paper-alerts";
 import FormProvider from "./src/context/FormProvider";
 import HomeNavigation from "./src/signed-in/Stack";
+import useCachedResources from "./src/hooks/useCachedResources";
 
 /**
  * Types
@@ -71,42 +72,46 @@ function App(): JSX.Element {
     };
   }, [listenUser]);
 
-  if (initializing) {
-    let waiting = true;
-    setTimeout(() => {
-      waiting = false;
-    }, 1000);
+  const isLoadingComplete = useCachedResources();
+  if (!isLoadingComplete) {
+    return <></>;
+  } else {
+    if (initializing) {
+      let waiting = true;
+      setTimeout(() => {
+        waiting = false;
+      }, 1000);
 
-    return (
-      <View
-        style={[
-          styles.loadingContainer,
-          { backgroundColor: appSettings.currentTheme.colors.background },
-        ]}
-      >
-        {!waiting && (
-          <Fragment>
-            <Headline
-              style={[
-                styles.padded,
-                { color: appSettings.currentTheme.colors.text },
-              ]}
-            >
-              {appSettings.t("loading")}...
-            </Headline>
-            <ActivityIndicator
-              size={"large"}
-              theme={{
-                ...appSettings.currentTheme,
-                colors: { primary: appSettings.currentTheme.colors.primary },
-              }}
-            />
-          </Fragment>
-        )}
-      </View>
-    );
+      return (
+        <View
+          style={[
+            styles.loadingContainer,
+            { backgroundColor: appSettings.currentTheme.colors.background },
+          ]}
+        >
+          {!waiting && (
+            <Fragment>
+              <Headline
+                style={[
+                  styles.padded,
+                  { color: appSettings.currentTheme.colors.text },
+                ]}
+              >
+                {appSettings.t("loading")}...
+              </Headline>
+              <ActivityIndicator
+                size={"large"}
+                theme={{
+                  ...appSettings.currentTheme,
+                  colors: { primary: appSettings.currentTheme.colors.primary },
+                }}
+              />
+            </Fragment>
+          )}
+        </View>
+      );
+    }
   }
-
   function container(children: ReactNode | ReactNode[]) {
     return (
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>

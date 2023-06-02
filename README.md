@@ -103,7 +103,7 @@ import 'react-native-gesture-handler';
 30. add video call library
     `yarn add react-native-voximplant@latest`
 
-- Run the expo command using Rosetta -> arch -x86_64 npx expo run:ios
+- Run the expo command using Rosetta -> `arch -x86_64 npx expo run:ios`
 
 31. add new sanario to the vox
 
@@ -128,6 +128,13 @@ VoxEngine.addEventListener(AppEvents.CallAlerting ,(e)=>{
     `yarn add react-native-calendars`
 
 34. add react native storage to save data
-    `yarn add @react-native-async-storage/async-storage`
+    `yarn add @react-native-async-storage/async-storage@1.17.11`
 
 35. https://expo.dev/register-device/62f7d54f-d8c6-4e2f-93a0-868db0491055
+    n
+
+36. add react native drag and resize for signature
+    `yarn add react-native-drag-resize`
+
+37. add font to the system
+    `npx expo install expo-font`

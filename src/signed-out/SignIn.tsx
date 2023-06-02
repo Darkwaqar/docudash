@@ -10,11 +10,14 @@ import Google from "../auth-providers/Google";
 import Apple from "../auth-providers/Apple";
 import { useAppSettings } from "../components/AppSettings";
 import { ScrollView } from "react-native-gesture-handler";
+import { isLoaded } from "expo-font";
 
 function SignIn() {
   const theme = useTheme();
   const appSettings = useAppSettings();
   const linkTo = useLinkTo();
+
+  console.log(isLoaded("SlacksideOne-Regular"));
 
   return (
     <ScrollView>
