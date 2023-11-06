@@ -1,6 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
-import { selectAccessToken, selectProfileData, setProfileData } from '@stores/Slices';
+import { selectAccessToken, selectProfileData, setProfileData } from '@stores/slices/UserSlice';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Alert, Modal, StyleSheet, Text, View } from 'react-native';

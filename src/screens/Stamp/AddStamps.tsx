@@ -6,7 +6,7 @@ import { Appbar, Avatar, Badge, Button, TextInput } from 'react-native-paper';
 import tw from 'twrnc';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, selectProfileData } from '@stores/Slices';
+import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
 import { RootStackScreenProps, StampPreview } from '@type/index';
 import FormData from 'form-data';
 import { useSelector } from 'react-redux';

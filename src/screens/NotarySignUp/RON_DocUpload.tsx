@@ -1,36 +1,18 @@
 import GreenButton from '@components/GreenButton';
-import Input from '@components/Input';
+import UploadView from '@components/UploadView';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { NotraySignUpAPI, SignUpAPI, SignUpStackScreenProps } from '@type/index';
-import { clearAsync, getToken, storeData } from '@utils/AsyncFunc';
+import { selectSignupToken, setAccessToken } from '@stores/slices/UserSlice';
+import { SignUpStackScreenProps } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Chip, Divider, List, Menu, Text } from 'react-native-paper';
-import { NotaryResendCode } from 'src/types/NotrayResendCode';
-import tw from 'twrnc';
-import Icon from '@expo/vector-icons/AntDesign';
-import UploadView from '@components/UploadView';
-import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import mime from 'mime';
 import FormData from 'form-data';
-import { useDispatch } from 'react-redux';
-import { setAccessToken } from '@stores/Slices';
-import { NotarySignUpStep5 } from 'src/types/NotarySignUpStep5';
-import { storeTokenGlobal } from '@utils/AsyncGlobal';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Chip, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
+import { NotarySignUpStep5 } from 'src/types/NotarySignUpStep5';
+import tw from 'twrnc';
 
 interface uploadType {
   uri: string;
@@ -38,11 +20,13 @@ interface uploadType {
   type: 'image' | 'video' | undefined | string;
 }
 const RON_DocUpload = () => {
+  const token = useSelector(selectSignupToken);
+  const dispatch = useDispatch();
+
   const navigation = useNavigation<SignUpStackScreenProps<'Step2'>['navigation']>();
   const route = useRoute<SignUpStackScreenProps<'Step2'>['route']>();
   const [otp, setOtp] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
   const [documents, setDocuments] = useState<uploadType[]>(new Array());
 
   useEffect(() => {
@@ -61,7 +45,6 @@ const RON_DocUpload = () => {
       formData.append('notary_document', element);
     });
 
-    const token = await getToken();
     axios
       .post('https://docudash.net/api/notary-sign-up-5/' + token, formData, {})
       .then((response) => {
@@ -69,11 +52,9 @@ const RON_DocUpload = () => {
         console.log('optScreen-', response.data);
 
         if (success) {
-          dispatch(setAccessToken(token));
           setLoading(false);
           Alert.alert(message);
-          storeTokenGlobal(token);
-          clearAsync();
+          dispatch(setAccessToken(token));
         } else {
           if (message) Object.values(message).map((x) => Alert.alert('Failed', x.toString()));
           setOtp(''), setLoading(false);

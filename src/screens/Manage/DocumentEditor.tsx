@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import {
   DraggedElArr,
   DraggedElement,

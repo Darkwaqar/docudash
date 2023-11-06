@@ -3,7 +3,7 @@ import Loader from '@components/Loader';
 import SigningOrderModal from '@components/SigningOrderModal';
 import COLORS from '@constants/colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, selectProfileData } from '@stores/Slices';
+import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
 import {
   DraggedElArr,
   Envelope,

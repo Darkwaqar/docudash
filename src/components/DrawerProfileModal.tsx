@@ -1,7 +1,7 @@
 import COLORS from '@constants/colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
-import { selectProfileData } from '@stores/Slices';
+import { selectProfileData } from '@stores/slices/UserSlice';
 import { RootStackScreenProps } from '@type/index';
 import { colors } from '@utils/Colors';
 import React, { useState } from 'react';

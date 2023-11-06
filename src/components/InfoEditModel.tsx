@@ -1,5 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { selectAccessToken, selectProfileData, setProfileData } from '@stores/Slices';
+import { selectAccessToken, selectProfileData, setProfileData } from '@stores/slices/UserSlice';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';

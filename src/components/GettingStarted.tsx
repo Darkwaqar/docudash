@@ -1,4 +1,4 @@
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import { HeaderAPI, HeaderOption } from '@type/*';
 import { colors } from '@utils/Colors';
 import axios from 'axios';

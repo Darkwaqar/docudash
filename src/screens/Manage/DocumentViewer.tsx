@@ -1,6 +1,6 @@
 import Loader from '@components/Loader';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, selectProfileData } from '@stores/Slices';
+import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
 import {
   DraggedElArr,
   DraggedElement,

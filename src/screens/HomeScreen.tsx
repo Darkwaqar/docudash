@@ -2,12 +2,13 @@ import GettingStarted from '@components/GettingStarted';
 import HomeHeader from '@components/HomeHeader';
 import UploadView from '@components/UploadView';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
-import { logoutUser, selectAccessToken, setProfileData, setRouteName } from '@stores/Slices';
+import { logoutUser, selectAccessToken, setProfileData } from '@stores/slices/UserSlice';
 import { DashboardAPI, HomeDrawerScreenProps, User } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
-import _ from 'lodash';
 import * as ImagePicker from 'expo-image-picker';
+import _ from 'lodash';
+import mime from 'mime';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -21,13 +22,11 @@ import {
   TouchableOpacity,
   findNodeHandle,
 } from 'react-native';
-import { FeatureHighlight, Typography, View, Text, Colors } from 'react-native-ui-lib';
 import { ActivityIndicator, Avatar, Button } from 'react-native-paper';
+import { Colors, FeatureHighlight, Text, Typography, View } from 'react-native-ui-lib';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import COLORS from '../constants/colors';
-import mime from 'mime';
-import { clearToken } from '@utils/AsyncGlobal';
 
 const { height } = Dimensions.get('window');
 
@@ -184,7 +183,6 @@ const HomeScreen = () => {
         if (err.response.status === 401) {
           Alert.alert('Session Expired', 'Please login again');
           dispatch(logoutUser());
-          clearToken();
         }
       });
   };
@@ -203,7 +201,6 @@ const HomeScreen = () => {
     setDocuments(new Array());
     fetchDashData();
     console.log('Change name Home', isFocused);
-    dispatch(setRouteName('Home'));
   }, [navigation, isFocused]);
 
   const pickImage = async () => {

@@ -11,7 +11,7 @@ import Inbox from '@screens/Manage/Inbox';
 import Profile from '@screens/Profile';
 import SignatureList from '@screens/Signatures/List';
 import StampList from '@screens/Stamp/List';
-import { selectProfileData, selectRouteName } from '@stores/Slices';
+import { selectProfileData } from '@stores/slices/UserSlice';
 import { useSelector } from 'react-redux';
 import ContactList from '@screens/Contact/List';
 import AddressesList from '@screens/Address/List';
@@ -25,10 +25,7 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   const user = useSelector(selectProfileData);
   const type = user?.user_type;
-
   const route = useRoute();
-  const routeName = useSelector(selectRouteName);
-  console.log('name', routeName);
   return (
     <Drawer.Navigator
       screenOptions={{

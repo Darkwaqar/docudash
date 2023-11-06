@@ -1,7 +1,7 @@
 global.Buffer = global.Buffer || require('buffer').Buffer;
 import COLORS from '@constants/colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, selectProfileData } from '@stores/Slices';
+import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
 import { DraggedElArr, RootStackScreenProps, ViewDocument } from '@type/index';
 import axios from 'axios';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
