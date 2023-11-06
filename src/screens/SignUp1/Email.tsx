@@ -22,7 +22,7 @@ import COLORS from '@constants/colors';
 const EmailScreen = () => {
   const navigation = useNavigation<SignUpStackScreenProps<'Index'>['navigation']>();
   const route = useNavigation<SignUpStackScreenProps<'Index'>['route']>();
-  const [inputVal, setInputVal] = useState<string>('');
+  const [inputVal, setInputVal] = useState<string>('urspecial1one@gmail.com');
   const [checked, setChecked] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);

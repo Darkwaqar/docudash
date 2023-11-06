@@ -28,7 +28,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.darkwaqar.DDash",
       "config": {
-        "googleMapsApiKey": "AIzaSyAS5nWA8pNQgiVb_LAWkOq6GU8F1tfmvDQ"
+        "googleMapsApiKey": "AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc"
       }
     },
     "android": {
@@ -39,7 +39,7 @@
       "package": "com.darkwaqar.DDash",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAS5nWA8pNQgiVb_LAWkOq6GU8F1tfmvDQ"
+          "apiKey": "AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc"
         }
       }
     },

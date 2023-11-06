@@ -1,9 +1,3 @@
-// To parse this data:
-//
-//   import { Convert, RequestDetailsPage } from "./file";
-//
-//   const requestDetailsPage = Convert.toRequestDetailsPage(json);
-
 export interface RequestDetailsPage {
     status:                         boolean;
     message:                        string;
@@ -13,28 +7,34 @@ export interface RequestDetailsPage {
 }
 
 export interface NotaryRequests {
-    id:                    number;
-    notary_id:             number;
-    reasonOfRequest:       string;
-    requestDate:           string;
-    requestTime:           number;
-    numOfRecipients:       number;
-    requestLocation:       number;
-    requestMessage:        string;
-    notary_request_status: number;
-    status:                number;
-    created_by:            number;
-    updated_by:            number;
-    deleted:               number;
-    created_at:            Date;
-    updated_at:            Date;
-    read_status:           number;
-    draggedElArr:          null;
-    uniqid:                null;
-    long:                  null;
-    lat:                   null;
-    notary_details:        Details;
-    individual_details:    Details;
+    id:                     number;
+    notary_id:              number;
+    reasonOfRequest:        string;
+    requestDate:            string;
+    requestTime:            number;
+    numOfRecipients:        number;
+    requestLocation:        number;
+    requestMessage:         string;
+    notary_request_status:  number;
+    status:                 number;
+    created_by:             number;
+    updated_by:             number;
+    deleted:                number;
+    created_at:             Date;
+    updated_at:             Date;
+    read_status:            number;
+    draggedElArr:           string;
+    uniqid:                 string;
+    long:                   null;
+    lat:                    null;
+    stripe_payment_info:    null;
+    pending_payment_id:     null;
+    client_secret:          null;
+    amount:                 null;
+    UploadedDocumentsCount: number;
+    request_location_list:  RequestLocationList;
+    notary_details:         Details;
+    individual_details:     Details;
 }
 
 export interface Details {
@@ -46,7 +46,7 @@ export interface Details {
     user_type:                   number;
     country:                     null | string;
     state:                       null | string;
-    city:                        null;
+    city:                        null | string;
     address1:                    null | string;
     address2:                    null | string;
     zip_code:                    number;
@@ -67,12 +67,12 @@ export interface Details {
     logged_in:                   number;
     logged_in_at:                Date;
     logged_out_at:               Date;
-    ip_sign_up:                  null | string;
-    location_sign_up:            null | string;
+    ip_sign_up:                  string;
+    location_sign_up:            string;
     ip_sign_in:                  string;
     location_sign_in:            string;
     email_verified_at:           null;
-    about_notary:                null;
+    about_notary:                null | string;
     hired_time:                  null;
     bussiness_start_up_date:     null;
     status:                      number;
@@ -83,16 +83,36 @@ export interface Details {
     updated_at:                  Date;
     trial_account_expired:       number;
     trial_account:               number;
-    company:                     null;
-    notary_document:             null | string;
+    company:                     null | string;
+    notary_document:             null;
     notary_document_staus:       number;
     verification_code_expire_at: Date;
-    BannerImage:                 null | string;
-    BioDescription:              null | string;
-    ShortDescription:            null | string;
+    BannerImage:                 null;
+    BioDescription:              null;
+    ShortDescription:            null;
     ProofOfEmployes:             number;
     ProofOfEmployesDoc:          null;
     profile_photo_url:           string;
+}
+
+export interface RequestLocationList {
+    id:         number;
+    user_id:    number;
+    name:       string;
+    address:    string;
+    city:       string;
+    state:      string;
+    country:    string;
+    zip_code:   string;
+    lat:        string;
+    long:       string;
+    uuid:       string;
+    status:     number;
+    created_by: number;
+    updated_by: number;
+    deleted:    number;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface NotaryRequestsDetail {
@@ -110,7 +130,7 @@ export interface NotaryRequestsDetail {
     deleted:                number;
     created_at:             Date;
     updated_at:             Date;
-    uniqid:                 null;
+    uniqid:                 string;
     view_final_response:    null;
     complete_incomplete:    number;
 }
@@ -126,16 +146,6 @@ export interface NotaryRequestsDetailsDocument {
     deleted:                number;
     created_at:             Date;
     updated_at:             Date;
-    uniqid:                 null;
-}
-
-// Converts JSON strings to/from your types
-export class Convert {
-    public static toRequestDetailsPage(json: string): RequestDetailsPage {
-        return JSON.parse(json);
-    }
-
-    public static requestDetailsPageToJson(value: RequestDetailsPage): string {
-        return JSON.stringify(value);
-    }
+    uniqid:                 string;
+    docs:                   string[];
 }
