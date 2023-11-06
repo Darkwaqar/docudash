@@ -49,6 +49,7 @@ export type RootStackParamList = {
   Contacts: { From?: string };
   AddContact: { Contact?: Contact };
   NotaryOrUser: undefined;
+  Map: undefined;
   NotaryProfile: { item: any };
   Addresses: { From: Addresses };
   AddAddress: { Address?: Address; From?: string; Notary?: string };

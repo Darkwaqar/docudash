@@ -7,6 +7,7 @@ import axios from 'axios';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {
+  Alert,
   Image,
   Modal,
   SafeAreaView,
@@ -16,7 +17,7 @@ import {
   View,
 } from 'react-native';
 import { Button, Divider, IconButton, Menu, TextInput, Text } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import {
   NotaryRequests,
@@ -28,6 +29,10 @@ import { colors } from '@utils/Colors';
 import { reasons } from '@utils/requestReason';
 import { time } from '@utils/requestTime';
 import { requestType } from '@utils/requestType';
+import Geocoder from 'react-native-geocoding';
+import Geolocation from '@react-native-community/geolocation';
+import { log } from 'react-native-reanimated';
+import { selectDestination, selectOrigin, setDestination, setOrigin } from '@stores/NavSlice';
 
 interface IButton {
   text: string;
@@ -37,6 +42,7 @@ interface IButton {
 
 const Details = () => {
   const accessToken = useSelector(selectAccessToken);
+  const dispatch = useDispatch();
   const navigation = useNavigation<RootStackScreenProps<'RequestDetails'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'RequestDetails'>['route']>();
   const id: number = route.params?.id;
@@ -65,7 +71,33 @@ const Details = () => {
   const [denyLoading, setDenyLoading] = useState(false);
   const [doneLoading, setDoneLoading] = useState(false);
   const [recipients, setRecipients] = useState<NotaryRequestsDetail[]>([]);
-
+  const origin = useSelector(selectOrigin);
+  const destination = useSelector(selectDestination);
+  console.log('origin', origin);
+  const GetCurrentLocation = () => {
+    Geolocation.requestAuthorization();
+    Geocoder.init('AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc');
+    Geolocation.getCurrentPosition(
+      (position: any) => {
+        console.log('position', position);
+        const region = {
+          lat: parseFloat(position.coords.latitude),
+          lng: parseFloat(position.coords.longitude),
+        };
+        dispatch(setOrigin(region));
+        navigation.navigate('Map');
+      },
+      (error) => {
+        console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  };
+  // useEffect(() => {
+  //   if (destination) {
+  //     navigation.navigate('Map');
+  //   }
+  // }, [destination]);
   const Accept = () => {
     setAcceptLoading(true);
     axios
@@ -153,6 +185,8 @@ const Details = () => {
           NotaryRequestsDetails,
           NotaryRequestsDetailsDocuments,
         }: RequestDetailsPage = response.data;
+        console.log('NotaryRequests', NotaryRequests);
+
         setDetails(NotaryRequests);
         setRecipients(NotaryRequestsDetails);
         setDocumentDetails(NotaryRequestsDetailsDocuments);
@@ -288,6 +322,23 @@ const Details = () => {
                   {details.individual_details.address1 || 'NO ADDRESS AVAILABLE'}
                 </Text>
               </Text>
+              <Button
+                style={tw`w-40`}
+                mode="contained"
+                loading={acceptLoading}
+                disabled={acceptLoading}
+                // onPress={Accept}
+                onPress={() => {
+                  dispatch(setDestination(details.request_location_list));
+                  if (destination == null) {
+                    GetCurrentLocation();
+                  } else {
+                    GetCurrentLocation();
+                  }
+                }}
+              >
+                Navigate
+              </Button>
             </View>
 
             {/* Buttons */}

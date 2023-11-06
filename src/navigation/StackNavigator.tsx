@@ -27,6 +27,7 @@ import { RootStackParamList } from '../types/navigation';
 import DrawerNavigator from './DrawerNavigator';
 import LoginStackNavigator from './LoginStackNavigator';
 import NotaryLoginStackNavigator from './NotaryLoginStackNavigator';
+import Map from '@screens/Map';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function StackNavigator() {
@@ -61,6 +62,7 @@ export default function StackNavigator() {
           <Stack.Screen name="AddAddress" component={AddAddress} />
           <Stack.Screen name="CreateARequest" component={CreateARequest} />
           <Stack.Screen name="RequestDetails" component={RequestDetails} />
+          <Stack.Screen name="Map" component={Map} />
 
           {/* <Stack.Screen name="ManageDrawer" component={ManageDrawer} /> */}
           {/* <Stack.Screen name="TemplateHistory" component={TemplateHistory} /> */}

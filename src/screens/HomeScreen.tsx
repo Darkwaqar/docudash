@@ -74,11 +74,11 @@ const HomeScreen = () => {
     showFTE: false,
     currentTargetIndex: 0,
   });
-  useEffect(() => {
-    setTimeout(() => {
-      showHighlight();
-    }, 1000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     showHighlight();
+  //   }, 1000);
+  // }, []);
 
   const closeHighlight = () => {
     setState((prev) => ({ ...prev, showFTE: false }));
