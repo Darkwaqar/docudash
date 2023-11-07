@@ -1,38 +1,28 @@
 global.Buffer = global.Buffer || require('buffer').Buffer;
 import COLORS from '@constants/colors';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
-import { DraggedElArr, RootStackScreenProps, ViewDocument } from '@type/index';
-import axios from 'axios';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import {
-  Alert,
-  Image,
-  Modal,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { Button, Divider, IconButton, Menu, TextInput, Text } from 'react-native-paper';
+import Geolocation from '@react-native-community/geolocation';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { selectDestination, selectOrigin, setDestination, setOrigin } from '@stores/NavSlice';
+import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
+import { DraggedElArr, RootStackScreenProps } from '@type/index';
+import { colors } from '@utils/Colors';
+import { reasons } from '@utils/requestReason';
+import { time } from '@utils/requestTime';
+import { requestType } from '@utils/requestType';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Image, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import Geocoder from 'react-native-geocoding';
+import { Button, Divider, IconButton, Menu, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import tw from 'twrnc';
 import {
   NotaryRequests,
   NotaryRequestsDetail,
   NotaryRequestsDetailsDocument,
   RequestDetailsPage,
 } from 'src/types/RequestDetails';
-import { colors } from '@utils/Colors';
-import { reasons } from '@utils/requestReason';
-import { time } from '@utils/requestTime';
-import { requestType } from '@utils/requestType';
-import Geocoder from 'react-native-geocoding';
-import Geolocation from '@react-native-community/geolocation';
-import { log } from 'react-native-reanimated';
-import { selectDestination, selectOrigin, setDestination, setOrigin } from '@stores/NavSlice';
+import tw from 'twrnc';
 
 interface IButton {
   text: string;
