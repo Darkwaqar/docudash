@@ -5,7 +5,7 @@ import tw from 'twrnc';
 import { IRequest } from 'src/types/request';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import { AddressList, Addresses } from 'src/types/AddressList';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { SignUpStackScreenProps } from 'src/types/navigation';

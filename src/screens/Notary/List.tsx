@@ -24,7 +24,7 @@ import { colors } from '@utils/Colors';
 import DropDown from 'react-native-paper-dropdown';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import { Notaries, NotaryList, locationNotary } from 'src/types/NoraryList';
 import { Searchbar, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

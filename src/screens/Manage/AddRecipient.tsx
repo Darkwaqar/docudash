@@ -29,7 +29,7 @@ import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { Contact, ContactList, RootStackParamList, RootStackScreenProps } from '@type/index';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import { SearchContact, SearchContactList } from 'src/types/SearchContact';
 const actionList = [
   {

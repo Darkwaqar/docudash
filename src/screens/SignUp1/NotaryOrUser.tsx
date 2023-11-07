@@ -1,16 +1,18 @@
-import { SafeAreaView, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
-import tw from 'twrnc';
-import DropDown from 'react-native-paper-dropdown';
-import { Button, Divider, Menu, Text } from 'react-native-paper';
 import GreenButton from '@components/GreenButton';
-import { useNavigation } from '@react-navigation/native';
-import { SignUpStackScreenProps } from '@type/*';
 import Icon from '@expo/vector-icons/AntDesign';
+import { useNavigation } from '@react-navigation/native';
+import { setUserType } from '@stores/slices/UserSlice';
+import { SignUpStackScreenProps } from '@type/*';
+import React, { useState } from 'react';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Divider, Menu, Text } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import tw from 'twrnc';
 
 const NotaryOrUser = () => {
+  const dispatch = useDispatch();
   const [showDropDown, setShowDropDown] = useState(false);
-  const [dropDownVal, setDropDownVal] = useState('User');
+  const [dropDownVal, setDropDownVal] = useState<'User' | 'Notary'>('User');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<SignUpStackScreenProps<'NotaryOrUser'>['navigation']>();
 
@@ -74,6 +76,7 @@ const NotaryOrUser = () => {
             } else if (dropDownVal === 'Notary') {
               navigation.navigate('NotaryLoginStackNavigator');
             }
+            dispatch(setUserType(dropDownVal));
           }}
         />
       </View>
@@ -82,5 +85,3 @@ const NotaryOrUser = () => {
 };
 
 export default NotaryOrUser;
-
-const styles = StyleSheet.create({});

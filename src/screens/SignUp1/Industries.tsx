@@ -1,16 +1,14 @@
 import GreenButton from '@components/GreenButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { setAccessToken } from '@stores/Slices';
+import { selectSignupToken, setAccessToken, setUserStep } from '@stores/slices/UserSlice';
 import { Istep5Response, SignUpStackScreenProps } from '@type/index';
-import { clearAsync, getToken } from '@utils/AsyncFunc';
-import { storeTokenGlobal } from '@utils/AsyncGlobal';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Chip, Text } from 'react-native-paper';
 import DropDown from 'react-native-paper-dropdown';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 
 interface route {
@@ -33,6 +31,7 @@ interface dropDown {
   value: number;
 }
 const IndustriesScreen = () => {
+  const token = useSelector(selectSignupToken);
   const navigation = useNavigation<SignUpStackScreenProps<'Step4'>['navigation']>();
   const route = useRoute<SignUpStackScreenProps<'Step4'>['route']>();
   const [password, setPassword] = useState<string | undefined>('');
@@ -80,7 +79,6 @@ const IndustriesScreen = () => {
   }, []);
   const sendData = async () => {
     setLoading(true);
-    const token = await getToken();
     axios
       .post('https://docudash.net/api/sign-up-4/' + token, {
         industry_id: industryID,
@@ -89,11 +87,10 @@ const IndustriesScreen = () => {
       .then((response) => {
         const { success, message, token }: Istep5Response = response.data;
         if (success) {
-          dispatch(setAccessToken(token));
           setLoading(false);
           Alert.alert(message);
-          storeTokenGlobal(token);
-          clearAsync();
+          dispatch(setUserStep(0));
+          dispatch(setAccessToken(token));
         } else {
           setLoading(false);
           // @ts-ignore

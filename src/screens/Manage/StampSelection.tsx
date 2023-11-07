@@ -1,6 +1,6 @@
 import HomeHeader from '@components/HomeHeader';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import { GenerateSignature, RootStackScreenProps, StampListAPI, StampPreview } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';

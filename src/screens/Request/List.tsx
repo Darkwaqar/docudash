@@ -6,7 +6,7 @@ import tw from 'twrnc';
 // import EmailBar from '@components/EmailBar';
 import EnvelopeList from '@components/EnvelopeList';
 import HomeHeader from '@components/HomeHeader';
-import { setRouteName } from '@stores/Slices';
+import { setRouteName } from '@stores/slices/UserSlice';
 import { useDispatch } from 'react-redux';
 import { SegmentedButtons } from 'react-native-paper';
 import { View } from 'react-native-ui-lib';

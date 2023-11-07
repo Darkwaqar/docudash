@@ -1,19 +1,22 @@
 import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { selectAccessToken, selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
 import { SignUpStackScreenProps, iStep4 } from '@type/index';
-import { getToken, storeData } from '@utils/AsyncFunc';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Chip, Text } from 'react-native-paper';
 import tw from 'twrnc';
+import { useSelector, useDispatch } from 'react-redux';
 
 interface route {
   email: string;
 }
 const SetPasswordScreen = () => {
+  const token = useSelector(selectSignupToken);
+  const dispatch = useDispatch();
   const navigation = useNavigation<SignUpStackScreenProps<'Step3'>['navigation']>();
   const route = useRoute<SignUpStackScreenProps<'Step3'>['route']>();
 
@@ -21,7 +24,6 @@ const SetPasswordScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const fetchData = async () => {
     setLoading(true);
-    const token = await getToken();
     axios
       .post('https://docudash.net/api/sign-up-3/' + token, {
         password: password,
@@ -38,7 +40,7 @@ const SetPasswordScreen = () => {
               signUpReasons: data.signUpReasons,
             },
           });
-          storeData('Step' + data.steps);
+          dispatch(setNotaryStep(0));
           setLoading(false);
         } else {
           alert(message.password[0]), setLoading(false);

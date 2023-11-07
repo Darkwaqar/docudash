@@ -1,6 +1,6 @@
 import GreenButton from '@components/GreenButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { setAccessToken } from '@stores/Slices';
+import { setAccessToken } from '@stores/slices/UserSlice';
 import { Istep5Response, SignUpStackScreenProps } from '@type/index';
 import { clearAsync, getToken } from '@utils/AsyncFunc';
 import { storeTokenGlobal } from '@utils/AsyncGlobal';

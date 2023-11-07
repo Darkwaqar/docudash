@@ -2,7 +2,6 @@ import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SignUpAPI, SignUpStackScreenProps } from '@type/index';
-import { getToken, storeData } from '@utils/AsyncFunc';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -10,17 +9,20 @@ import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, View } from
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Chip, Text } from 'react-native-paper';
 import tw from 'twrnc';
+import { useSelector } from 'react-redux';
+import { selectSignupToken, setUserStep } from '@stores/slices/UserSlice';
+import { useDispatch } from 'react-redux';
 
 const OptScreen = () => {
   const navigation = useNavigation<SignUpStackScreenProps<'Step2'>['navigation']>();
   const route = useRoute<SignUpStackScreenProps<'Step2'>['route']>();
   const [otp, setOtp] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const token = useSelector(selectSignupToken);
 
   const fetchData = async () => {
     setLoading(true);
-
-    const token = await getToken();
     axios
       .post('https://docudash.net/api/sign-up-2/' + token, {
         verification_code: otp,
@@ -38,7 +40,7 @@ const OptScreen = () => {
                 api: response.data.next,
               },
             }),
-            storeData('Step' + data.steps);
+            dispatch(setUserStep(data.steps));
         } else {
           Alert.alert('Failed', 'Wrong code Please try again or resend code'),
             setOtp(''),
@@ -50,7 +52,6 @@ const OptScreen = () => {
       });
   };
   const ResendCode = async () => {
-    const token = await getToken();
     axios
       .get('https://docudash.net/api/sendCodeAgain/' + token)
       .then((response) => {

@@ -1,9 +1,12 @@
+import { SignUpStackParamList } from './navigation';
 import { User } from './user';
 
 export interface IUserSlice {
-  _name: string;
   accessToken: string | null;
-  profile: User;
+  profile: User | null;
   wishList: Array<string>;
-  routeName: string;
+  userType: null | 'User' | 'Notary';
+  userStep: number;
+  notaryStep: number;
+  signUpToken: string | null;
 }

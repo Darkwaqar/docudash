@@ -1,8 +1,9 @@
 import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
-import { NotraySignUpAPI, SignUpAPI, SignUpStackScreenProps } from '@type/index';
-import { storeData, storeToken } from '@utils/AsyncFunc';
+import { setNotaryStep, setSignUpToken } from '@stores/slices/UserSlice';
+import { NotraySignUpAPI, SignUpStackScreenProps } from '@type/index';
 import axios from 'axios';
 import React, { useState } from 'react';
 import {
@@ -14,12 +15,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Appbar, Avatar, Checkbox, Divider, Menu, Text } from 'react-native-paper';
+import { Checkbox, Divider, Menu, Text } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import tw from 'twrnc';
-import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import COLORS from '@constants/colors';
 
 const EmailScreen = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation<SignUpStackScreenProps<'Index'>['navigation']>();
   const route = useNavigation<SignUpStackScreenProps<'Index'>['route']>();
   const [inputVal, setInputVal] = useState<string>('');
@@ -58,8 +59,8 @@ const EmailScreen = () => {
               },
             });
           }
-          storeToken(next_code);
-          storeData('Step' + data.steps);
+          dispatch(setSignUpToken(next_code));
+          dispatch(setNotaryStep(data.steps));
         } else {
           // @ts-ignore
           message.email ? Alert.alert(message.email[0]) : Alert.alert(JSON.stringify(message));

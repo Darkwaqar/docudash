@@ -3,7 +3,7 @@ import UploadView from '@components/UploadView';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   GenerateSignature,

@@ -2,7 +2,6 @@ import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SignUpAPI, SignUpStackScreenProps } from '@type/index';
-import { getToken, storeData } from '@utils/AsyncFunc';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import { useFonts } from 'expo-font';
@@ -11,12 +10,17 @@ import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, View } from
 import { Chip, Text } from 'react-native-paper';
 import tw from 'twrnc';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAccessToken, selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
+
 interface form {
   first_Name: string;
   last_Name: string;
   phone: string;
 }
 const UserInfoScreen = () => {
+  const token = useSelector(selectSignupToken);
+  const dispatch = useDispatch();
   const navigation = useNavigation<SignUpStackScreenProps<'Step2'>['navigation']>();
   const route = useRoute<SignUpStackScreenProps<'Step2'>['route']>();
   const [fontsLoaded] = useFonts({
@@ -32,7 +36,6 @@ const UserInfoScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const fetchData = async () => {
     setLoading(true);
-    const token = await getToken();
     console.log('token', token);
 
     axios
@@ -54,7 +57,7 @@ const UserInfoScreen = () => {
                 api: next,
               },
             }),
-            storeData('Step' + data.steps);
+            dispatch(setNotaryStep(data.steps));
         } else {
           if (message.first_name) {
             Alert.alert(message.first_name[0]);

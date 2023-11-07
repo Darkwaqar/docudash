@@ -1,12 +1,14 @@
 import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { NotraySignUpAPI, SignUpAPI, SignUpStackScreenProps } from '@type/index';
-import { getToken, storeData } from '@utils/AsyncFunc';
+import { useNavigation } from '@react-navigation/native';
+import { NotraySignUpAPI, SignUpStackScreenProps } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import React, { useRef, useState } from 'react';
 
+import Icon from '@expo/vector-icons/AntDesign';
+import { placeTypeToDelta } from '@utils/placeTypeToDelta';
+import { usaStates } from '@utils/states';
 import {
   Alert,
   Image,
@@ -17,22 +19,20 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Chip, Divider, Menu, Text } from 'react-native-paper';
-import { NotaryResendCode } from 'src/types/NotrayResendCode';
-import tw from 'twrnc';
-import Icon from '@expo/vector-icons/AntDesign';
-import { placeTypeToDelta } from '@utils/placeTypeToDelta';
-import MapView, { Marker, Region } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { usaStates } from '@utils/states';
-
+import MapView, { Marker, Region } from 'react-native-maps';
+import { Chip, Divider, Menu, Text } from 'react-native-paper';
+import tw from 'twrnc';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAccessToken, setNotaryStep } from '@stores/slices/UserSlice';
 const Address = () => {
   const navigation = useNavigation<SignUpStackScreenProps<'Step2'>['navigation']>();
   const [loading, setLoading] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const [showDropDownState, setShowDropDownState] = useState(false);
+  const token = useSelector(selectAccessToken);
   const map = useRef<MapView>(null);
+  const dispatch = useDispatch();
   const [address, setAddress] = useState<{
     address1: string;
     address2: string;
@@ -56,8 +56,6 @@ const Address = () => {
     if (address.lat == '0' && address.long == '0') return Alert.alert('Please search Address');
     if (address.zip_code == '') return Alert.alert('Please Provide zip Code / Postal Code');
     setLoading(true);
-
-    const token = await getToken();
 
     console.log({
       address1: address.address1,
@@ -95,7 +93,7 @@ const Address = () => {
                 api: response.data.next,
               },
             }),
-            storeData('Step' + data.steps);
+            dispatch(setNotaryStep(data.steps));
         } else {
           if (message) Object.values(message).map((x) => Alert.alert('Failed', x.toString()));
           setLoading(false);

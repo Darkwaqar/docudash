@@ -21,7 +21,7 @@ import Foundation from '@expo/vector-icons/Foundation';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import { NotarizeReview, ReviewsList } from 'src/types/ReviewList';
 import tw from 'twrnc';
 import { Avatar } from 'react-native-paper';

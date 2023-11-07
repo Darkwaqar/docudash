@@ -1,5 +1,5 @@
 import FilterModal from '@components/FilterModal';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import { Envelope, InboxApiResponse } from '@type/index';
 import axios from 'axios';
 import SkeletonLoader from 'expo-skeleton-loader';

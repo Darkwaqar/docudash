@@ -2,14 +2,14 @@ import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SignUpStackScreenProps, iStep4 } from '@type/index';
-import { getToken, storeData } from '@utils/AsyncFunc';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Chip, Text } from 'react-native-paper';
 import tw from 'twrnc';
-
+import { selectSignupToken, setUserStep } from '@stores/slices/UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
 interface route {
   email: string;
 }
@@ -19,9 +19,10 @@ const SetPasswordScreen = () => {
 
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const token = useSelector(selectSignupToken);
   const fetchData = async () => {
     setLoading(true);
-    const token = await getToken();
     axios
       .post('https://docudash.net/api/sign-up-3/' + token, {
         password: password,
@@ -38,7 +39,7 @@ const SetPasswordScreen = () => {
               signUpReasons: data.signUpReasons,
             },
           });
-          storeData('Step' + data.steps);
+          dispatch(setUserStep(data.steps));
           setLoading(false);
         } else {
           alert(message.password[0]), setLoading(false);

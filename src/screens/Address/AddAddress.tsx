@@ -19,7 +19,7 @@ import tw from 'twrnc';
 
 import ChooseSignatureItem from '@components/ChooseSignatureItem';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, selectProfileData } from '@stores/Slices';
+import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
 import { Contact, RootStackScreenProps, SignaturePreview } from '@type/index';
 import { useSelector } from 'react-redux';
 import { Addresses } from 'src/types/AddressList';

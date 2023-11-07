@@ -1,9 +1,8 @@
 import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { setAccessToken } from '@stores/Slices';
+import { setAccessToken, setUserStep } from '@stores/slices/UserSlice';
 import { SignUpStackScreenProps } from '@type/index';
-import { storeTokenGlobal } from '@utils/AsyncGlobal';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -34,7 +33,7 @@ const PasswordScreen = () => {
         setLoading(false);
         if (success) {
           console.log('token', token);
-          storeTokenGlobal(token);
+          dispatch(setUserStep(0));
           dispatch(setAccessToken(token));
         } else {
           Alert.alert(message);

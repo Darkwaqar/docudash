@@ -1,7 +1,7 @@
 import COLORS from '@constants/colors';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectProfileData } from '@stores/Slices';
+import { selectProfileData } from '@stores/slices/UserSlice';
 import { HomeDrawerScreenProps } from '@type/*';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';

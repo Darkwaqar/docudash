@@ -2,13 +2,14 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import StackNavigator from '@navigation/StackNavigator';
 import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import { NavigationContainer } from '@react-navigation/native';
-import store from '@stores/index';
+import { persistor, store } from '@stores/index';
 import { darkColors, lightColors } from '@utils/index';
 import React from 'react';
 import { StyleSheet, useColorScheme } from 'react-native';
 import 'react-native-gesture-handler';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
-import { Provider as StoreProvider } from 'react-redux';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import useCachedResources from './src/hooks/useCachedResources';
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -24,15 +25,17 @@ export default function App() {
     return null;
   }
   return (
-    <StoreProvider store={store}>
-      <PaperProvider theme={paperTheme}>
-        <BottomSheetModalProvider>
-          <NavigationContainer>
-            <StackNavigator />
-          </NavigationContainer>
-        </BottomSheetModalProvider>
-      </PaperProvider>
-    </StoreProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <PaperProvider theme={paperTheme}>
+          <BottomSheetModalProvider>
+            <NavigationContainer>
+              <StackNavigator />
+            </NavigationContainer>
+          </BottomSheetModalProvider>
+        </PaperProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 

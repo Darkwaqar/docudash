@@ -5,7 +5,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import NameEditModal from '@components/NameEditModel';
 import ProofEmployees from '@components/ProofEmpoyees';
 import ShortDescriptionModal from '@components/ShortDescriptionModal';
-import { selectAccessToken, selectProfileData, setProfileData } from '@stores/Slices';
+import { selectAccessToken, selectProfileData, setProfileData } from '@stores/slices/UserSlice';
 import { DashboardAPI } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
