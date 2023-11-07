@@ -2,12 +2,13 @@ import CustomLogoMarker from '@components/CustomLogoMarker';
 import { selectAccessToken } from '@stores/slices/UserSlice';
 import * as Location from 'expo-location';
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import { selectDestination, selectOrigin, setTravelTimeInformation } from '../stores/NavSlice';
+import axios from 'axios';
 
 const Map = ({ route }) => {
   const { notary_id } = route.params.details;
@@ -56,7 +57,9 @@ const Map = ({ route }) => {
     getTravelTime();
   }, [origin, destination, GOOGLE_MAPS_APIKEY]);
   useEffect(() => {
-    GetCurrentLocation();
+    setInterval(() => {
+      GetCurrentLocation();
+    }, 3000);
   }, []);
   const GetCurrentLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -65,42 +68,47 @@ const Map = ({ route }) => {
     }
     try {
       await Location.watchPositionAsync({ accuracy: Location.Accuracy.High }, (loc) => {
-        console.log(loc);
+        const region = {
+          lat: loc.coords.latitude,
+          lng: loc.coords.longitude,
+        };
+        PostCurrentLocation(region);
+        console.log('location', loc);
       });
     } catch (error) {
       console.log(error);
     }
   };
-  // const PostCurrentLocation = (region: any) => {
-  //   console.log(region);
-  //   axios
-  //     .post(
-  //       'https://docudash.net/api/create-request-locations-update',
-  //       {
-  //         NotaryRequestsReturnID: notary_id,
-  //         long: region.lng,
-  //         lat: region.lat,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       const data = response.data;
-  //       console.log('PostCurrentLocation', data);
-  //     })
-  //     .catch((err) => {
-  //       J(false);
-  //       console.log('Err PostCurrentLocation', err);
-  //       // if (err.response.status === 401) {
-  //       //   Alert.alert('Session Expired', 'Please login again');
-  //       //   dispatch(logoutUser());
-  //       //   clearToken();
-  //       // }
-  //     });
-  // };
+  const PostCurrentLocation = (region: any) => {
+    console.log(region);
+    axios
+      .post(
+        'https://docudash.net/api/create-request-locations-update',
+        {
+          NotaryRequestsReturnID: notary_id,
+          long: region.lng,
+          lat: region.lat,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        const data = response.data;
+        console.log('PostCurrentLocation', data);
+      })
+      .catch((err) => {
+        false;
+        console.log('Err PostCurrentLocation', err);
+        // if (err.response.status === 401) {
+        //   Alert.alert('Session Expired', 'Please login again');
+        //   dispatch(logoutUser());
+        //   clearToken();
+        // }
+      });
+  };
   if (destination === null || origin === null) return;
   return (
     <MapView
