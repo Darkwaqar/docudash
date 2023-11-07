@@ -22,6 +22,7 @@ const DrawerProfileModal = () => {
   const user = useSelector(selectProfileData);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation<RootStackScreenProps<'Home'>['navigation']>();
+  console.log(user);
   return (
     <>
       {user && (
@@ -44,7 +45,7 @@ const DrawerProfileModal = () => {
                 marginTop: 10,
               }}
             >
-              {user.first_name} {user.last_name}
+              {user?.first_name} {user?.last_name}
             </Text>
           </View>
         </Pressable>
@@ -72,12 +73,12 @@ const DrawerProfileModal = () => {
             {/* content */}
             <View style={tw`gap-2 w-[80%] overflow-hidden`}>
               <Text style={tw`font-bold text-4`}>
-                {user.first_name} {user.last_name}
+                {user?.first_name} {user?.last_name}
               </Text>
-              <Text style={styles.profile_small_text}>{user.email}</Text>
-              <Text style={styles.profile_small_text}> Account #00000{user.id}</Text>
+              <Text style={styles.profile_small_text}>{user?.email}</Text>
+              <Text style={styles.profile_small_text}> Account #00000{user?.id}</Text>
               <Text style={styles.profile_small_text}>
-                {user.first_name} {user.last_name}
+                {user?.first_name} {user?.last_name}
               </Text>
               <TouchableOpacity
                 onPress={() => {
