@@ -1,7 +1,6 @@
 global.Buffer = global.Buffer || require('buffer').Buffer;
 import COLORS from '@constants/colors';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import Geolocation from '@react-native-community/geolocation';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { selectDestination, selectOrigin, setDestination, setOrigin } from '@stores/NavSlice';
 import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
@@ -16,6 +15,7 @@ import { Image, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import Geocoder from 'react-native-geocoding';
 import { Button, Divider, IconButton, Menu, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Location from 'expo-location';
 import {
   NotaryRequests,
   NotaryRequestsDetail,
@@ -64,10 +64,18 @@ const Details = () => {
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
   console.log('origin', origin);
-  const GetCurrentLocation = () => {
-    Geolocation.requestAuthorization();
-    Geocoder.init('AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc');
-    Geolocation.getCurrentPosition(
+  const GetCurrentLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permission to access location was denied');
+      return;
+    }
+
+    const option: Location.LocationOptions = {
+      accuracy: Location.Accuracy.Highest,
+      timeInterval: 10000,
+    };
+    Location.getCurrentPositionAsync(option).then(
       (position: any) => {
         console.log('position', position);
         const region = {
@@ -79,8 +87,7 @@ const Details = () => {
       },
       (error) => {
         console.log(error.code, error.message);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      }
     );
   };
   // useEffect(() => {

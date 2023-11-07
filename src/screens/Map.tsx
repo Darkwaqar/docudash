@@ -1,16 +1,13 @@
-import { Alert, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useRef } from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import tw from 'twrnc';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectDestination, selectOrigin, setTravelTimeInformation } from '../stores/NavSlice';
-import MapViewDirections from 'react-native-maps-directions';
 import CustomLogoMarker from '@components/CustomLogoMarker';
-import axios from 'axios';
-import Geocoder from 'react-native-geocoding';
-import Geolocation from '@react-native-community/geolocation';
-import { selectAccessToken } from '@stores/Slices';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import * as Location from 'expo-location';
+import React, { useEffect, useRef } from 'react';
+import { StyleSheet } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
+import { useDispatch, useSelector } from 'react-redux';
+import tw from 'twrnc';
+import { selectDestination, selectOrigin, setTravelTimeInformation } from '../stores/NavSlice';
 
 const Map = ({ route }) => {
   const { notary_id } = route.params.details;
