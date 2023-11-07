@@ -1,15 +1,25 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import tw from 'twrnc';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectDestination, selectOrigin, setTravelTimeInformation } from '../stores/NavSlice';
 import MapViewDirections from 'react-native-maps-directions';
+import CustomLogoMarker from '@components/CustomLogoMarker';
+import axios from 'axios';
+import Geocoder from 'react-native-geocoding';
+import Geolocation from '@react-native-community/geolocation';
+import { selectAccessToken } from '@stores/Slices';
+import * as Location from 'expo-location';
 
-const Map = () => {
+const Map = ({ route }) => {
+  const { notary_id } = route.params.details;
+  console.log('Notary', notary_id);
+
   const GOOGLE_MAPS_APIKEY = 'AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc';
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
+  const accessToken = useSelector(selectAccessToken);
   console.log('origin ==><>', origin);
   console.log('destination ==><>', destination);
 
@@ -40,13 +50,6 @@ const Map = () => {
         .then((res) => res.json())
         .then((data) => {
           console.log('data', JSON.stringify(data));
-          console.log(
-            '',
-            `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${
-              origin.lat + ',' + origin.lng
-            }&destinations=${destination.lat + ',' + destination.long}&key=${GOOGLE_MAPS_APIKEY}`
-          );
-
           dispatch(setTravelTimeInformation(data.rows[0].elements[0]));
         })
         .catch((error) => {
@@ -55,6 +58,52 @@ const Map = () => {
     };
     getTravelTime();
   }, [origin, destination, GOOGLE_MAPS_APIKEY]);
+  useEffect(() => {
+    GetCurrentLocation();
+  }, []);
+  const GetCurrentLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      return;
+    }
+    try {
+      await Location.watchPositionAsync({ accuracy: Location.Accuracy.High }, (loc) => {
+        console.log(loc);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // const PostCurrentLocation = (region: any) => {
+  //   console.log(region);
+  //   axios
+  //     .post(
+  //       'https://docudash.net/api/create-request-locations-update',
+  //       {
+  //         NotaryRequestsReturnID: notary_id,
+  //         long: region.lng,
+  //         lat: region.lat,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       const data = response.data;
+  //       console.log('PostCurrentLocation', data);
+  //     })
+  //     .catch((err) => {
+  //       J(false);
+  //       console.log('Err PostCurrentLocation', err);
+  //       // if (err.response.status === 401) {
+  //       //   Alert.alert('Session Expired', 'Please login again');
+  //       //   dispatch(logoutUser());
+  //       //   clearToken();
+  //       // }
+  //     });
+  // };
   if (destination === null || origin === null) return;
   return (
     <MapView
@@ -86,13 +135,22 @@ const Map = () => {
         />
       )}
       {origin && (
-        <Marker
+        // <Marker
+        //   coordinate={{
+        //     latitude: parseFloat(origin.lat),
+        //     longitude: parseFloat(origin.lng),
+        //   }}
+        //   title="Origin"
+        //   // description={origin.description}
+        //   identifier="origin"
+        // />
+        <CustomLogoMarker
+          LogoMarker
           coordinate={{
             latitude: parseFloat(origin.lat),
             longitude: parseFloat(origin.lng),
           }}
           title="Origin"
-          // description={origin.description}
           identifier="origin"
         />
       )}
@@ -114,3 +172,6 @@ const Map = () => {
 export default Map;
 
 const styles = StyleSheet.create({});
+// function setLoading(arg0: boolean) {
+//   throw new Error('Function not implemented.');
+// }

@@ -85,7 +85,7 @@ const Details = () => {
           lng: parseFloat(position.coords.longitude),
         };
         dispatch(setOrigin(region));
-        navigation.navigate('Map');
+        navigation.navigate('Map', { details: details });
       },
       (error) => {
         console.log(error.code, error.message);
