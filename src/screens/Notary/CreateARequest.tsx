@@ -2,8 +2,6 @@ import GreenButton from '@components/GreenButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { selectAccessToken, setAccessToken } from '@stores/slices/UserSlice';
 import { Istep5Response, RootStackScreenProps, SignUpStackScreenProps } from '@type/index';
-import { clearAsync, getToken } from '@utils/AsyncFunc';
-import { storeTokenGlobal } from '@utils/AsyncGlobal';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';

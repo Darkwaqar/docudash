@@ -319,23 +319,26 @@ const Details = () => {
                   {details.individual_details.address1 || 'NO ADDRESS AVAILABLE'}
                 </Text>
               </Text>
-              <Button
-                style={tw`w-40`}
-                mode="contained"
-                loading={acceptLoading}
-                disabled={acceptLoading}
-                // onPress={Accept}
-                onPress={() => {
-                  dispatch(setDestination(details.request_location_list));
-                  if (destination == null) {
-                    GetCurrentLocation();
-                  } else {
-                    GetCurrentLocation();
-                  }
-                }}
-              >
-                Navigate
-              </Button>
+              {requestType.find((x) => x.value == details.notary_request_status.toString())
+                ?.label === 'Accepted' && (
+                <Button
+                  style={tw`w-40`}
+                  mode="contained"
+                  loading={acceptLoading}
+                  disabled={acceptLoading}
+                  // onPress={Accept}
+                  onPress={() => {
+                    dispatch(setDestination(details.request_location_list));
+                    if (destination == null) {
+                      GetCurrentLocation();
+                    } else {
+                      GetCurrentLocation();
+                    }
+                  }}
+                >
+                  {user.user_type === 7 ? 'Navigate' : 'View Your Notary Location'}
+                </Button>
+              )}
             </View>
 
             {/* Buttons */}

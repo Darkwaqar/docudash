@@ -22,7 +22,7 @@ const DrawerProfileModal = () => {
   const user = useSelector(selectProfileData);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation<RootStackScreenProps<'Home'>['navigation']>();
-  console.log(user);
+  console.log('USER DrawerProfileModal', user);
   return (
     <>
       {user && (

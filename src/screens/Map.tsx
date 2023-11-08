@@ -1,26 +1,30 @@
-import CustomLogoMarker from '@components/CustomLogoMarker';
-import { selectAccessToken } from '@stores/slices/UserSlice';
+import CustomLogoMarker from '../components/CustomLogoMarker';
+import { selectAccessToken } from '../stores/slices/UserSlice';
 import * as Location from 'expo-location';
-import React, { useEffect, useRef } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, StyleSheet, View, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
-import { selectDestination, selectOrigin, setTravelTimeInformation } from '../stores/NavSlice';
+import {
+  selectDestination,
+  selectOrigin,
+  setOrigin,
+  setTravelTimeInformation,
+} from '../stores/NavSlice';
 import axios from 'axios';
+import COLORS from '../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 const Map = ({ route }) => {
-  const { notary_id } = route.params.details;
-  console.log('Notary', notary_id);
-
+  const { notary_id } = route?.params?.details;
   const GOOGLE_MAPS_APIKEY = 'AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc';
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
   const accessToken = useSelector(selectAccessToken);
-  console.log('origin ==><>', origin);
-  console.log('destination ==><>', destination);
-
+  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const mapRef = useRef<MapView>(null);
@@ -59,7 +63,7 @@ const Map = ({ route }) => {
   useEffect(() => {
     setInterval(() => {
       GetCurrentLocation();
-    }, 3000);
+    }, 10000);
   }, []);
   const GetCurrentLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -72,8 +76,9 @@ const Map = ({ route }) => {
           lat: loc.coords.latitude,
           lng: loc.coords.longitude,
         };
-        PostCurrentLocation(region);
         console.log('location', loc);
+        dispatch(setOrigin(region));
+        PostCurrentLocation(region);
       });
     } catch (error) {
       console.log(error);
@@ -111,66 +116,90 @@ const Map = ({ route }) => {
   };
   if (destination === null || origin === null) return;
   return (
-    <MapView
-      ref={mapRef}
-      style={tw`flex-1`}
-      // mapType="mutedStandard"
-      initialRegion={{
-        // latitude: 36.70983349999999,
-        // longitude: -81.9773482,
-        latitude: parseFloat(origin.lat),
-        longitude: parseFloat(origin.lng),
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
-      }}
-    >
-      {origin && destination && (
-        <MapViewDirections
-          origin={{
-            latitude: origin.lat,
-            longitude: origin.lng,
+    <View style={{ backgroundColor: 'white' }}>
+      <View
+        style={{
+          padding: 15,
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: 'white',
+        }}
+      >
+        <Icon name="arrow-left" size={28} onPress={() => navigation.goBack()} />
+        <Text
+          style={{
+            color: COLORS.primary,
+            fontWeight: 'bold',
+            fontSize: 16,
+            textAlign: 'center',
+            flex: 1,
           }}
-          destination={{
-            latitude: destination.lat,
-            longitude: destination.long,
-          }}
-          apikey={GOOGLE_MAPS_APIKEY}
-          strokeWidth={3}
-          strokeColor="black"
-        />
-      )}
-      {origin && (
-        // <Marker
-        //   coordinate={{
-        //     latitude: parseFloat(origin.lat),
-        //     longitude: parseFloat(origin.lng),
-        //   }}
-        //   title="Origin"
-        //   // description={origin.description}
-        //   identifier="origin"
-        // />
-        <CustomLogoMarker
-          LogoMarker
-          coordinate={{
-            latitude: parseFloat(origin.lat),
-            longitude: parseFloat(origin.lng),
-          }}
-          title="Origin"
-          identifier="origin"
-        />
-      )}
-      {destination && (
-        <Marker
-          coordinate={{
-            latitude: parseFloat(destination.lat),
-            longitude: parseFloat(destination.long),
-          }}
-          title="destination"
-          // description={destination.description}
-          identifier="destination"
-        />
-      )}
-    </MapView>
+        >
+          Notary
+        </Text>
+      </View>
+
+      <MapView
+        ref={mapRef}
+        style={tw`flex-1`}
+        // mapType="mutedStandard"
+        initialRegion={{
+          // latitude: 36.70983349999999,
+          // longitude: -81.9773482,
+          latitude: parseFloat(origin.lat),
+          longitude: parseFloat(origin.lng),
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        }}
+      >
+        {origin && destination && (
+          <MapViewDirections
+            origin={{
+              latitude: origin.lat,
+              longitude: origin.lng,
+            }}
+            destination={{
+              latitude: destination.lat,
+              longitude: destination.long,
+            }}
+            apikey={GOOGLE_MAPS_APIKEY}
+            strokeWidth={3}
+            strokeColor="black"
+          />
+        )}
+        {origin && (
+          // <Marker
+          //   coordinate={{
+          //     latitude: parseFloat(origin.lat),
+          //     longitude: parseFloat(origin.lng),
+          //   }}
+          //   title="Origin"
+          //   // description={origin.description}
+          //   identifier="origin"
+          // />
+          <CustomLogoMarker
+            LogoMarker
+            coordinate={{
+              latitude: parseFloat(origin.lat),
+              longitude: parseFloat(origin.lng),
+            }}
+            title="Origin"
+            identifier="origin"
+          />
+        )}
+        {destination && (
+          <Marker
+            coordinate={{
+              latitude: parseFloat(destination.lat),
+              longitude: parseFloat(destination.long),
+            }}
+            title="destination"
+            // description={destination.description}
+            identifier="destination"
+          />
+        )}
+      </MapView>
+    </View>
   );
 };
 
