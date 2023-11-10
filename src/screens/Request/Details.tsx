@@ -95,29 +95,7 @@ const Details = () => {
   //     navigation.navigate('Map');
   //   }
   // }, [destination]);
-  const Accept = () => {
-    setAcceptLoading(true);
-    axios
-      .post(
-        'https://docudash.net/api/notary/ApproveRequest',
-        {
-          id: id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-        setAcceptLoading(false);
-        navigation.goBack();
-      })
-      .catch((err) => {
-        setAcceptLoading(false);
-      });
-  };
+  const Accept = () => navigation.navigate('ApproveRequest', { id: id });
   const Done = () => {
     setDoneLoading(true);
     axios

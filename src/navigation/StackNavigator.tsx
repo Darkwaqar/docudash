@@ -29,6 +29,7 @@ import LoginStackNavigator from './LoginStackNavigator';
 import NotaryLoginStackNavigator from './NotaryLoginStackNavigator';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import Map from '@screens/Map';
+import ApproveRequest from '@screens/Notary/ApproveRequest';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function StackNavigator() {
@@ -68,6 +69,7 @@ export default function StackNavigator() {
             <Stack.Screen name="AddAddress" component={AddAddress} />
             <Stack.Screen name="CreateARequest" component={CreateARequest} />
             <Stack.Screen name="RequestDetails" component={RequestDetails} />
+            <Stack.Screen name="ApproveRequest" component={ApproveRequest} />
             <Stack.Screen name="Map" component={Map} />
 
             {/* <Stack.Screen name="ManageDrawer" component={ManageDrawer} /> */}

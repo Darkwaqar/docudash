@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import Browser from '@screens/Browser';
+import ApproveRequest from '@screens/Notary/ApproveRequest';
 import Address from '@screens/NotarySignUp/Address';
 import EmailScreen from '@screens/NotarySignUp/Email';
 import OptScreen from '@screens/NotarySignUp/OptScreen';

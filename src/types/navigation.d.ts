@@ -49,13 +49,14 @@ export type RootStackParamList = {
   Contacts: { From?: string };
   AddContact: { Contact?: Contact };
   NotaryOrUser: undefined;
-  Map:{details: NotaryRequests;};
+  Map: { details: NotaryRequests };
   NotaryProfile: { item: any };
   Addresses: { From: Addresses };
   AddAddress: { Address?: Address; From?: string; Notary?: string };
   CreateARequest: { email?: string; From?: string };
   RequestList: { heading: string };
-  RequestDetails: {id: number}
+  RequestDetails: { id: number };
+  ApproveRequest: undefined | number;
 };
 
 export type SignUpStackParamList = {
