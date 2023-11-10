@@ -27,53 +27,60 @@ import { RootStackParamList } from '../types/navigation';
 import DrawerNavigator from './DrawerNavigator';
 import LoginStackNavigator from './LoginStackNavigator';
 import NotaryLoginStackNavigator from './NotaryLoginStackNavigator';
+import { StripeProvider } from '@stripe/stripe-react-native';
 import Map from '@screens/Map';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function StackNavigator() {
   const user = useSelector(selectAccessToken);
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {user ? (
-        <Stack.Group>
-          {/* <Stack.Screen name="RequestDetails" component={RequestDetails} /> */}
-          {/* <Stack.Screen name="CreateARequest" component={CreateARequest} /> */}
-          {/* <Stack.Screen name="Featured" component={FeatureHighlightScreen} /> */}
+    <StripeProvider
+      publishableKey={
+        'pk_test_51NGLKgENH01nEXEQS9Gnq8NlhNxD5nZ6rXpa9Fr1q5DOyupUahN1k22hE4y9azhfErdmPoMyn6oZzItFyMexZBnl00gAWDSY7G'
+      }
+    >
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {user ? (
+          <Stack.Group>
+            {/* <Stack.Screen name="RequestDetails" component={RequestDetails} /> */}
+            {/* <Stack.Screen name="CreateARequest" component={CreateARequest} /> */}
+            {/* <Stack.Screen name="Featured" component={FeatureHighlightScreen} /> */}
 
-          <Stack.Screen name="Home" component={DrawerNavigator} />
-          <Stack.Screen name="Signatures" component={Signatures} />
-          <Stack.Screen name="AddSignature" component={AddSignature} />
+            <Stack.Screen name="Home" component={DrawerNavigator} />
+            <Stack.Screen name="Signatures" component={Signatures} />
+            <Stack.Screen name="AddSignature" component={AddSignature} />
 
-          <Stack.Screen name="AddContact" component={AddContact} />
-          <Stack.Screen name="Stamps" component={Stamps} />
-          <Stack.Screen name="AddStamp" component={AddStamp} />
-          <Stack.Screen name="Browser" component={Browser} />
-          <Stack.Screen name="Details" component={Details} />
-          <Stack.Screen name="Edit" component={Edit} />
-          <Stack.Screen name="AddRecipient" component={AddRecipient} />
-          <Stack.Screen name="DocumentEditor" component={DocumentEditor} />
-          <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="DocumentViewer" component={DocumentViewer} />
-          <Stack.Screen name="SignatureSelection" component={SignatureSelection} />
-          <Stack.Screen name="StampSelection" component={StampSelection} />
-          <Stack.Screen name="Contacts" component={Contacts} />
-          <Stack.Screen name="NotaryProfile" component={NotaryProfile} />
-          <Stack.Screen name="Addresses" component={Addresses} />
-          <Stack.Screen name="AddAddress" component={AddAddress} />
-          <Stack.Screen name="CreateARequest" component={CreateARequest} />
-          <Stack.Screen name="RequestDetails" component={RequestDetails} />
-          <Stack.Screen name="Map" component={Map} />
+            <Stack.Screen name="AddContact" component={AddContact} />
+            <Stack.Screen name="Stamps" component={Stamps} />
+            <Stack.Screen name="AddStamp" component={AddStamp} />
+            <Stack.Screen name="Browser" component={Browser} />
+            <Stack.Screen name="Details" component={Details} />
+            <Stack.Screen name="Edit" component={Edit} />
+            <Stack.Screen name="AddRecipient" component={AddRecipient} />
+            <Stack.Screen name="DocumentEditor" component={DocumentEditor} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="DocumentViewer" component={DocumentViewer} />
+            <Stack.Screen name="SignatureSelection" component={SignatureSelection} />
+            <Stack.Screen name="StampSelection" component={StampSelection} />
+            <Stack.Screen name="Contacts" component={Contacts} />
+            <Stack.Screen name="NotaryProfile" component={NotaryProfile} />
+            <Stack.Screen name="Addresses" component={Addresses} />
+            <Stack.Screen name="AddAddress" component={AddAddress} />
+            <Stack.Screen name="CreateARequest" component={CreateARequest} />
+            <Stack.Screen name="RequestDetails" component={RequestDetails} />
+            <Stack.Screen name="Map" component={Map} />
 
-          {/* <Stack.Screen name="ManageDrawer" component={ManageDrawer} /> */}
-          {/* <Stack.Screen name="TemplateHistory" component={TemplateHistory} /> */}
-        </Stack.Group>
-      ) : (
-        <Stack.Group>
-          <Stack.Screen name="NotaryOrUser" component={NotaryOrUser} />
-          <Stack.Screen name="SignUpIndex" component={LoginStackNavigator} />
-          <Stack.Screen name="NotaryLoginStackNavigator" component={NotaryLoginStackNavigator} />
-        </Stack.Group>
-      )}
-    </Stack.Navigator>
+            {/* <Stack.Screen name="ManageDrawer" component={ManageDrawer} /> */}
+            {/* <Stack.Screen name="TemplateHistory" component={TemplateHistory} /> */}
+          </Stack.Group>
+        ) : (
+          <Stack.Group>
+            <Stack.Screen name="NotaryOrUser" component={NotaryOrUser} />
+            <Stack.Screen name="SignUpIndex" component={LoginStackNavigator} />
+            <Stack.Screen name="NotaryLoginStackNavigator" component={NotaryLoginStackNavigator} />
+          </Stack.Group>
+        )}
+      </Stack.Navigator>
+    </StripeProvider>
   );
 }

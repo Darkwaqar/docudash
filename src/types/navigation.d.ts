@@ -65,8 +65,8 @@ export type SignUpStackParamList = {
   Step2: { api: string };
   Step3: { api: string };
   Step4: { industry: Industry[]; signUpReasons: Industry[] };
-  Step5: { token: string; email: string };
-  Step6: { token: string; email: string };
+  Step5: { token: string | undefined; email: string };
+  Step6: { token: string | undefined; email: string };
   Browser: { url: string; heading: string };
   Address: { From: Addresses };
 };

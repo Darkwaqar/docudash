@@ -27,8 +27,10 @@ import RequestMessage from '@components/RequestMessage';
 import RequestReason from '@components/RequestReason';
 import HomeHeader from '@components/HomeHeader';
 import RequestRecipient from '@components/RequestRecipient';
+import { useStripe } from '@stripe/stripe-react-native';
 import FormData from 'form-data';
 import { IRequest } from 'src/types/request';
+import { PaymentScreen } from '@screens/PaymentScreen';
 
 interface uploadType {
   uri: string;
@@ -37,6 +39,7 @@ interface uploadType {
 }
 const CreateARequest = () => {
   const accessToken = useSelector(selectAccessToken);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const navigation = useNavigation<SignUpStackScreenProps<'Step4'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'AddAddress'>['route']>();
   const From = route.params?.From as string;
@@ -120,8 +123,12 @@ const CreateARequest = () => {
         const {
           status,
           message,
+          NotaryRequestsReturnID,
+          amount,
         }: {
           status: boolean;
+          NotaryRequestsReturnID: string;
+          amount: number;
           message: {
             emailSubject: string[];
             emailMessage: string[];
@@ -130,6 +137,7 @@ const CreateARequest = () => {
           };
         } = response.data;
         console.log(response.data);
+        createRequestPayment(NotaryRequestsReturnID, amount);
         if (status) {
           showDialog();
           // navigation.replace('DocumentEditor', {
@@ -141,6 +149,86 @@ const CreateARequest = () => {
           }
           console.log(JSON.stringify(response.data));
         }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log('error', error);
+      });
+  };
+  const initializePaymentSheet = async (data) => {
+    console.log('initializePaymentSheet', data);
+
+    setLoading(true);
+    // const { paymentIntent, ephemeralKey, customer } = await fetchPaymentSheetParams();
+
+    const { error } = await initPaymentSheet({
+      merchantDisplayName: 'Docudash, Inc.',
+      customerId: data.detailsArr.customer,
+      customerEphemeralKeySecret: data.detailsArr.phemeralKey,
+      paymentIntentClientSecret: data.detailsArr.paymentIntent,
+      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+      //methods that complete payment after a delay, like SEPA Debit and Sofort.
+      allowsDelayedPaymentMethods: true,
+      defaultBillingDetails: {
+        name: 'Jane Doe',
+      },
+    });
+    openPaymentSheet();
+    if (!error) {
+      setLoading(true);
+    }
+  };
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+    } else {
+      Alert.alert('Success', 'Your order is confirmed!');
+      navigation.goBack();
+    }
+  };
+  const createRequestPayment = (NotaryRequestsReturnID: string, amount: number) => {
+    let formData = new FormData();
+    formData.append('NotaryRequestsReturnID', NotaryRequestsReturnID);
+    formData.append('amount', amount);
+    let headers = {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'multipart/form-data',
+    };
+    axios
+      .post('https://docudash.net/api/create-request-payment', formData, { headers })
+      .then((response) => {
+        setLoading(false);
+        console.log('response', response);
+        if (response.data.status) {
+          console.log(' create-request-payment response', response);
+          initializePaymentSheet(response.data);
+        }
+        // const {
+        //   status,
+        //   message,
+        // }: {
+        //   status: boolean;
+        //   message: {
+        //     emailSubject: string[];
+        //     emailMessage: string[];
+        //     'recName.0': string[];
+        //     'photos.0': string[];
+        //   };
+        // } = response.data;
+        // console.log(response.data);
+        // if (status) {
+        //   showDialog();
+        //   // navigation.replace('DocumentEditor', {
+        //   //   Envelope: generateSignature,
+        //   // });
+        // } else {
+        //   for (const [key, value] of Object.entries(message)) {
+        //     alert(value);
+        //   }
+        //   console.log(JSON.stringify(response.data));
+        // }
       })
       .catch((error) => {
         setLoading(false);
@@ -229,7 +317,6 @@ const CreateARequest = () => {
                 setProgress(0.8);
               } else {
                 // console.log(input);
-                navigation.goBack();
               }
             }}
           >

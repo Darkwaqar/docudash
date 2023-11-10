@@ -6,7 +6,7 @@ import tw from 'twrnc';
 // import EmailBar from '@components/EmailBar';
 import EnvelopeList from '@components/EnvelopeList';
 import HomeHeader from '@components/HomeHeader';
-import { setRouteName } from '@stores/slices/UserSlice';
+import { setRouteName } from '../../stores/slices/UserSlice';
 import { useDispatch } from 'react-redux';
 import { SegmentedButtons } from 'react-native-paper';
 import { View } from 'react-native-ui-lib';
@@ -20,10 +20,10 @@ const List = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log('Change name');
-    dispatch(setRouteName('Manage'));
+    console.log('Change name', value);
+    // dispatch(setRouteName('Manage'));
   }, [navigation]);
-
+  console.log('Change name', value);
   return (
     <SafeAreaView style={tw`flex-1`}>
       <HomeHeader heading={'Requests'} />

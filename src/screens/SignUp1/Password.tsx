@@ -27,8 +27,11 @@ const PasswordScreen = () => {
         password: password,
       })
       .then((response) => {
-        const { token, success, message }: { token: string; success: boolean; message: any } =
-          response.data;
+        const {
+          token,
+          success,
+          message,
+        }: { token: string | undefined; success: boolean; message: any } = response.data;
         console.log(response.data);
         setLoading(false);
         if (success) {

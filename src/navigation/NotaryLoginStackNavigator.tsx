@@ -7,14 +7,17 @@ import SetPasswordScreen from '@screens/NotarySignUp/Password';
 import RON_DocUpload from '@screens/NotarySignUp/RON_DocUpload';
 import UserInfoScreen from '@screens/NotarySignUp/UserInfo';
 import PasswordScreen from '@screens/SignUp1/Password';
-import { selectNotaryStep } from '@stores/slices/UserSlice';
+import { selectNotaryStep, setNotaryStep } from '@stores/slices/UserSlice';
 import { SignUpStackParamList } from '@type/index';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const LoginStack = createStackNavigator<SignUpStackParamList>();
 export default function NotaryLoginStackNavigator() {
   const step = useSelector(selectNotaryStep);
+  const dispatch = useDispatch();
+  console.log('step', step);
+  dispatch(setNotaryStep(0));
 
   return (
     <LoginStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={'Step' + step}>

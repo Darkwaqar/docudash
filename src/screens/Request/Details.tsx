@@ -63,7 +63,7 @@ const Details = () => {
   const [recipients, setRecipients] = useState<NotaryRequestsDetail[]>([]);
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
-  console.log('origin', origin);
+  console.log('origin', details);
   const GetCurrentLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -319,6 +319,11 @@ const Details = () => {
                   {details.individual_details.address1 || 'NO ADDRESS AVAILABLE'}
                 </Text>
               </Text>
+              {details.amount != null && (
+                <Text variant="labelLarge">
+                  Amount: <Text style={tw`text-[#6FAC46]`}>{`$${details.amount}`}</Text>
+                </Text>
+              )}
               {requestType.find((x) => x.value == details.notary_request_status.toString())
                 ?.label === 'Accepted' && (
                 <Button
