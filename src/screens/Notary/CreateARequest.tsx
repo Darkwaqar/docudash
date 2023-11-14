@@ -137,9 +137,10 @@ const CreateARequest = () => {
           };
         } = response.data;
         console.log(response.data);
-        createRequestPayment(NotaryRequestsReturnID, amount);
+
         if (status) {
-          showDialog();
+          createRequestPayment(NotaryRequestsReturnID, amount);
+          // showDialog();
           // navigation.replace('DocumentEditor', {
           //   Envelope: generateSignature,
           // });
@@ -176,6 +177,7 @@ const CreateARequest = () => {
     openPaymentSheet();
     if (!error) {
       setLoading(true);
+      //have to implement cancel logic here/ ask sufe
     }
   };
   const openPaymentSheet = async () => {

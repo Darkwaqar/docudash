@@ -94,18 +94,14 @@ const Skeleton = () => {
   return (
     <SkeletonLoader boneColor={'#D3D3D3'}>
       <SkeletonLoader.Container style={tw`my-2`}>
-        <SkeletonLoader.Container style={tw`flex-row overflow-hidden gap-2 items-center px-5 `}>
+        <SkeletonLoader.Container style={tw` overflow-hidden gap-4 items-center p-5`}>
           {/*  @ts-ignore */}
-          <SkeletonLoader.Item style={tw`w-10 h-10 rounded-full`} />
-          <SkeletonLoader.Container style={tw`overflow-hidden w-70`}>
-            {/*  @ts-ignore */}
-            <SkeletonLoader.Item style={tw`flex-1 h-5 my-1`} />
-            {/*  @ts-ignore */}
-            <SkeletonLoader.Item style={tw`w-100 h-2`} />
-          </SkeletonLoader.Container>
+          <SkeletonLoader.Item style={tw`w-full h-2 self-center`} />
+          <SkeletonLoader.Item style={tw`w-full h-2 self-center`} />
+          <SkeletonLoader.Item style={tw`w-full h-2 self-center`} />
+          <SkeletonLoader.Item style={tw`w-full h-2 self-center`} />
+          <SkeletonLoader.Item style={tw`w-full h-2 self-center`} />
         </SkeletonLoader.Container>
-        {/*  @ts-ignore */}
-        <SkeletonLoader.Item style={tw`w-80 h-5 self-center mt-5`} />
       </SkeletonLoader.Container>
     </SkeletonLoader>
   );
