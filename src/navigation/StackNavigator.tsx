@@ -11,6 +11,8 @@ import DocumentViewer from '@screens/Manage/DocumentViewer';
 import Edit from '@screens/Manage/Edit';
 import SignatureSelection from '@screens/Manage/SignatureSelection';
 import StampSelection from '@screens/Manage/StampSelection';
+import Map from '@screens/Map';
+import ApproveRequest from '@screens/Notary/ApproveRequest';
 import CreateARequest from '@screens/Notary/CreateARequest';
 import NotaryProfile from '@screens/Notary/NotaryProfile';
 import Profile from '@screens/Profile';
@@ -21,15 +23,13 @@ import Signatures from '@screens/Signatures/List';
 import AddStamp from '@screens/Stamp/AddStamps';
 import Stamps from '@screens/Stamp/List';
 import { selectAccessToken } from '@stores/slices/UserSlice';
+import { StripeProvider } from '@stripe/stripe-react-native';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootStackParamList } from '../types/navigation';
 import DrawerNavigator from './DrawerNavigator';
 import LoginStackNavigator from './LoginStackNavigator';
 import NotaryLoginStackNavigator from './NotaryLoginStackNavigator';
-import { StripeProvider } from '@stripe/stripe-react-native';
-import Map from '@screens/Map';
-import ApproveRequest from '@screens/Notary/ApproveRequest';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function StackNavigator() {

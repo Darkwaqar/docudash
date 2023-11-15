@@ -9,7 +9,6 @@ const selectUserState = (state: RootState) => state.user;
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['property'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

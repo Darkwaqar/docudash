@@ -7,6 +7,7 @@ import axios from 'axios';
 import React, { useRef, useState } from 'react';
 
 import Icon from '@expo/vector-icons/AntDesign';
+import { selectAccessToken, setNotaryStep } from '@stores/slices/UserSlice';
 import { placeTypeToDelta } from '@utils/placeTypeToDelta';
 import { usaStates } from '@utils/states';
 import {
@@ -22,9 +23,8 @@ import {
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { Marker, Region } from 'react-native-maps';
 import { Chip, Divider, Menu, Text } from 'react-native-paper';
-import tw from 'twrnc';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAccessToken, setNotaryStep } from '@stores/slices/UserSlice';
+import tw from 'twrnc';
 const Address = () => {
   const navigation = useNavigation<SignUpStackScreenProps<'Step2'>['navigation']>();
   const [loading, setLoading] = useState<boolean>(false);

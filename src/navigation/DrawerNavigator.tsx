@@ -3,22 +3,21 @@ import React from 'react';
 
 import CustomDrawerContent from '@components/CustomDrawerContent';
 import DrawerScreenContainer from '@components/DrawerScreenContainer';
-import COLORS from '@constants/colors';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useRoute } from '@react-navigation/native';
+import AddressesList from '@screens/Address/List';
+import ContactList from '@screens/Contact/List';
 import HomeScreen from '@screens/HomeScreen';
 import Inbox from '@screens/Manage/Inbox';
+import Map from '@screens/Notary/List';
 import Profile from '@screens/Profile';
+import RequestList from '@screens/Request/List';
+import UserRequestList from '@screens/Request/UserList';
 import SignatureList from '@screens/Signatures/List';
 import StampList from '@screens/Stamp/List';
 import { selectProfileData } from '@stores/slices/UserSlice';
-import { useSelector } from 'react-redux';
-import ContactList from '@screens/Contact/List';
-import AddressesList from '@screens/Address/List';
-import Map from '@screens/Notary/List';
-import RequestList from '@screens/Request/List';
 import { colors } from '@utils/Colors';
-import UserRequestList from '@screens/Request/UserList';
+import { useSelector } from 'react-redux';
 
 const Drawer = createDrawerNavigator();
 

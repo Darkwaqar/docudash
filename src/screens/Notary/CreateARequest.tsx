@@ -1,36 +1,21 @@
-import GreenButton from '@components/GreenButton';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, setAccessToken } from '@stores/slices/UserSlice';
-import { Istep5Response, RootStackScreenProps, SignUpStackScreenProps } from '@type/index';
-import { colors } from '@utils/Colors';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import {
-  Button,
-  Chip,
-  Dialog,
-  Divider,
-  Menu,
-  Portal,
-  ProgressBar,
-  SegmentedButtons,
-  Text,
-  TextInput,
-} from 'react-native-paper';
-import DropDown from 'react-native-paper-dropdown';
-import { useDispatch, useSelector } from 'react-redux';
-import tw from 'twrnc';
-import CalendarPicker from 'react-native-calendar-picker';
-import UploadView from '@components/UploadView';
+import HomeHeader from '@components/HomeHeader';
 import RequestMessage from '@components/RequestMessage';
 import RequestReason from '@components/RequestReason';
-import HomeHeader from '@components/HomeHeader';
 import RequestRecipient from '@components/RequestRecipient';
+import UploadView from '@components/UploadView';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { selectAccessToken } from '@stores/slices/UserSlice';
 import { useStripe } from '@stripe/stripe-react-native';
+import { RootStackScreenProps } from '@type/index';
+import { colors } from '@utils/Colors';
+import axios from 'axios';
 import FormData from 'form-data';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Button, Dialog, Portal, ProgressBar, Text } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import { IRequest } from 'src/types/request';
-import { PaymentScreen } from '@screens/PaymentScreen';
+import tw from 'twrnc';
 
 interface uploadType {
   uri: string;
@@ -40,10 +25,10 @@ interface uploadType {
 const CreateARequest = () => {
   const accessToken = useSelector(selectAccessToken);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const navigation = useNavigation<SignUpStackScreenProps<'Step4'>['navigation']>();
-  const route = useRoute<RootStackScreenProps<'AddAddress'>['route']>();
-  const From = route.params?.From as string;
-  const notaryName = route.params?.Notary as string;
+  const navigation = useNavigation<RootStackScreenProps<'CreateARequest'>['navigation']>();
+  const route = useRoute<RootStackScreenProps<'CreateARequest'>['route']>();
+  const From = route.params?.From;
+  const notaryName = route.params?.Notary;
   const [documents, setDocuments] = useState<uploadType[]>(new Array());
   const [progress, setProgress] = useState(0.2);
   const [loading, setLoading] = useState<boolean>(false);
@@ -241,16 +226,17 @@ const CreateARequest = () => {
   return (
     <SafeAreaView style={tw`flex-1 bg-[${colors.white}]`}>
       <HomeHeader heading={'Create a Request'} />
-      <View style={tw`flex gap-3 justify-center items-center`}>
-        <Image
-          style={tw`w-70 h-30 self-center`}
-          resizeMode="contain"
-          source={require('@assets/logo.png')}
-        />
-        <Text variant="titleLarge">Create A Request</Text>
-        <Text variant="titleMedium">{value}</Text>
-      </View>
       <ScrollView>
+        <View style={tw`flex gap-3 justify-center items-center`}>
+          <Image
+            style={tw`w-70 h-30 self-center`}
+            resizeMode="contain"
+            source={require('@assets/logo.png')}
+          />
+          <Text variant="titleLarge">Create A Request</Text>
+          <Text variant="titleMedium">{value}</Text>
+        </View>
+
         <View style={tw`flex-1 gap-2`}>
           {value === 'Reason' && <RequestReason data={data} setData={setData} />}
           {value === 'Recipient' && <RequestRecipient data={data} setData={setData} />}
