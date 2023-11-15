@@ -4,7 +4,7 @@ import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { setSignUpToken, setUserStep } from '@stores/slices/UserSlice';
 import { SignUpAPI, SignUpStackScreenProps } from '@type/index';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -68,6 +68,7 @@ const EmailScreen = () => {
         setLoading(false);
       })
       .catch((err) => {
+        console.log(err);
         setLoading(false);
       });
   };

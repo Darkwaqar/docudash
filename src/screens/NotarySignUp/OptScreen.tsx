@@ -1,7 +1,7 @@
 import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
+import { selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
 import { NotraySignUpAPI, SignUpStackScreenProps } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';

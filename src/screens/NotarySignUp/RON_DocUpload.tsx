@@ -1,12 +1,7 @@
 import GreenButton from '@components/GreenButton';
 import UploadView from '@components/UploadView';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import {
-  selectSignupToken,
-  setAccessToken,
-  setNotaryStep,
-  setUserStep,
-} from '@stores/slices/UserSlice';
+import { selectSignupToken, setAccessToken, setNotaryStep } from '@stores/slices/UserSlice';
 import { SignUpStackScreenProps } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';

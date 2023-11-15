@@ -1,15 +1,15 @@
 import GreenButton from '@components/GreenButton';
 import Input from '@components/Input';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken, selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
+import { selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
 import { SignUpStackScreenProps, iStep4 } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Chip, Text } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
-import { useSelector, useDispatch } from 'react-redux';
 
 interface route {
   email: string;

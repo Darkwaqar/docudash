@@ -10,8 +10,8 @@ import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, View } from
 import { Chip, Text } from 'react-native-paper';
 import tw from 'twrnc';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { selectAccessToken, selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
+import { selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface form {
   first_Name: string;

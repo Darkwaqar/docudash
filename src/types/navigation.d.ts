@@ -53,7 +53,7 @@ export type RootStackParamList = {
   NotaryProfile: { item: any };
   Addresses: { From: Addresses };
   AddAddress: { Address?: Address; From?: string; Notary?: string };
-  CreateARequest: { email?: string; From?: string };
+  CreateARequest: { email?: string; From?: string; Notary?: string };
   RequestList: { heading: string };
   RequestDetails: { id: number };
   ApproveRequest: undefined | number;

@@ -37,6 +37,7 @@ export default function EnvelopeList({ heading }: { heading: string }) {
       .then((response) => {
         setLoading(false);
         const data: InboxApiResponse = response.data;
+        console.log(data);
         setData(data.data);
       })
       .catch((error) => {
