@@ -17,6 +17,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import FormData from 'form-data';
 import mime from 'mime';
+import moment from 'moment';
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
@@ -91,15 +92,18 @@ const Edit = () => {
 
   const [emailSubject, setEmailSubject] = useState('');
   const [emailMessage, setEmailMessage] = useState('');
+  const [btnShowAdvance, setBtnShowAdvance] = useState(false);
   const [frequencyOfReminder, setFrequencyOfReminder] = useState(1);
   const [forVisible, setForVisible] = useState(false);
   const [documents, setDocuments] = useState<uploadType[]>(new Array());
   const [loading, setLoading] = useState(false);
+  const [numberOfDay, setNumberOfDay] = useState('0');
+  const [expiration, setExpiration] = useState<any>('120');
   const [generateSignature, setGenerateSignature] = useState<GenerateSignature>();
   const [generateSignatureDetailsImages, setGenerateSignatureDetailsImages] = useState<
     GenerateSignatureDetailsImage[]
   >([]);
-
+  const date = new Date();
   const envelope = route.params?.Envelope;
   const files = route.params?.files;
   const Recipients = route.params?.Recipients;
@@ -291,6 +295,8 @@ const Edit = () => {
     formData.append('emailSubject', emailSubject);
     formData.append('emailMessage', emailMessage);
     formData.append('frequency_of_reminders', frequencyOfReminder);
+    formData.append('expirationDays', expiration);
+    formData.append('number_of_expire_day_alert', numberOfDay);
 
     [...documents].forEach((image, index) => {
       formData.append('photosID[' + index + ']', '0');
@@ -426,42 +432,94 @@ const Edit = () => {
   const renderAddRecipient = () => (
     <>
       <RecipientList data={data} setData={setData} />
-      <View style={tw`flex-row items-center gap-2 px-4 pb-2`}>
-        <Text variant="labelLarge">Frequency of reminders :</Text>
-        <Menu
-          visible={forVisible}
-          // anchorPosition="top"
-          onDismiss={() => setForVisible(false)}
-          anchor={
-            <Chip
-              icon="chevron-down"
-              mode="outlined"
-              style={tw` p-1`}
-              onPress={() => {
-                setForVisible(true);
-              }}
-            >
-              {actionList[frequencyOfReminder - 1]?.label}
-            </Chip>
-          }
+      <View style={[tw`gap-2  flex-row mx-2`, { marginBottom: btnShowAdvance ? 10 : 0 }]}>
+        <Button
+          style={tw`w-30`}
+          contentStyle={[tw`flex-row-reverse`]}
+          mode="outlined"
+          icon="arrow-down"
+          onPress={() => {
+            if (btnShowAdvance) {
+              setBtnShowAdvance(false);
+            } else {
+              setBtnShowAdvance(true);
+            }
+
+            console.log('generateSignature', generateSignature);
+          }}
+          // disabled={disabled}
         >
-          <Menu.Item
-            onPress={() => {
-              setFrequencyOfReminder(1);
-              setForVisible(false);
-            }}
-            title="Every Day"
-          />
-          <Divider />
-          <Menu.Item
-            onPress={() => {
-              setFrequencyOfReminder(2);
-              setForVisible(false);
-            }}
-            title="Every 2 Days"
-          />
-        </Menu>
+          {btnShowAdvance ? 'Advance' : 'Advance'}
+        </Button>
       </View>
+      {btnShowAdvance && (
+        <View>
+          <View style={tw`flex-row items-center gap-2 px-4 pb-2`}>
+            <Text variant="labelLarge">Frequency of reminders :</Text>
+            <Menu
+              visible={forVisible}
+              // anchorPosition="top"
+              onDismiss={() => setForVisible(false)}
+              anchor={
+                <Chip
+                  icon="chevron-down"
+                  mode="outlined"
+                  style={tw` p-1`}
+                  onPress={() => {
+                    setForVisible(true);
+                  }}
+                >
+                  {actionList[frequencyOfReminder - 1]?.label}
+                </Chip>
+              }
+            >
+              <Menu.Item
+                onPress={() => {
+                  setFrequencyOfReminder(1);
+                  setForVisible(false);
+                }}
+                title="Every Day"
+              />
+              <Divider />
+              <Menu.Item
+                onPress={() => {
+                  setFrequencyOfReminder(2);
+                  setForVisible(false);
+                }}
+                title="Every 2 Days"
+              />
+            </Menu>
+          </View>
+          <View style={tw`flex-row items-center gap-2 px-4 pb-2`}>
+            <Text variant="labelLarge">Expiration:</Text>
+            <TextInput
+              placeholder="120"
+              onChangeText={(text) => setExpiration(text)}
+              value={expiration}
+              style={tw`bg-white w-15`}
+            />
+          </View>
+          <View style={tw`flex-row items-center gap-2 px-4 pb-2`}>
+            <Text variant="labelLarge">Envelope will be queued for expiration on:</Text>
+            <Text variant="labelLarge">{moment().add(expiration, 'days').calendar()}</Text>
+          </View>
+          <View style={tw` gap-2 px-4 pb-2`}>
+            <Text variant="labelLarge">
+              Number of days in which to warn signers before expiration:
+            </Text>
+            <TextInput
+              placeholder="0"
+              value={numberOfDay}
+              keyboardType="number-pad"
+              maxLength={2}
+              onChangeText={(text: number) => {
+                setNumberOfDay(text);
+              }}
+              style={tw`bg-white w-15`}
+            />
+          </View>
+        </View>
+      )}
       {/* <DropDown
         label={'Frequency Of Reminder'}
         mode={'outlined'}
