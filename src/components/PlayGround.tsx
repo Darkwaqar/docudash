@@ -71,6 +71,9 @@ export default function PlayGround({
   index,
   recipients,
   setDeleteModal,
+  setLoadingImg,
+  loadingImg,
+  onLoadEnd,
 }: {
   image: string;
   draggedElArr: DraggedElArr;
@@ -79,8 +82,12 @@ export default function PlayGround({
   index: number;
   recipients;
   setDeleteModal;
+  setLoadingImg: any;
+  loadingImg: any;
+  onLoadEnd: any;
 }) {
   const [scroll, setScroll] = useState(true);
+  // const [loading, setLoading] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [openModalDelete, setOpenModalDelete] = useState({
     active: false,
@@ -119,18 +126,20 @@ export default function PlayGround({
   //   }, [image]);
 
   //   if (loading) return <ActivityIndicator />;
-  console.log('scrollBool', scroll);
+  // console.log('setLoading', setLoading);
 
   return (
     <ScrollView scrollEnabled={scroll} onScroll={handleScroll}>
       <View ref={ref}>
         <AnimatedImage
           height={imageRealSize?.height || width}
-          width={imageRealSize?.width || width}
+          width={imageRealSize?.width < width ? width : imageRealSize?.width}
           source={{
             uri: image,
           }}
-          style={tw`border`}
+          // onLoadStart={() => setLoadingImg(true)}
+          onLoadEnd={onLoadEnd}
+          style={tw`border `}
           loader={<ActivityIndicator />}
           onLoad={({
             nativeEvent: {

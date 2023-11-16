@@ -17,7 +17,7 @@ export default function RequestEnvelopeListItem({ item, heading }: IEnvelopeList
   const route = useRoute<RootStackScreenProps<'Inbox'>['route']>();
   return (
     <TouchableOpacity onPress={() => navigation.navigate('RequestDetails', { id: item.id })}>
-      <View style={tw`flex-1 mx-2 gap-2 rounded-lg p-4 justify-between bg-white my-2 shadow-lg`}>
+      <View style={tw` mx-2 gap-2 rounded-lg p-4 justify-between bg-white my-2 shadow-lg`}>
         <Text variant="bodyMedium" numberOfLines={2}>
           Request: {''}
           {reasons.find((x) => x.value == item.reasonOfRequest.toString()).label}

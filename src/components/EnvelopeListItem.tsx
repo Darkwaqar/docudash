@@ -11,6 +11,8 @@ interface IEnvelopeListItem {
 }
 
 export default function EnvelopeListItem({ item, heading }: IEnvelopeListItem) {
+  console.log('item ===><>>', item);
+
   const navigation = useNavigation<RootStackScreenProps<'Inbox'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'Inbox'>['route']>();
   return (
@@ -28,7 +30,10 @@ export default function EnvelopeListItem({ item, heading }: IEnvelopeListItem) {
         <Image style={tw`w-10 h-10 rounded-full`} source={require('@assets/ProfilePic.png')} />
         <View>
           <Text style={tw`font-bold text-black`}>{item?.emailSubject}</Text>
-          <Text style={tw`font-light text-3 w-50 text-gray-900`}>{item?.emailMessage}</Text>
+          <Text style={tw`font-light text-3  text-gray-900`}>{item?.emailMessage}</Text>
+          <Text style={tw`font-light text-3  text-gray-900`}>
+            <Text style={tw`font-bold text-black`}>Status:</Text> {`${item?.complete_incomplete}`}
+          </Text>
         </View>
       </View>
       <View style={tw`flex-row items-center gap-3 overflow-hidden`}>

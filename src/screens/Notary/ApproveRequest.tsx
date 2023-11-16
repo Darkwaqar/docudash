@@ -23,6 +23,7 @@ import {
   View,
   ViewToken,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import AutoHeightImage from 'react-native-auto-height-image';
 import Draggable from 'react-native-draggable';
@@ -120,6 +121,7 @@ const ApproveRequest = () => {
   const [recipients, setRecipients] = useState<GenerateSignatureDetail[]>();
   const [selectedRecipient, setSelectedRecipient] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [loadingImg, setLoadingImg] = useState(true);
   const [images, setImages] = useState<string[]>();
   const [deleteModal, setDeleteModal] = useState({
     active: false,
@@ -145,7 +147,7 @@ const ApproveRequest = () => {
   // console.log(draggedElArr);
 
   const fetchData = async () => {
-    setLoading(true);
+    setLoadingImg(true);
     console.log('hello', `https://docudash.net/api/notary/request-detail-accept/${id}`);
 
     // const url = 'https://docudash.net/api/generate-signature/html-editor/';
@@ -212,6 +214,11 @@ const ApproveRequest = () => {
         const { NotaryRequests, NotaryRequestsDetails, NotaryRequestsDetailsDocuments } =
           response.data;
         //     if (status) {
+        console.log(
+          'NotaryRequestsDetailsDocuments.map((x) => x.docs).flat()',
+          NotaryRequestsDetailsDocuments.map((x) => x.docs).flat()
+        );
+        console.log('NotaryRequestsDetails', NotaryRequestsDetails);
         if (NotaryRequests && NotaryRequests.draggedElArr) {
           const draggable = {
             signature: NotaryRequests.draggedElArr.signature ?? [],
@@ -226,12 +233,13 @@ const ApproveRequest = () => {
 
           setDraggedElArr(draggable);
           refDraggedElArr.current = draggable;
-          setImages(NotaryRequestsDetailsDocuments.map((x) => x.docs).flat());
         }
-        setLoading(false);
+        setImages(NotaryRequestsDetailsDocuments.map((x) => x.docs).flat());
+        setRecipients(NotaryRequestsDetails);
+        setLoadingImg(false);
       })
       .catch((err) => {
-        setLoading(false);
+        setLoadingImg(false);
         console.log('err ===><><>', err);
       });
   };
@@ -313,6 +321,7 @@ const ApproveRequest = () => {
   //   });
   // }, [index]);
 
+  console.log(images, 'images');
   return (
     <View style={tw`h-full `}>
       <Modal visible={deleteModal.active} transparent={true} animationType="none">
@@ -397,7 +406,7 @@ const ApproveRequest = () => {
         </Button>
       </Appbar.Header>
 
-      <View style={tw` bg-white bottom-0 `}>
+      <View style={tw` bg-white `}>
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
           horizontal
@@ -435,6 +444,12 @@ const ApproveRequest = () => {
             ))}
         </ScrollView>
       </View>
+      {/* {loadingImg ? (
+        <View style={[tw` flex-1 items-center justify-center`]}>
+          <ActivityIndicator />
+        </View>
+      ) : ( */}
+
       <View style={tw`flex-1`}>
         {images && (
           <PlayGround
@@ -445,14 +460,34 @@ const ApproveRequest = () => {
             selectedRecipient={selectedRecipient}
             index={index}
             recipients={recipients}
+            loadingImg={loadingImg}
+            onLoadEnd={() => setLoadingImg(false)}
+            setLoadingImg={setLoadingImg}
           />
         )}
-
+        {loadingImg && (
+          <View
+            style={[
+              tw` flex-1 items-center justify-center `,
+              {
+                position: 'absolute',
+                // top: 100,
+                left: 0,
+                height: '100%',
+                // backgroundColor: 'red',
+                width: '100%',
+                flex: 1,
+              },
+            ]}
+          >
+            <ActivityIndicator color="black" />
+          </View>
+        )}
         <Chip style={tw`absolute top-1 right-1 `}>
           <Text variant="labelLarge">{` ${index + 1} / ${images?.length} `}</Text>
         </Chip>
       </View>
-
+      {/* )} */}
       <View style={tw` bg-white bottom-0 `}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {/* draw */}
@@ -716,7 +751,10 @@ const ApproveRequest = () => {
           <IconButton
             icon="chevron-down"
             onPress={() => {
-              if (index < images?.length - 1) setIndex(index + 1);
+              if (index < images?.length - 1) {
+                setLoadingImg(true);
+                setIndex(index + 1);
+              }
             }}
           ></IconButton>
 
@@ -724,7 +762,10 @@ const ApproveRequest = () => {
             icon="chevron-up"
             onPress={() => {
               console.log(index, images.length);
-              if (index > 0) setIndex(index - 1);
+              if (index > 0) {
+                setLoadingImg(true);
+                setIndex(index - 1);
+              }
             }}
           ></IconButton>
           <Text variant="labelLarge">{` ${index + 1} / ${images?.length} documents`}</Text>
