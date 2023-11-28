@@ -2,7 +2,7 @@ import CustomLogoMarker from '../components/CustomLogoMarker';
 import { selectAccessToken } from '../stores/slices/UserSlice';
 import * as Location from 'expo-location';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, StyleSheet, View, Text } from 'react-native';
+import { Alert, StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
@@ -34,7 +34,7 @@ const Map = ({ route }) => {
 
     // Zoom  @ fit to markers
     setTimeout(() => {
-      mapRef.current.fitToSuppliedMarkers(['origin', 'destination'], {
+      mapRef?.current?.fitToSuppliedMarkers(['origin', 'destination'], {
         edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
       });
     }, 5000);
@@ -116,7 +116,7 @@ const Map = ({ route }) => {
   };
   if (destination === null || origin === null) return;
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <SafeAreaView style={tw`bg-white flex-1`}>
       <View
         style={{
           padding: 15,
@@ -141,7 +141,7 @@ const Map = ({ route }) => {
 
       <MapView
         ref={mapRef}
-        style={tw`flex-1`}
+        style={tw`flex-1 `}
         // mapType="mutedStandard"
         initialRegion={{
           // latitude: 36.70983349999999,
@@ -199,7 +199,7 @@ const Map = ({ route }) => {
           />
         )}
       </MapView>
-    </View>
+    </SafeAreaView>
   );
 };
 
