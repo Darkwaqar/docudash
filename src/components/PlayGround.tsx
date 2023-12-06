@@ -6,7 +6,7 @@ import { AnimatedImage } from 'react-native-ui-lib';
 import { ActivityIndicator, IconButton } from 'react-native-paper';
 import Draggable from 'react-native-draggable';
 import { DraggedElArr, DraggedElement } from '@type/*';
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const icons = {
   company: 'office-building',
@@ -129,18 +129,21 @@ export default function PlayGround({
   // console.log('setLoading', setLoading);
 
   return (
-    <ScrollView scrollEnabled={scroll} onScroll={handleScroll}>
-      <View ref={ref}>
-        <AnimatedImage
-          height={imageRealSize?.height || width}
-          width={imageRealSize?.width < width ? width : imageRealSize?.width}
+    <ScrollView scrollEnabled={scroll} onScroll={handleScroll} contentContainerStyle={tw`flex-1`}>
+      <View style={tw` flex-1 border`} ref={ref}>
+        <Image
+          // height={imageRealSize?.height || width}
+          // height={height}
+          // resizeMode="contain"
+          // width={imageRealSize?.width < width ? '100%' : imageRealSize?.width}
+          // width={'100%'}
           source={{
             uri: image,
           }}
           // onLoadStart={() => setLoadingImg(true)}
           onLoadEnd={onLoadEnd}
-          style={tw`border `}
-          loader={<ActivityIndicator />}
+          style={[tw` flex-1 `, { flex: 1, width: null, height: null, resizeMode: 'contain' }]}
+          // loader={<ActivityIndicator />}
           onLoad={({
             nativeEvent: {
               source: { width, height },
