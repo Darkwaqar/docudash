@@ -8,7 +8,9 @@
     "web": "expo start --web",
     "ios-m": "arch -x86_64 npx expo run:ios",
     "pre-build": "npx expo prebuild",
-    "log": "cd ios && pod install --verbose"
+    "log": "cd ios && pod install --verbose",
+    "apk": "eas build -p android --profile preview",
+    "ipk": "eas build -p ios --profile preview"
   },
   "dependencies": {
     "@expo/webpack-config": "^18.0.1",

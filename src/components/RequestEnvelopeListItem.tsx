@@ -28,7 +28,7 @@ export default function RequestEnvelopeListItem({ item, heading }: IEnvelopeList
         </Text>
         <Text variant="labelLarge">
           Request Location: {''}
-          <Text style={tw`font-thin`}>{item.request_location_list.name}</Text>
+          <Text style={tw`font-thin`}>{item?.request_location_list?.name}</Text>
         </Text>
         <Text variant="labelLarge">
           Request Time: {''}
