@@ -81,7 +81,7 @@ const Edit = () => {
   const navigation = useNavigation<RootStackScreenProps<'Edit'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'Edit'>['route']>();
   const [state, setState] = useState<State>({
-    activeIndex: 0,
+    activeIndex: route?.params?.activeIndex ?? 0,
     completedStepIndex: undefined,
     allTypesIndex: 0,
     selectedFlavor: initialFlavor,
@@ -108,6 +108,8 @@ const Edit = () => {
   const files = route.params?.files;
   const Recipients = route.params?.Recipients;
   const isFocused = useIsFocused();
+  console.log('envelope ==><>==', envelope);
+
   useEffect(() => {
     if (files) {
       setDocuments(files);
@@ -252,6 +254,7 @@ const Edit = () => {
                 if (status) navigation.navigate('Home');
                 else {
                   alert(message);
+                  console.log('message', message);
                 }
               })
               .catch((error) => {
@@ -273,6 +276,10 @@ const Edit = () => {
     }
     if (emailMessage == '') {
       Alert.alert('Please enter email message');
+      return;
+    }
+    if (data.length === 0) {
+      Alert.alert('Please enter recipients');
       return;
     }
     setLoading(true);
@@ -326,6 +333,7 @@ const Edit = () => {
         if (status) {
           navigation.replace('DocumentEditor', {
             Envelope: generateSignature,
+            emailSubject: emailSubject,
           });
         } else {
           for (const [key, value] of Object.entries(message)) {
@@ -545,6 +553,7 @@ const Edit = () => {
             mode="outlined"
             label="Email Subject"
             value={emailSubject}
+            maxLength={80}
             onChangeText={(text) => setEmailSubject(text)}
           />
           <HelperText type={80 - emailSubject.length >= 0 ? 'info' : 'error'}>
@@ -558,6 +567,7 @@ const Edit = () => {
             value={emailMessage}
             multiline
             numberOfLines={4}
+            maxLength={1000}
             onChangeText={(text) => setEmailMessage(text)}
           />
           <HelperText type={1000 - emailMessage.length >= 0 ? 'info' : 'error'}>
@@ -657,7 +667,14 @@ const Edit = () => {
   return (
     <SafeAreaView style={tw`h-full`}>
       <View style={tw`flex-row p-5 justify-between items-center`}>
-        <Icon name="arrow-left" size={28} onPress={() => deleteDraft()} />
+        <Icon
+          name="arrow-left"
+          size={28}
+          onPress={() => {
+            state.activeIndex === 0 ? deleteDraft() : goToPrevStep();
+          }}
+          //  onPress={() =>  deleteDraft()}
+        />
         <Text style={{ color: COLORS.primary, fontWeight: 'bold', fontSize: 16 }}>
           {envelope ? 'Editing Envelope' : 'Creating New Envelope'}
         </Text>

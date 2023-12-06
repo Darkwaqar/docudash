@@ -3,6 +3,7 @@ import { selectAccessToken } from '@stores/slices/UserSlice';
 import {
   DraggedElArr,
   DraggedElement,
+  EmailSubject,
   GenerateSignature,
   GenerateSignatureDetail,
   GenerateSignatureDetails,
@@ -125,12 +126,13 @@ const DocumentEditor = () => {
     uudid: '',
   });
   const envelope: GenerateSignature = route.params?.Envelope;
+  const emailSubject = route?.params?.emailSubject;
   // const envelope: GenerateSignature = {
   //   uniqid: 'd4e421647a894ba55dd90f9857e76b50',
   //   signature_id: 41,
   // };
   const [index, setIndex] = useState(0);
-  console.log('deleteModal', deleteModal);
+  // console.log('data', route.params?.emailSubject);
 
   const [visible, setVisible] = React.useState(false);
 
@@ -339,12 +341,18 @@ const DocumentEditor = () => {
         </View>
       </Modal>
       <Appbar.Header mode="center-aligned">
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.BackAction
+          onPress={() =>
+            navigation.push('Edit', {
+              Envelope: { uniqid: envelope.uniqid, id: envelope.signature_id },
+            })
+          }
+        />
         <Appbar.Content
           title={
             <View style={tw`items-center`}>
               <Text variant="titleSmall">Editing Document</Text>
-              <Text variant="labelSmall">subtitle</Text>
+              <Text variant="labelSmall">{emailSubject}</Text>
             </View>
           }
         />
@@ -719,14 +727,30 @@ const DocumentEditor = () => {
               title="Discard"
             />
             <Divider />
-            <Menu.Item onPress={() => {}} title="Edit message" />
+            <Menu.Item
+              onPress={() => {
+                closeMenu();
+                navigation.push('Edit', { activeIndex: 0 });
+              }}
+              title="Edit Recipient"
+            />
+            <Menu.Item
+              onPress={() => {
+                closeMenu();
+                navigation.push('Edit', { activeIndex: 1 });
+              }}
+              title="Edit message"
+            />
             <Divider />
-            <Menu.Item onPress={() => {}} title="Edit Recipient" />
             <Divider />
             <Menu.Item
               onPress={() => {
                 closeMenu();
+                navigation.push('Edit', { activeIndex: 2 });
               }}
+              // onPress={() => {
+              //   closeMenu();
+              // }}
               title="Edit document"
             />
           </Menu>

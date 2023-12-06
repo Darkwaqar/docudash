@@ -24,13 +24,15 @@ export type RootStackParamList = {
   Edit:
     | undefined
     | {
-        Envelope?: Envelope;
+        Envelope?: Partial<Envelope>;
         files?: DocumentPickerOptions.DocumentResult[];
         images?: ImagePicker.ImagePickerAsset[];
         Recipients?: Recipient[];
+        activeIndex: number;
       };
   DocumentEditor: {
     Envelope: GenerateSignature;
+    emailSubject: string;
   };
   Details: {
     Envelope: Envelope;
