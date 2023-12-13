@@ -18,6 +18,7 @@ import StampList from '@screens/Stamp/List';
 import { selectProfileData } from '@stores/slices/UserSlice';
 import { colors } from '@utils/Colors';
 import { useSelector } from 'react-redux';
+import ScanDocument from '@screens/Notary/ScanDocument';
 
 const Drawer = createDrawerNavigator();
 

@@ -6004,6 +6004,11 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
+link@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/link/-/link-2.1.0.tgz#a52dee157ff7ab9b44bc18de26effeb61ca35b6a"
+  integrity sha512-6jgX7ejPBOQaKsFY/9aFEg0HW0JyFuMGDoN+KQX1W94t+8Fi5xwlSlGouRMDqDlrE46drqu4PYduAG7tUwdF7Q==
+
 load-json-file@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-2.0.0.tgz#7947e42149af80d696cbf797bcaabcfe1fe29ca8"
@@ -8008,6 +8013,11 @@ react-native-codegen@^0.71.6:
     flow-parser "^0.185.0"
     jscodeshift "^0.14.0"
     nullthrows "^1.1.1"
+
+react-native-document-scanner-plugin@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/react-native-document-scanner-plugin/-/react-native-document-scanner-plugin-0.9.1.tgz#3aedc14e90f40b60096a3e7d3c6e028850624f1c"
+  integrity sha512-iHqd/ZEHmKnPsA0X2DoSZ7B324WSDQO45I22busHHfc2vSRMHozP9fcIP34YTuNvfbvjJFhziCIw66YcGWLotA==
 
 react-native-draggable@^3.3.0:
   version "3.3.0"

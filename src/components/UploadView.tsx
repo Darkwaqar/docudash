@@ -7,9 +7,22 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import mime from 'mime';
 import React, { useCallback, useMemo, useRef } from 'react';
-import { FlatList, Image, Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import {
+  Alert,
+  FlatList,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import { Badge, Divider, List } from 'react-native-paper';
+import DocumentScanner from 'react-native-document-scanner-plugin';
 import tw from 'twrnc';
+import { useSelector } from 'react-redux';
+import { selectProfileData } from '@stores/slices/UserSlice';
 
 interface uploadType {
   uri: string;
@@ -18,9 +31,11 @@ interface uploadType {
 }
 
 export default function UploadView({ documents, setDocuments }) {
+  const user = useSelector(selectProfileData);
+  const type = user?.user_type;
   const navigation = useNavigation<RootStackScreenProps<'Home'>['navigation']>();
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ['26%'], []);
+  const snapPoints = useMemo(() => [300], []);
   const handleSheetChanges = useCallback((index: number) => {}, []);
   const handlePresentModalPress = useCallback(() => {
     // @ts-ignore
@@ -73,6 +88,47 @@ export default function UploadView({ documents, setDocuments }) {
         };
         setDocuments((prev) => [...prev, imageToUpload]);
       }
+    }
+  };
+  const scanDocument = async () => {
+    // prompt user to accept camera permission request if they haven't already
+    if (
+      Platform.OS === 'android' &&
+      (await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA)) !==
+        PermissionsAndroid.RESULTS.GRANTED
+    ) {
+      Alert.alert('Error', 'User must grant camera permissions to use document scanner.');
+      return;
+    }
+
+    // start the document scanner
+    const { scannedImages } = await DocumentScanner.scanDocument();
+    console.log('scannedImages', scannedImages);
+
+    // get back an array with scanned image file paths
+    if (scannedImages.length > 0) {
+      // set the img src, so we can view the first scanned image
+      if (Platform.OS === 'android') {
+        const newImageUri = 'file:///' + scannedImages[0].split('file:/').join('');
+
+        const imageToUpload = {
+          uri: newImageUri,
+          name: scannedImages[0].split('/').pop(),
+          type: mime.getType(newImageUri),
+        };
+        setDocuments((prev) => [...prev, imageToUpload]);
+        bottomSheetRef.current?.close();
+      } else {
+        const imageToUpload = {
+          uri: scannedImages[0],
+          name: scannedImages[0].split('/').pop(),
+          type: mime.getType(scannedImages[0]),
+        };
+        setDocuments((prev) => [...prev, imageToUpload]);
+        bottomSheetRef.current?.close();
+      }
+      // setDocuments((prev) => [...prev, scannedImages[0]]);
+      // setScannedImage(scannedImages[0]);
     }
   };
   return (
@@ -154,6 +210,17 @@ export default function UploadView({ documents, setDocuments }) {
               left={(props) => <List.Icon {...props} icon="folder" />}
             />
             <Divider />
+            {/* {type === 7 && (
+              <> */}
+            <List.Item
+              onPress={scanDocument}
+              title="Scan Upload "
+              description="Sign images like png/jpg"
+              left={(props) => <List.Icon {...props} icon="folder" />}
+            />
+            <Divider />
+            {/* </>
+            )} */}
             <List.Item
               onPress={() => {
                 // @ts-ignore

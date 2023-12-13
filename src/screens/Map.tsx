@@ -1,5 +1,5 @@
 import CustomLogoMarker from '../components/CustomLogoMarker';
-import { selectAccessToken } from '../stores/slices/UserSlice';
+import { selectAccessToken, selectProfileData } from '../stores/slices/UserSlice';
 import * as Location from 'expo-location';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, StyleSheet, View, Text, SafeAreaView } from 'react-native';
@@ -20,6 +20,8 @@ import { useNavigation } from '@react-navigation/native';
 
 const Map = ({ route }) => {
   const { notary_id } = route?.params?.details;
+  const user = useSelector(selectProfileData);
+  const type = user?.user_type;
   const GOOGLE_MAPS_APIKEY = 'AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc';
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
@@ -61,9 +63,7 @@ const Map = ({ route }) => {
     getTravelTime();
   }, [origin, destination, GOOGLE_MAPS_APIKEY]);
   useEffect(() => {
-    setInterval(() => {
-      GetCurrentLocation();
-    }, 10000);
+    if (type === 7) GetCurrentLocation();
   }, []);
   const GetCurrentLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
