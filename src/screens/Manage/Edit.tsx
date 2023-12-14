@@ -108,7 +108,7 @@ const Edit = () => {
   const files = route.params?.files;
   const Recipients = route.params?.Recipients;
   const isFocused = useIsFocused();
-  console.log('envelope ==><>==', envelope);
+  // console.log('envelope ==><>==', envelope);
 
   useEffect(() => {
     if (files) {
@@ -117,7 +117,7 @@ const Edit = () => {
     if (Recipients) {
       setData(Recipients);
     }
-    console.log('found', generateSignature);
+    // console.log('found', generateSignature);
     if (!generateSignature || generateSignature == undefined) {
       setLoading(true);
       if (envelope) {
@@ -136,7 +136,7 @@ const Edit = () => {
           .then((response) => {
             const data: UploadDocumentAPI = response.data;
             setLoading(false);
-            console.log('', response.data);
+            // console.log('', response.data);
             if (data.generateSignatureDetails.length > 0) {
               const fixData = data.generateSignatureDetails.map((x) => {
                 return {
@@ -162,7 +162,7 @@ const Edit = () => {
               setGenerateSignatureDetailsImages(data.generateSignatureDetailsImages);
             }
 
-            console.log('getting already Existing envelope', data);
+            // console.log('getting already Existing envelope', data);
           })
           .catch((err) => {
             setLoading(false);
@@ -184,7 +184,7 @@ const Edit = () => {
             setLoading(false);
 
             setGenerateSignature(data);
-            console.log('Data----', data);
+            // console.log('Data----', data);
           })
           .catch((error) => {
             setLoading(false);
@@ -250,7 +250,7 @@ const Edit = () => {
               )
               .then((response) => {
                 const { status, message }: { status: boolean; message: string } = response.data;
-                console.log(response.data);
+                // console.log(response.data);
                 if (status) navigation.navigate('Home');
                 else {
                   alert(message);
@@ -313,7 +313,7 @@ const Edit = () => {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'multipart/form-data',
     };
-    console.log('formData', JSON.stringify(formData));
+    // console.log('formData', JSON.stringify(formData));
     axios
       .post('https://docudash.net/api/generate-signature/upload-document', formData, { headers })
       .then((response) => {
@@ -339,7 +339,7 @@ const Edit = () => {
           for (const [key, value] of Object.entries(message)) {
             alert(value);
           }
-          console.log(JSON.stringify(response.data));
+          // console.log(JSON.stringify(response.data));
         }
       })
       .catch((error) => {
@@ -453,7 +453,7 @@ const Edit = () => {
               setBtnShowAdvance(true);
             }
 
-            console.log('generateSignature', generateSignature);
+            // console.log('generateSignature', generateSignature);
           }}
           // disabled={disabled}
         >
@@ -652,7 +652,7 @@ const Edit = () => {
       )
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (status) navigation.navigate('Home');
         else {
           alert(message);

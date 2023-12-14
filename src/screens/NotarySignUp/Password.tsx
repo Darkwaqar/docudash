@@ -30,7 +30,7 @@ const SetPasswordScreen = () => {
       })
       .then((response) => {
         const { data, success, message }: iStep4 = response.data;
-        console.log('PasswordScreen', data);
+        // console.log('PasswordScreen', data);
         if (success) {
           //@ts-ignore
           navigation.replace('NotaryLoginStackNavigator', {

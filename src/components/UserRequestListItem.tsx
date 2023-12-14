@@ -13,7 +13,7 @@ interface IEnvelopeListItem {
 export default function UserRequestListItem({ item }: IEnvelopeListItem) {
   const navigation = useNavigation<RootStackScreenProps<'Inbox'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'Inbox'>['route']>();
-  console.log('item ===><><', item);
+  // console.log('item ===><><', item);
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate('RequestDetails', { id: item.id })}>

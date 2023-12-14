@@ -46,7 +46,7 @@ const BioEditModal = () => {
         Alert.alert(message);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
   return (

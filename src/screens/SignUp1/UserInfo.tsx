@@ -35,7 +35,7 @@ const UserInfoScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const fetchData = async () => {
     setLoading(true);
-    console.log(token);
+    // console.log(token);
 
     axios
       .post('https://docudash.net/api/sign-up-1/' + token, {
@@ -46,7 +46,7 @@ const UserInfoScreen = () => {
       .then((response) => {
         const { data, success, next_access, message, next }: SignUpAPI = response.data;
 
-        console.log('NameScreen', data);
+        // console.log('NameScreen', data);
         if (success) {
           setLoading(false),
             // @ts-ignore

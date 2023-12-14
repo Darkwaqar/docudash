@@ -49,7 +49,7 @@ const RON_DocUpload = () => {
       .post('https://docudash.net/api/notary-sign-up-5/' + token, formData, {})
       .then((response) => {
         const { success = true, data, message }: NotarySignUpStep5 = response.data;
-        console.log('optScreen-', response.data);
+        // console.log('optScreen-', response.data);
 
         if (success) {
           setLoading(false);

@@ -200,7 +200,7 @@ const HomeScreen = () => {
   useEffect(() => {
     setDocuments(new Array());
     fetchDashData();
-    console.log('Change name Home', isFocused);
+    // console.log('Change name Home', isFocused);
   }, [navigation, isFocused]);
 
   const pickImage = async () => {
@@ -215,7 +215,7 @@ const HomeScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
     setLoading(true);
     if (!result.canceled) {
       const image = result.assets[0];

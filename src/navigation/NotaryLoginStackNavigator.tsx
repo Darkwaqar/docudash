@@ -16,7 +16,7 @@ const LoginStack = createStackNavigator<SignUpStackParamList>();
 export default function NotaryLoginStackNavigator() {
   const step = useSelector(selectNotaryStep);
   const dispatch = useDispatch();
-  console.log('step', step);
+  // console.log('step', step);
   dispatch(setNotaryStep(0));
 
   return (

@@ -16,7 +16,7 @@ export default function GettingStarted({ addTarget }) {
   const accessToken = useSelector(selectAccessToken);
 
   const fetchData = () => {
-    console.log('Fetch data');
+    // console.log('Fetch data');
 
     axios
       .get('https://docudash.net/api/getStartedWithDocudash', {
@@ -43,10 +43,10 @@ export default function GettingStarted({ addTarget }) {
         });
         setCompleteNumber(ones);
 
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   };
   useEffect(() => {

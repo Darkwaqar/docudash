@@ -20,10 +20,10 @@ const List = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log('Change name', value);
+    // console.log('Change name', value);
     // dispatch(setRouteName('Manage'));
   }, [navigation]);
-  console.log('Change name', value);
+  // console.log('Change name', value);
   return (
     <SafeAreaView style={tw`flex-1`}>
       <HomeHeader heading={'Requests'} />

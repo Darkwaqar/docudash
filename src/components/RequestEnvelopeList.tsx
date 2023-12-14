@@ -18,7 +18,7 @@ export default function RequestEnvelopeList({ heading }: { heading: string }) {
   const accessToken = useSelector(selectAccessToken);
   const [data, setData] = useState<Array<RequestEnvelopeListT>>();
   const [loading, setLoading] = useState(false);
-  console.log(accessToken);
+  // console.log(accessToken);
 
   function filter(name: string | undefined) {
     if (name) {
@@ -31,7 +31,7 @@ export default function RequestEnvelopeList({ heading }: { heading: string }) {
     setLoading(true);
     const h = heading;
     const url = 'https://docudash.net/api/notary/';
-    console.log(url + h);
+    // console.log(url + h);
     await axios
       .get(url + h, {
         headers: {
@@ -41,7 +41,7 @@ export default function RequestEnvelopeList({ heading }: { heading: string }) {
       .then((response) => {
         setLoading(false);
         const data: InboxApiResponse = response.data;
-        console.log(data);
+        // console.log(data);
 
         setData(data.data);
       })

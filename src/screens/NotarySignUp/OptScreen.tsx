@@ -29,7 +29,7 @@ const OptScreen = () => {
       })
       .then((response) => {
         const { success = true, data }: NotraySignUpAPI = response.data;
-        console.log('optScreen-', response.data);
+        // console.log('optScreen-', response.data);
 
         if (success) {
           setLoading(false),
@@ -56,7 +56,7 @@ const OptScreen = () => {
       .post('https://docudash.net/api/notarySendCodeAgain/' + token)
       .then((response) => {
         const data: NotaryResendCode = response.data;
-        console.log(data.data.verification_code);
+        // console.log(data.data.verification_code);
 
         if (data.success) {
           Alert.alert('Code sent to ' + data.data.email);

@@ -63,7 +63,7 @@ const AddAddress = () => {
     }
     if (Adress) {
       // update
-      console.log('Update');
+      // console.log('Update');
 
       axios
         .post(
@@ -92,7 +92,7 @@ const AddAddress = () => {
             message: string;
             success: boolean;
           } = response.data;
-          console.log('response.data', response.data);
+          // console.log('response.data', response.data);
           if (success) {
             navigation.goBack();
             // navigation.navigate('Signatures', {});
@@ -105,7 +105,7 @@ const AddAddress = () => {
         });
     } else {
       // create
-      console.log('Create');
+      // console.log('Create');
 
       axios
         .post(
@@ -134,7 +134,7 @@ const AddAddress = () => {
             message: string;
             success: boolean;
           } = response.data;
-          console.log(response.data);
+          // console.log(response.data);
           if (success) {
             if (From === 'create request') {
               navigation.navigate('CreateARequest', { From: 'Address' });
@@ -175,7 +175,7 @@ const AddAddress = () => {
           message: string;
           status: boolean;
         } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (status) {
           navigation.goBack();
           // navigation.navigate('Signatures', {});
@@ -266,7 +266,7 @@ const AddAddress = () => {
               let zip_code: any;
               let re: any;
               let filtersResCity = details.address_components.filter((val: any) => {
-                console.log(val.types);
+                // console.log(val.types);
 
                 if (val.types.includes('locality') || val.types.includes('sublocality')) {
                   setAddress((prev) => ({

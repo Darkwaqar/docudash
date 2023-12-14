@@ -32,10 +32,10 @@ const PasswordScreen = () => {
           success,
           message,
         }: { token: string | undefined; success: boolean; message: any } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         setLoading(false);
         if (success) {
-          console.log('token', token);
+          // console.log('token', token);
           dispatch(setUserStep(0));
           dispatch(setAccessToken(token));
         } else {

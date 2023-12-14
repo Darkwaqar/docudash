@@ -39,7 +39,7 @@ export default function List() {
       .then((response) => {
         setLoading(false);
         const { data }: AddressList = response.data;
-        console.log(data);
+        // console.log(data);
 
         setData(data);
       })

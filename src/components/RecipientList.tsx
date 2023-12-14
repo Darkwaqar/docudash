@@ -65,7 +65,7 @@ const actionList = [
 ];
 const RecipientList = ({ data, setData }) => {
   const accessToken = useSelector(selectAccessToken);
-  console.log('RecipientList', data);
+  // console.log('RecipientList', data);
   // const [data, setData] = useState<Item[]>([]);
   const navigation = useNavigation();
   const [items, setItems] = useState<Item[]>(data);
@@ -121,7 +121,7 @@ const RecipientList = ({ data, setData }) => {
         } else {
           alert(apiData.message);
         }
-        console.log('data', response.data);
+        // console.log('data', response.data);
       })
       .catch((error) => {
         console.log('Error----', error);
@@ -140,7 +140,7 @@ const RecipientList = ({ data, setData }) => {
   }, []);
 
   const onOrderChange = useCallback((newData: Item[]) => {
-    console.log('New order:', newData);
+    // console.log('New order:', newData);
     setData(newData);
   }, []);
 

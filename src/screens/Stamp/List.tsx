@@ -59,11 +59,11 @@ export default function List() {
       .then((response) => {
         fetchList();
         const data = response.data;
-        console.log(data);
+        // console.log(data);
       });
   };
   const StatusUpdate = (id: number, status: number | boolean) => {
-    console.log(id, status);
+    // console.log(id, status);
 
     axios
       .post(
@@ -80,7 +80,7 @@ export default function List() {
       )
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
       });
   };
 

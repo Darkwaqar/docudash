@@ -102,12 +102,12 @@ export default function PlayGround({
     pageY: number;
   }>(null);
   const ref = useRef<View>(null);
-  console.log('Render');
+  // console.log('Render');
   const handleScroll = (event) => {
     const positionX = event.nativeEvent.contentOffset.x;
     const positionY = event.nativeEvent.contentOffset.y;
     setScrollY(positionY);
-    console.log(positionY);
+    // console.log(positionY);
   };
 
   //   useEffect(() => {
@@ -151,7 +151,7 @@ export default function PlayGround({
           }) => {
             if (ref.current) {
               ref.current.measure((x, y, w, h, pageX, pageY) => {
-                console.log({ x, y, width, height, pageX, pageY });
+                // console.log({ x, y, width, height, pageX, pageY });
                 setImageRealSize({ x, y, width, height, pageX, pageY });
               });
             }
@@ -198,8 +198,8 @@ export default function PlayGround({
                     const topinpercent = newTop + '%';
                     const leftinpercent = newLeft + '%';
 
-                    console.log('left', leftinpercent);
-                    console.log('top', topinpercent);
+                    // console.log('left', leftinpercent);
+                    // console.log('top', topinpercent);
 
                     const newItem = {
                       ...item,
@@ -208,7 +208,7 @@ export default function PlayGround({
                     };
                     // console.log(item);
                     // console.log(newItem);
-                    console.log(item.type);
+                    // console.log(item.type);
                     if (item.type == 'signature') {
                       setDraggedElArr.current = {
                         ...draggedElArr,

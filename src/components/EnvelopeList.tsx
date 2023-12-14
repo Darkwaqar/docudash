@@ -27,7 +27,7 @@ export default function EnvelopeList({ heading }: { heading: string }) {
     setLoading(true);
     const h = heading.toLowerCase();
     const url = 'https://docudash.net/api/generate-signature/';
-    console.log(url + h);
+    // console.log(url + h);
     await axios
       .get(url + h, {
         headers: {
@@ -37,12 +37,12 @@ export default function EnvelopeList({ heading }: { heading: string }) {
       .then((response) => {
         setLoading(false);
         const data: InboxApiResponse = response.data;
-        console.log(data);
+        // console.log(data);
         setData(data.data);
       })
       .catch((error) => {
         setLoading(false);
-        console.log('Error----', error);
+        // console.log('Error----', error);
         setData([]);
       });
   };

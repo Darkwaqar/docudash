@@ -27,7 +27,7 @@ const EmailScreen = () => {
   const [checked, setChecked] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
-  console.log(visible);
+  // console.log(visible);
 
   const fetchData = () => {
     setLoading(true);
@@ -38,7 +38,7 @@ const EmailScreen = () => {
       })
       .then((response) => {
         const { data, success, next_code, message, next }: NotraySignUpAPI = response.data;
-        console.log('emailScreen', response.data);
+        // console.log('emailScreen', response.data);
         if (success) {
           if (data.steps === 6) {
             // @ts-ignore

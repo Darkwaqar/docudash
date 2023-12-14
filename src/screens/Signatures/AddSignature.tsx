@@ -104,7 +104,7 @@ const AddSignature = () => {
       Alert.alert('Please add a signature');
       return;
     }
-    console.log(selectedInitialUri, selectedUri);
+    // console.log(selectedInitialUri, selectedUri);
     axios
       .post(
         'https://docudash.net/api/signatures/create',
@@ -126,7 +126,7 @@ const AddSignature = () => {
           message: string;
           success: boolean;
         } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (success) {
           navigation.goBack();
           // navigation.navigate('Signatures', {});

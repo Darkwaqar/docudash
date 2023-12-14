@@ -172,7 +172,7 @@ const Details = () => {
           .filter((x) => x.element_container_id == `canvasInner-${i}`)
           .map(async (element) => {
             const bg = element.background.replace(/(\r\n|\n|\r)/gm, '');
-            console.log(bg);
+            // console.log(bg);
             const image = await pdfDoc.embedPng(bg);
             page.drawImage(image, {
               x: (parseFloat(element.left) / 100) * image.width,
@@ -198,7 +198,7 @@ const Details = () => {
     createPDF()
       .then((res) => {
         const fileUri = `${FileSystem.documentDirectory}pdf2.pdf`;
-        console.log(fileUri);
+        // console.log(fileUri);
         FileSystem.writeAsStringAsync(fileUri, res, {
           encoding: FileSystem.EncodingType.Base64,
         }).then((data) => {
@@ -262,7 +262,7 @@ const Details = () => {
     } else {
       url = url + 'deleteDraftEmail';
     }
-    console.log(url, heading);
+    // console.log(url, heading);
     axios
       .post(
         url,
@@ -275,7 +275,7 @@ const Details = () => {
       )
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (status) navigation.navigate('Home');
         else {
           alert(message);
@@ -289,7 +289,7 @@ const Details = () => {
   const ResendEmail = () => {
     if (inbox.signature_id == undefined) return;
     var url = 'https://docudash.net/api/generate-signature/ResendEmail';
-    console.log(url, heading);
+    // console.log(url, heading);
     axios
       .post(
         url,

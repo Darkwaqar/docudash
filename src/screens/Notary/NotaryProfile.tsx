@@ -43,7 +43,7 @@ const NotaryProfile = ({ navigation, route }) => {
     numberOfLines = 2;
     seeMoreText = 'See more';
   }
-  console.log('profile', item);
+  // console.log('profile', item);
 
   const fetchReviews = () => {
     const url = 'https://docudash.net/api/notarize-map-details/' + item.first_name + item.last_name;
@@ -56,7 +56,7 @@ const NotaryProfile = ({ navigation, route }) => {
       .then((response) => {
         const { status, NotarizeReview }: ReviewsList = response.data;
         if (status) {
-          console.log(NotarizeReview);
+          // console.log(NotarizeReview);
 
           setReviews(NotarizeReview);
         } else {
