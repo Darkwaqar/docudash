@@ -164,11 +164,14 @@ const HomeScreen = () => {
       })
       .then((response) => {
         const data: DashboardAPI = response.data;
+        // console.log('data =>><><>', data);
+
         // console.log('DashboardAPI', data);
         setDashNumber({
           ...dashNumber,
           waitingForOthers: data.WaitingForOthers,
           completed: data.CompletedEmails,
+          expiringSoon: data.expiredEmails,
         });
         dispatch(setProfileData(data.user));
         setUserData(data.user);
@@ -333,8 +336,9 @@ const HomeScreen = () => {
             >
               <Box text={'Action Required'} num={0} />
               <Box text={'Waiting for Others'} num={dashNumber.waitingForOthers} />
-              <Box text={'Expiring Soon'} num={0} />
+              <Box text={'Expiring Soon'} num={dashNumber.expiringSoon} />
               <Box text={'Completed'} num={dashNumber.completed} />
+              {/* <Box text={'Expired Emails'} num={dashNumber.expiredEmails} /> */}
             </View>
           </View>
 
