@@ -74,7 +74,7 @@ const ProgressModal = ({ progress, obj, steps, addTarget }: IProgressModal) => {
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={tw` items-center justify-center h-full
+          contentContainerStyle={tw` items-center justify-center 
            `}
         >
           <View style={tw`bg-gray-100 w-full flex-1 py-10 px-5`}>
