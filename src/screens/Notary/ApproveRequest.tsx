@@ -399,7 +399,7 @@ const ApproveRequest = () => {
         />
         <Button
           onPress={() => {
-            save(0);
+            save(1);
           }}
         >
           Send
