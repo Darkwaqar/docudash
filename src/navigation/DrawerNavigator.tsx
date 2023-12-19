@@ -32,7 +32,7 @@ const DrawerNavigator = () => {
         headerShown: false,
         drawerType: 'slide',
         drawerStyle: {
-          width: 200,
+          width: 213,
           backgroundColor: colors.white,
         },
         // @ts-ignore

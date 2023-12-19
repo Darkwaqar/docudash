@@ -15,6 +15,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  Modal,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -56,6 +57,7 @@ const HomeScreen = () => {
   const navigation = useNavigation<HomeDrawerScreenProps<'HomeScreen'>['navigation']>();
   const route = useRoute<HomeDrawerScreenProps<'HomeScreen'>['route']>();
   const [documents, setDocuments] = useState<uploadType[]>(new Array());
+  const [modalVisible, setModalVisible] = useState(true);
   const dispatch = useDispatch();
   const [dashNumber, setDashNumber] = useState({
     actionRequired: 0,
@@ -79,6 +81,9 @@ const HomeScreen = () => {
   //     showHighlight();
   //   }, 1000);
   // }, []);
+  // setTimeout(() => {
+  //   setModalVisible(false);
+  // }, 3000);
 
   const closeHighlight = () => {
     setState((prev) => ({ ...prev, showFTE: false }));
@@ -373,6 +378,53 @@ const HomeScreen = () => {
 };
 
 const style = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+    padding: 20,
+    backgroundColor: ' rgba(52, 52, 52, 0.8)',
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    // padding: 35,
+    width: '100%',
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    // marginBottom: 15,
+    fontSize: 20,
+    textAlign: 'center',
+  },
   header: {
     padding: 20,
     flexDirection: 'row',

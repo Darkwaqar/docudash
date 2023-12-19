@@ -1,7 +1,7 @@
 import CustomMarker from '@components/CustomMarker';
 import PostCarouselItem from '@components/PostCarouselItem';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Dimensions,
@@ -14,6 +14,9 @@ import {
   ViewabilityConfigCallbackPairs,
   useWindowDimensions,
   TextInput,
+  Modal,
+  Alert,
+  StyleSheet,
 } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -28,6 +31,7 @@ import { selectAccessToken } from '@stores/slices/UserSlice';
 import { Notaries, NotaryList, locationNotary } from 'src/types/NoraryList';
 import { Searchbar, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import GreenButton from '@components/GreenButton';
 
 const { width, height } = Dimensions.get('window');
 const types = [
@@ -45,6 +49,8 @@ const types = [
   },
 ];
 const Map = () => {
+  const isFocused = useIsFocused();
+  const [modalVisible, setModalVisible] = useState(true);
   const insets = useSafeAreaInsets();
   const accessToken = useSelector(selectAccessToken);
   const navigation = useNavigation();
@@ -52,6 +58,11 @@ const Map = () => {
   const [heart, setHeart] = useState<number>();
   const [data, setData] = useState<Notaries[]>();
   const [searchQuery, setSearchQuery] = React.useState('');
+  useEffect(() => {
+    if (isFocused) {
+      setModalVisible(true);
+    }
+  }, [isFocused]);
 
   const onChangeSearch = (query) => setSearchQuery(query);
   const fetchData = () => {
@@ -344,7 +355,105 @@ const Map = () => {
           {/* </View> */}
         </BottomSheet>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={style.centeredView}>
+          <View style={style.modalView}>
+            <Text style={style.modalText}>Select the type of services your looking.</Text>
+            <View
+              style={[tw`flex-row items-center justify-between w-full `, { paddingHorizontal: 10 }]}
+            >
+              <GreenButton
+                text={'RON'}
+                onPress={() => setModalVisible(false)}
+                styles={{ width: 150 }}
+              />
+              <GreenButton
+                text={'inperson'}
+                onPress={() => setModalVisible(false)}
+                styles={{ width: 150 }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
 export default Map;
+const style = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+    padding: 20,
+    backgroundColor: ' rgba(52, 52, 52, 0.8)',
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    // padding: 35,
+    width: '100%',
+    height: 150,
+    // justifyContent: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    // marginBottom: 15,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  header: {
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  categoryBtn: {
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+});

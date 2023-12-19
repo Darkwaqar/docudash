@@ -5,7 +5,16 @@ import { setAccessToken, setUserStep } from '@stores/slices/UserSlice';
 import { SignUpStackScreenProps } from '@type/index';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+} from 'react-native';
 import { Appbar, Button } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import tw from 'twrnc';
@@ -66,6 +75,9 @@ const PasswordScreen = () => {
               source={require('@assets/docudash_pow_logo.png')}
             />
           </View>
+          <View style={[tw`items-center justify-center mt-3`]}>
+            <Text style={tw`text-[20px]`}>Wellcome Back</Text>
+          </View>
           <Input
             state={password}
             secureTextEntry
@@ -81,5 +93,3 @@ const PasswordScreen = () => {
 };
 
 export default PasswordScreen;
-
-const styles = StyleSheet.create({});

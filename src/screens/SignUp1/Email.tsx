@@ -147,15 +147,15 @@ const EmailScreen = () => {
                 }}
               />
             </View>
-            <Text style={styles.soft_text}>
+            <Text style={[styles.soft_text]}>
+              By clicking the Get Started button below, you agree to the Terms & Conditions and
+              Privacy Policy.
+            </Text>
+            {/* <Text style={styles.soft_text}>
               I agree to receive marketing communications from Docudash and acknowledge that I can
               opt out at any time by visiting the Preference Centre.
-            </Text>
+            </Text> */}
           </View>
-          <Text style={[styles.soft_text, tw`mt-5`]}>
-            By clicking the Get Started button below, you agree to the Terms & Conditions and
-            Privacy Policy.
-          </Text>
           <GreenButton loading={loading} text={'Get Started'} onPress={fetchData} />
           <Text style={[styles.soft_text, tw`mt-5`]}>
             By clicking the Get Started button below, you agree to the
