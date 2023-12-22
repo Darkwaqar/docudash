@@ -73,7 +73,7 @@ const RON_DocUpload = () => {
         <View style={tw`flex-1 gap-3 justify-center px-10`}>
           <View style={tw`absolute top-10 left-5`}>
             <Chip>
-              <Text variant="labelLarge">{`6/6`}</Text>
+              <Text variant="labelLarge">{`7/7`}</Text>
             </Chip>
           </View>
           <Image

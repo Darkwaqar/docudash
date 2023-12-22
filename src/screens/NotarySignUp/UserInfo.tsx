@@ -5,11 +5,11 @@ import { SignUpAPI, SignUpStackScreenProps } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
 import { useFonts } from 'expo-font';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 import { Chip, Text } from 'react-native-paper';
 import tw from 'twrnc';
-
+import PhoneInput from 'react-native-phone-number-input';
 import { selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -19,6 +19,7 @@ interface form {
   phone: string;
 }
 const UserInfoScreen = () => {
+  const phoneInput = useRef<PhoneInput>();
   const token = useSelector(selectSignupToken);
   const dispatch = useDispatch();
   const navigation = useNavigation<SignUpStackScreenProps<'Step2'>['navigation']>();
@@ -32,24 +33,34 @@ const UserInfoScreen = () => {
     last_Name: '',
     phone: '',
   });
+  const [phoneCode, setPhoneCode] = useState('+1');
+  const [error, setError] = useState('');
+  const ref = useRef();
 
   const [loading, setLoading] = useState<boolean>(false);
   const fetchData = async () => {
-    setLoading(true);
-    // console.log('token', token);
+    if (!phoneInput.current.isValidNumber(form.phone)) {
+      setError('Number your provided is invalid');
+      return;
+    }
+    // console.log('form.phone 1', form);
+    if (phoneCode.toString() == '+1') {
+      console.log('form.phone', form);
+      setLoading(true);
 
-    axios
-      .post('https://docudash.net/api/notary-sign-up-1/' + token, {
-        first_name: form.first_Name,
-        last_name: form.last_Name,
-        phone: form.phone,
-      })
-      .then((response) => {
-        const { data, success, next_access, message, next }: SignUpAPI = response.data;
+      axios
+        .post('https://docudash.net/api/notary-sign-up-1/' + token, {
+          first_name: form.first_Name,
+          last_name: form.last_Name,
+          phone: form.phone,
+        })
+        .then((response) => {
+          const { data, success, next_access, message, next }: SignUpAPI = response.data;
 
-        // console.log('NameScreen', data);
-        if (success) {
-          setLoading(false),
+          // console.log('NameScreen', data);
+          if (success) {
+            setLoading(false), console.log('data.steps', data.steps);
+
             // @ts-ignore
             navigation.replace('NotaryLoginStackNavigator', {
               screen: ('Step' + data.steps) as any,
@@ -57,22 +68,26 @@ const UserInfoScreen = () => {
                 api: next,
               },
             }),
-            dispatch(setNotaryStep(data.steps));
-        } else {
-          if (message.first_name) {
-            Alert.alert(message.first_name[0]);
-          } else if (message.last_name) {
-            Alert.alert(message.last_name[0]);
-          } else if (message.phone) {
-            Alert.alert(message.phone[0]);
+              dispatch(setNotaryStep(data.steps));
+          } else {
+            if (message.first_name) {
+              Alert.alert(message.first_name[0]);
+            } else if (message.last_name) {
+              Alert.alert(message.last_name[0]);
+            } else if (message.phone) {
+              Alert.alert(message.phone[0]);
+            }
+            setLoading(false);
           }
+        })
+        .catch((err) => {
           setLoading(false);
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log('err', err);
-      });
+          console.log('err', err);
+        });
+    } else {
+      setLoading(false);
+      setError('We are providing service in USA Only please Select Again');
+    }
   };
   if (!fontsLoaded) {
     return null;
@@ -87,7 +102,7 @@ const UserInfoScreen = () => {
         >
           <View style={tw`absolute top--10 left-5`}>
             <Chip>
-              <Text variant="labelLarge">{`2/6`}</Text>
+              <Text variant="labelLarge">{`2/7`}</Text>
             </Chip>
           </View>
           <Image
@@ -131,19 +146,40 @@ const UserInfoScreen = () => {
               style={{ flex: 1 }}
             />
           </View>
-          <Input
+          {/* <Input
             state={form.phone}
             setState={(text) => setForm({ ...form, phone: text })}
             placeholder={'Phone Number'}
             keyboardType={'number-pad'}
+          /> */}
+          <PhoneInput
+            ref={phoneInput}
+            defaultValue={form.phone}
+            defaultCode="US"
+            layout="first"
+            containerStyle={tw`rounded-full p-2 mt-5  `}
+            onChangeText={(text) => {
+              setForm({ ...form, phone: text });
+            }}
+            onChangeFormattedText={(text) => {
+              console.log('text', text.slice(0, 2).toString());
+              setPhoneCode(text.slice(0, 2));
+              //  setFormattedValue(text.slice(0,2));
+            }}
+            countryPickerProps={{ withAlphaFilter: true }}
+            withShadow
+            autoFocus
           />
+          <Text style={tw`mt-5 text-red-500`}>{error}</Text>
           <View style={tw`flex-row justify-between items-center `}>
             <Image
               style={tw`w-30 self-center top-3`}
               resizeMode="contain"
               source={require('@assets/logo.png')}
             />
-            <View style={tw`w-30  h-20 border-b-2  border-gray-400 justify-end py-3 items-center`}>
+            <View
+              style={tw`flex-1  h-20 border-b-2  border-gray-400 justify-end py-3 items-center`}
+            >
               <Text style={{ fontFamily: 'Signature', fontSize: 28 }}>
                 {`${form.first_Name}${form.last_Name}`}
               </Text>

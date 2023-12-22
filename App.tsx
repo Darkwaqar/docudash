@@ -11,6 +11,7 @@ import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import useCachedResources from './src/hooks/useCachedResources';
+import LicenseDocument from '@screens/NotarySignUp/LicenseDocument';
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -31,6 +32,7 @@ export default function App() {
           <BottomSheetModalProvider>
             <NavigationContainer>
               <StackNavigator />
+              {/* <LicenseDocument /> */}
             </NavigationContainer>
           </BottomSheetModalProvider>
         </PaperProvider>

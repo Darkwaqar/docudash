@@ -25,7 +25,7 @@ const SetPasswordScreen = () => {
   const fetchData = async () => {
     setLoading(true);
     axios
-      .post('https://docudash.net/api/sign-up-3/' + token, {
+      .post('https://docudash.net/api/sign-up-4/' + token, {
         password: password,
       })
       .then((response) => {
@@ -56,7 +56,7 @@ const SetPasswordScreen = () => {
       <View style={tw`flex-1 bg-white gap-2 justify-center px-10`}>
         <View style={tw`absolute top-30 left-10`}>
           <Chip>
-            <Text variant="labelLarge">{`4/6`}</Text>
+            <Text variant="labelLarge">{`5/7`}</Text>
           </Chip>
         </View>
         <Image

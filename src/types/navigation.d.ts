@@ -70,6 +70,7 @@ export type SignUpStackParamList = {
   Step4: { industry: Industry[]; signUpReasons: Industry[] };
   Step5: { token: string | undefined; email: string };
   Step6: { token: string | undefined; email: string };
+  Step7: { token: string | undefined; email: string };
   Browser: { url: string; heading: string };
   Address: { From: Addresses };
 };

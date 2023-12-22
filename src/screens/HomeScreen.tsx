@@ -2,7 +2,12 @@ import GettingStarted from '@components/GettingStarted';
 import HomeHeader from '@components/HomeHeader';
 import UploadView from '@components/UploadView';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
-import { logoutUser, selectAccessToken, setProfileData } from '@stores/slices/UserSlice';
+import {
+  logoutUser,
+  selectAccessToken,
+  selectProfileData,
+  setProfileData,
+} from '@stores/slices/UserSlice';
 import { DashboardAPI, HomeDrawerScreenProps, User } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
@@ -64,7 +69,13 @@ const HomeScreen = () => {
     waitingForOthers: 0,
     expiringSoon: 0,
     completed: 0,
+    Requests: 0,
+    AcceptedList: 0,
+    Rejected: 0,
+    Done: 0,
   });
+  const user = useSelector(selectProfileData);
+  const type = user?.user_type;
   const [userData, setUserData] = useState<User>();
   const [loading, setLoading] = useState(false);
   const [signature, setSignature] = useState<any>();
@@ -177,6 +188,10 @@ const HomeScreen = () => {
           waitingForOthers: data.WaitingForOthers,
           completed: data.CompletedEmails,
           expiringSoon: data.expiredEmails,
+          Requests: data.Requests,
+          AcceptedList: data.AcceptedList,
+          Rejected: data.Rejected,
+          Done: data.Done,
         });
         dispatch(setProfileData(data.user));
         setUserData(data.user);
@@ -343,7 +358,14 @@ const HomeScreen = () => {
               <Box text={'Waiting for Others'} num={dashNumber.waitingForOthers} />
               <Box text={'Expiring Soon'} num={dashNumber.expiringSoon} />
               <Box text={'Completed'} num={dashNumber.completed} />
-              {/* <Box text={'Expired Emails'} num={dashNumber.expiredEmails} /> */}
+              {type === 7 && (
+                <>
+                  <Box text={'Requests'} num={dashNumber.Requests} />
+                  <Box text={'Accepted List'} num={dashNumber.AcceptedList} />
+                  <Box text={'Rejected'} num={dashNumber.Rejected} />
+                  <Box text={'Done'} num={dashNumber.Done} />
+                </>
+              )}
             </View>
           </View>
 

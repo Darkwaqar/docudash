@@ -8,4 +8,8 @@ export interface DashboardAPI {
   WaitingForOthers: number;
   CompletedEmails: number;
   expiredEmails: number;
+  Requests: number;
+  AcceptedList: number;
+  Rejected: number;
+  Done: number;
 }

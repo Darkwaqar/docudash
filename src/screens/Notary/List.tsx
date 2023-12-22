@@ -65,9 +65,11 @@ const Map = () => {
   }, [isFocused]);
 
   const onChangeSearch = (query) => setSearchQuery(query);
-  const fetchData = () => {
+  const fetchData = (type: number) => {
     axios
-      .get('https://docudash.net/api/notarize-map', {
+      .post('https://docudash.net/api/notarize-map', {
+        notary_document_staus: type,
+
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -81,6 +83,7 @@ const Map = () => {
             location_sign_up: JSON.parse(x.location_sign_up) as locationNotary,
           }));
           setData(notaryList);
+          setModalVisible(false);
           // if (notaryList.length > 0) {
           //   const selectedPlace = notaryList[0];
           //   const region: Region = {
@@ -94,9 +97,9 @@ const Map = () => {
         }
       });
   };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
   const snapPoints = useMemo(() => ['10', '90'], []);
   const [showDropDownType, setShowDropDownType] = useState(false);
   const [typeValue, setTypeValue] = useState('');
@@ -286,7 +289,16 @@ const Map = () => {
                       showDropDown={() => setShowDropDownType(true)}
                       onDismiss={() => setShowDropDownType(false)}
                       value={typeValue}
-                      setValue={setTypeValue}
+                      // setValue={setTypeValue}
+                      setValue={(val) => {
+                        if (val == 'in person') {
+                          setTypeValue(val);
+                          fetchData(0);
+                        } else {
+                          setTypeValue(val);
+                          fetchData(1);
+                        }
+                      }}
                       list={types}
                     />
                   </View>
@@ -372,12 +384,17 @@ const Map = () => {
             >
               <GreenButton
                 text={'RON'}
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  fetchData(1);
+                }}
                 styles={{ width: 150 }}
               />
               <GreenButton
                 text={'inperson'}
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  fetchData(0);
+                }}
+                // onPress={() => setModalVisible(false)}
                 styles={{ width: 150 }}
               />
             </View>
