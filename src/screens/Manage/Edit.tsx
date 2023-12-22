@@ -520,7 +520,7 @@ const Edit = () => {
               value={numberOfDay}
               keyboardType="number-pad"
               maxLength={2}
-              onChangeText={(text: number) => {
+              onChangeText={(text: string) => {
                 setNumberOfDay(text);
               }}
               style={tw`bg-white w-15`}

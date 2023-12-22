@@ -3,7 +3,6 @@ import { selectAccessToken } from '@stores/slices/UserSlice';
 import {
   DraggedElArr,
   DraggedElement,
-  EmailSubject,
   GenerateSignature,
   GenerateSignatureDetail,
   GenerateSignatureDetails,

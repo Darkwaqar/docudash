@@ -76,7 +76,7 @@ const DrawerProfileModal = () => {
                 {user?.first_name} {user?.last_name}
               </Text>
               <Text style={styles.profile_small_text}>{user?.email}</Text>
-              <Text style={styles.profile_small_text}> Account #00000{user?.id}</Text>
+              <Text style={styles.profile_small_text}>Account #00000{user?.id}</Text>
               <Text style={styles.profile_small_text}>
                 {user?.first_name} {user?.last_name}
               </Text>
