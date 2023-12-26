@@ -26,7 +26,7 @@ export default function List() {
   const focused = useIsFocused();
   const route = useRoute<RootStackScreenProps<'Contacts'>['route']>();
   const From = route.params?.From;
-  console.log('From', From);
+  // console.log('From', From);
 
   const fetchData = async () => {
     setLoading(true);

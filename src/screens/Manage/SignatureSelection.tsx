@@ -25,7 +25,7 @@ export default function SignatureSelection() {
   const [setselectedItem, setSetselectedItem] = React.useState<SignaturePreview | undefined>();
   const envelope: GenerateSignature = route.params.Envelope;
 
-  console.log('envelope', envelope);
+  // console.log('envelope', envelope);
 
   const fetchList = () => {
     setIsFetching(true);
@@ -73,7 +73,7 @@ export default function SignatureSelection() {
       .then((response) => {
         fetchList();
         const data = response.data;
-        console.log(data);
+        // console.log(data);
       });
   };
   const StatusUpdate = (id: number, status: number | boolean) => {
@@ -92,7 +92,7 @@ export default function SignatureSelection() {
       )
       .then((response) => {
         const data = response.data;
-        console.log(data);
+        // console.log(data);
       });
   };
 

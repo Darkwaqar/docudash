@@ -11,7 +11,7 @@ interface IEnvelopeListItem {
 }
 
 export default function EnvelopeListItem({ item, heading }: IEnvelopeListItem) {
-  console.log('item ===><>>', item);
+  // console.log('item ===><>>', item);
 
   const navigation = useNavigation<RootStackScreenProps<'Inbox'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'Inbox'>['route']>();

@@ -11,8 +11,17 @@ import { colors } from '@utils/Colors';
 import axios from 'axios';
 import FormData from 'form-data';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { Button, Dialog, Portal, ProgressBar, Text } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-ui-lib';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRequest } from 'src/types/request';
 import tw from 'twrnc';
@@ -121,7 +130,7 @@ const CreateARequest = () => {
             'photos.0': string[];
           };
         } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
 
         if (status) {
           createRequestPayment(NotaryRequestsReturnID, amount);
@@ -133,7 +142,7 @@ const CreateARequest = () => {
           for (const [key, value] of Object.entries(message)) {
             alert(value);
           }
-          console.log(JSON.stringify(response.data));
+          // console.log(JSON.stringify(response.data));
         }
       })
       .catch((error) => {
@@ -142,7 +151,7 @@ const CreateARequest = () => {
       });
   };
   const initializePaymentSheet = async (data) => {
-    console.log('initializePaymentSheet', data);
+    // console.log('initializePaymentSheet', data);
 
     setLoading(true);
     // const { paymentIntent, ephemeralKey, customer } = await fetchPaymentSheetParams();
@@ -187,9 +196,9 @@ const CreateARequest = () => {
       .post('https://docudash.net/api/create-request-payment', formData, { headers })
       .then((response) => {
         setLoading(false);
-        console.log('response', response);
+        // console.log('response', response);
         if (response.data.status) {
-          console.log(' create-request-payment response', response);
+          // console.log(' create-request-payment response', response);
           initializePaymentSheet(response.data);
         }
         // const {
@@ -224,9 +233,10 @@ const CreateARequest = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-[${colors.white}]`}>
+    <SafeAreaView style={tw`h-full bg-[${colors.white}]`}>
       <HomeHeader heading={'Create a Request'} />
-      <ScrollView>
+      <KeyboardAwareScrollView>
+        {/* <ScrollView contentContainerStyle={tw` bg-red-200`}> */}
         <View style={tw`flex gap-3 justify-center items-center`}>
           <Image
             style={tw`w-70 h-30 self-center`}
@@ -237,7 +247,7 @@ const CreateARequest = () => {
           <Text variant="titleMedium">{value}</Text>
         </View>
 
-        <View style={tw`flex-1 gap-2`}>
+        <View style={tw` gap-2`}>
           {value === 'Reason' && <RequestReason data={data} setData={setData} />}
           {value === 'Recipient' && <RequestRecipient data={data} setData={setData} />}
           {value === 'Documents' && (
@@ -245,7 +255,8 @@ const CreateARequest = () => {
           )}
           {value === 'Message' && <RequestMessage data={data} setData={setData} />}
         </View>
-      </ScrollView>
+        {/* </ScrollView> */}
+      </KeyboardAwareScrollView>
       <ProgressBar progress={progress}></ProgressBar>
       <View style={tw`flex-row gap-4 my-4 justify-center`}>
         <Button

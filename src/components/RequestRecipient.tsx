@@ -70,7 +70,7 @@ export default function RequestRecipient({
 
   return (
     <>
-      <View style={tw`mx-2`}>
+      <View style={tw` mx-2`}>
         <Text variant="labelLarge">Number of Recipients:</Text>
         <TextInput
           mode="outlined"

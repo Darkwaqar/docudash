@@ -29,7 +29,7 @@ const OptScreen = () => {
       })
       .then((response) => {
         const { success = true, data }: SignUpAPI = response.data;
-        console.log('optScreen-', response.data);
+        // console.log('optScreen-', response.data);
 
         if (success) {
           setLoading(false),
@@ -56,7 +56,7 @@ const OptScreen = () => {
       .get('https://docudash.net/api/sendCodeAgain/' + token)
       .then((response) => {
         const data = response.data;
-        console.log('resend code ', data);
+        // console.log('resend code ', data);
         if (data.success) {
           Alert.alert('Code sent to ' + data.data.email);
         } else {

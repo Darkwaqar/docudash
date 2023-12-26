@@ -48,7 +48,7 @@ const AddContact = () => {
     }
     if (Contact) {
       // update
-      console.log(contact.name, contact.email);
+      // console.log(contact.name, contact.email);
       axios
         .post(
           'https://docudash.net/api/Contacts/update/' + contact.id,
@@ -70,7 +70,7 @@ const AddContact = () => {
             message: string;
             status: boolean;
           } = response.data;
-          console.log(response.data);
+          // console.log(response.data);
           if (status) {
             navigation.goBack();
             // navigation.navigate('Signatures', {});
@@ -83,7 +83,7 @@ const AddContact = () => {
         });
     } else {
       // create
-      console.log(contact.name, contact.email);
+      // console.log(contact.name, contact.email);
       axios
         .post(
           'https://docudash.net/api/Contacts/create',
@@ -105,7 +105,7 @@ const AddContact = () => {
             message: string;
             status: boolean;
           } = response.data;
-          console.log(response.data);
+          // console.log(response.data);
           if (status) {
             navigation.goBack();
             // navigation.navigate('Signatures', {});
@@ -144,7 +144,7 @@ const AddContact = () => {
           message: string;
           success: boolean;
         } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (success) {
           navigation.goBack();
           // navigation.navigate('Signatures', {});

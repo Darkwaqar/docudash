@@ -134,7 +134,7 @@ const ApproveRequest = () => {
   //   signature_id: 41,
   // };
   const [index, setIndex] = useState(0);
-  console.log('deleteModal', deleteModal);
+  // console.log('deleteModal', deleteModal);
 
   const [visible, setVisible] = React.useState(false);
 
@@ -210,15 +210,15 @@ const ApproveRequest = () => {
         }
       )
       .then((response) => {
-        console.log('ApproveRequest ===><><>', response.data);
+        // console.log('ApproveRequest ===><><>', response.data);
         const { NotaryRequests, NotaryRequestsDetails, NotaryRequestsDetailsDocuments } =
           response.data;
         //     if (status) {
-        console.log(
-          'NotaryRequestsDetailsDocuments.map((x) => x.docs).flat()',
-          NotaryRequestsDetailsDocuments.map((x) => x.docs).flat()
-        );
-        console.log('NotaryRequestsDetails', NotaryRequestsDetails);
+        // console.log(
+        //   'NotaryRequestsDetailsDocuments.map((x) => x.docs).flat()',
+        //   NotaryRequestsDetailsDocuments.map((x) => x.docs).flat()
+        // );
+        // console.log('NotaryRequestsDetails', NotaryRequestsDetails);
         if (NotaryRequests && NotaryRequests.draggedElArr) {
           const draggable = {
             signature: NotaryRequests.draggedElArr.signature ?? [],
@@ -250,17 +250,17 @@ const ApproveRequest = () => {
   }, []);
 
   const save = (type: number) => {
-    console.log('refDraggedElArr', JSON.stringify(refDraggedElArr.current));
+    // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr.current));
     // return;
 
     const url = `https://docudash.net/api/notary/request-detail-accept/${id}`;
-    console.log(`Bearer ${accessToken}`);
+    // console.log(`Bearer ${accessToken}`);
     const data = new FormData();
     data.append('draggedElArr', JSON.stringify(refDraggedElArr.current));
     // save for 0 send for 1
     data.append('save_type', type);
 
-    console.log('data', refDraggedElArr.current);
+    // console.log('data', refDraggedElArr.current);
 
     axios
       .post(url, data, {
@@ -271,7 +271,7 @@ const ApproveRequest = () => {
       })
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
-        console.log('save', response.data);
+        // console.log('save', response.data);
 
         if (status) {
           alert(message);
@@ -298,7 +298,7 @@ const ApproveRequest = () => {
       )
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (status) navigation.navigate('Home');
         else {
           alert(message);
@@ -311,7 +311,7 @@ const ApproveRequest = () => {
 
   useEffect(() => {
     if (refDraggedElArr.current) setDraggedElArr(refDraggedElArr.current);
-    console.log('refDraggedElArr', JSON.stringify(refDraggedElArr));
+    // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr));
   }, [index]);
 
   // useEffect(() => {
@@ -321,7 +321,7 @@ const ApproveRequest = () => {
   //   });
   // }, [index]);
 
-  console.log(images, 'images');
+  // console.log(images, 'images');
   return (
     <View style={tw`h-full `}>
       <Modal visible={deleteModal.active} transparent={true} animationType="none">
@@ -399,7 +399,7 @@ const ApproveRequest = () => {
         />
         <Button
           onPress={() => {
-            save(0);
+            save(1);
           }}
         >
           Send
@@ -761,7 +761,7 @@ const ApproveRequest = () => {
           <IconButton
             icon="chevron-up"
             onPress={() => {
-              console.log(index, images.length);
+              // console.log(index, images.length);
               if (index > 0) {
                 setLoadingImg(true);
                 setIndex(index - 1);

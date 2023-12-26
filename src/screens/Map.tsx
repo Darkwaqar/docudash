@@ -53,7 +53,7 @@ const Map = ({ route }) => {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log('data', JSON.stringify(data));
+          // console.log('data', JSON.stringify(data));
           dispatch(setTravelTimeInformation(data.rows[0].elements[0]));
         })
         .catch((error) => {
@@ -76,7 +76,7 @@ const Map = ({ route }) => {
           lat: loc.coords.latitude,
           lng: loc.coords.longitude,
         };
-        console.log('location', loc);
+        // console.log('location', loc);
         dispatch(setOrigin(region));
         PostCurrentLocation(region);
       });
@@ -85,7 +85,7 @@ const Map = ({ route }) => {
     }
   };
   const PostCurrentLocation = (region: any) => {
-    console.log(region);
+    // console.log(region);
     axios
       .post(
         'https://docudash.net/api/create-request-locations-update',
@@ -102,7 +102,7 @@ const Map = ({ route }) => {
       )
       .then((response) => {
         const data = response.data;
-        console.log('PostCurrentLocation', data);
+        // console.log('PostCurrentLocation', data);
       })
       .catch((err) => {
         false;

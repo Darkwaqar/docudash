@@ -27,7 +27,7 @@ const EmailScreen = () => {
   const [checked, setChecked] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
-  console.log(visible);
+  // console.log(visible);
 
   const fetchData = () => {
     setLoading(true);
@@ -38,7 +38,7 @@ const EmailScreen = () => {
       })
       .then((response) => {
         const { data, success, next_code, message, next }: NotraySignUpAPI = response.data;
-        console.log('emailScreen', response.data);
+        console.log('emailScreen', data.steps);
         if (success) {
           if (data.steps === 6) {
             // @ts-ignore
@@ -119,18 +119,20 @@ const EmailScreen = () => {
         keyboardShouldPersistTaps="handled"
       >
         {/* HEADER FINISHED  */}
-        <View style={tw` px-14 `}>
+        <View style={tw` px-14  `}>
           <Text
-            style={{
-              fontFamily: 'nunito-SemiBold',
-              fontSize: 25,
-            }}
+            style={[
+              tw`text-center`,
+              {
+                fontFamily: 'nunito-SemiBold',
+                fontSize: 30,
+              },
+            ]}
           >
-            Try Docudash free for 30 days
+            Docudash
+            <Text style={tw`uppercase text-xs tracking-tighter`}>for notary</Text>
           </Text>
-          <Text style={{ fontFamily: 'nunito-SemiBold', fontSize: 15 }}>
-            No credit card required
-          </Text>
+
           <Input state={inputVal} setState={setInputVal} placeholder="Email" />
           <View style={tw`flex-row mt-5 w-[${'100%'}] items-start`}>
             <View
@@ -146,20 +148,23 @@ const EmailScreen = () => {
                 }}
               />
             </View>
-            <Text style={styles.soft_text}>
+            <Text style={[styles.soft_text, tw`text-xs`]}>
+              By clicking the Get Started button below, you agree to the Terms & Conditions and
+              Privacy Policy.
+            </Text>
+            {/* <Text style={styles.soft_text}>
               I agree to receive marketing communications from Docudash and acknowledge that I can
               opt out at any time by visiting the Preference Centre.
-            </Text>
+            </Text> */}
           </View>
-          <Text style={[styles.soft_text, tw`mt-5`]}>
-            By clicking the Get Started button below, you agree to the Terms & Conditions and
-            Privacy Policy.
-          </Text>
           <GreenButton loading={loading} text={'Get Started'} onPress={fetchData} />
-          <Text style={[styles.soft_text, tw`mt-5`]}>
+          <Text style={[styles.soft_text, tw`mt-5 text-xs`]}>
             By clicking the Get Started button below, you agree to the
             <Text style={tw`text-blue-500`}> Terms & Conditions</Text> and{' '}
             <Text style={tw`text-blue-500`}>Privacy Policy.</Text>
+          </Text>
+          <Text style={{ fontFamily: 'nunito-SemiBold', fontSize: 15 }}>
+            * No credit card required
           </Text>
         </View>
       </ScrollView>

@@ -137,8 +137,8 @@ export default function AddRecipient() {
       setRecipient((prev) => ({ ...prev, recName: Contact.name, recEmail: Contact.email }));
     }
   }, [route]);
-  console.log('Recipients', Recipients);
-  console.log('recipient', recipient);
+  // console.log('Recipients', Recipients);
+  // console.log('recipient', recipient);
 
   const addNewRecipient = () => {
     if (Recipient) {
@@ -149,7 +149,7 @@ export default function AddRecipient() {
       navigation.navigate('Edit', { Recipients: [...(Recipients || []), recipient] });
     }
   };
-  console.log('Render');
+  // console.log('Render');.
 
   return (
     <SafeAreaView style={tw`h-full bg-[${COLORS.white}]`}>

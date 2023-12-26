@@ -63,11 +63,11 @@ const Details = () => {
   const [recipients, setRecipients] = useState<NotaryRequestsDetail[]>([]);
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
-  console.log('origin', details);
+  // console.log('origin', details);
   const GetCurrentLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-      console.log('Permission to access location was denied');
+      // console.log('Permission to access location was denied');
       return;
     }
 
@@ -77,7 +77,7 @@ const Details = () => {
     };
     Location.getCurrentPositionAsync(option).then(
       (position: any) => {
-        console.log('position', position);
+        // console.log('position', position);
         const region = {
           lat: parseFloat(position.coords.latitude),
           lng: parseFloat(position.coords.longitude),
@@ -86,7 +86,7 @@ const Details = () => {
         navigation.navigate('Map', { details: details });
       },
       (error) => {
-        console.log(error.code, error.message);
+        // console.log(error.code, error.message);
       }
     );
   };
@@ -111,7 +111,7 @@ const Details = () => {
         }
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setDoneLoading(false);
         navigation.goBack();
       })
@@ -134,7 +134,7 @@ const Details = () => {
         }
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setDenyLoading(false);
         navigation.goBack();
       })
@@ -160,7 +160,7 @@ const Details = () => {
           NotaryRequestsDetails,
           NotaryRequestsDetailsDocuments,
         }: RequestDetailsPage = response.data;
-        console.log('NotaryRequests', NotaryRequests);
+        // console.log('NotaryRequests', NotaryRequests);
 
         setDetails(NotaryRequests);
         setRecipients(NotaryRequestsDetails);

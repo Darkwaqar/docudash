@@ -3,7 +3,6 @@ import { selectAccessToken } from '@stores/slices/UserSlice';
 import {
   DraggedElArr,
   DraggedElement,
-  EmailSubject,
   GenerateSignature,
   GenerateSignatureDetail,
   GenerateSignatureDetails,
@@ -159,7 +158,7 @@ const DocumentEditor = () => {
       })
       .then((response) => {
         setLoading(false);
-        console.log('html-editor', response.data);
+        // console.log('html-editor', response.data);
         const {
           status,
           message,
@@ -182,7 +181,7 @@ const DocumentEditor = () => {
             };
             setDraggedElArr(draggable);
             refDraggedElArr.current = draggable;
-            console.log('draggedElArr', draggedElArr);
+            // console.log('draggedElArr', draggedElArr);
           }
           setRecipients(generateSignatureDetails);
           setImages(generateSignatureDetailsImages.map((x) => x.filesArr).flat());
@@ -202,12 +201,12 @@ const DocumentEditor = () => {
   }, []);
 
   const save = (type: number) => {
-    console.log('refDraggedElArr', JSON.stringify(refDraggedElArr.current));
+    // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr.current));
     // return;
 
     const url = 'https://docudash.net/api/generate-signature/html-editor/';
-    console.log(`Bearer ${accessToken}`);
-    console.log('post', url + envelope.uniqid + '/' + envelope.signature_id);
+    // console.log(`Bearer ${accessToken}`);
+    // console.log('post', url + envelope.uniqid + '/' + envelope.signature_id);
     const data = new FormData();
     data.append('uniqid', envelope.uniqid);
     data.append('signature_id', envelope.signature_id);
@@ -215,7 +214,7 @@ const DocumentEditor = () => {
     // save for 0 send for 1
     data.append('save_type', type);
 
-    console.log('data', refDraggedElArr.current);
+    // console.log('data', refDraggedElArr.current);
 
     axios
       .post(url + envelope.uniqid + '/' + envelope.signature_id, data, {
@@ -252,7 +251,7 @@ const DocumentEditor = () => {
       )
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (status) navigation.navigate('Home');
         else {
           alert(message);
@@ -265,7 +264,7 @@ const DocumentEditor = () => {
 
   useEffect(() => {
     if (refDraggedElArr.current) setDraggedElArr(refDraggedElArr.current);
-    console.log('refDraggedElArr', JSON.stringify(refDraggedElArr));
+    // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr));
   }, [index]);
 
   // useEffect(() => {
@@ -691,7 +690,7 @@ const DocumentEditor = () => {
           <IconButton
             icon="chevron-up"
             onPress={() => {
-              console.log(index, images.length);
+              // console.log(index, images.length);
               if (index > 0) setIndex(index - 1);
             }}
           ></IconButton>

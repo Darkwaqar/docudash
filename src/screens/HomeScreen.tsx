@@ -2,7 +2,12 @@ import GettingStarted from '@components/GettingStarted';
 import HomeHeader from '@components/HomeHeader';
 import UploadView from '@components/UploadView';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
-import { logoutUser, selectAccessToken, setProfileData } from '@stores/slices/UserSlice';
+import {
+  logoutUser,
+  selectAccessToken,
+  selectProfileData,
+  setProfileData,
+} from '@stores/slices/UserSlice';
 import { DashboardAPI, HomeDrawerScreenProps, User } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
@@ -15,6 +20,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  Modal,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -56,13 +62,20 @@ const HomeScreen = () => {
   const navigation = useNavigation<HomeDrawerScreenProps<'HomeScreen'>['navigation']>();
   const route = useRoute<HomeDrawerScreenProps<'HomeScreen'>['route']>();
   const [documents, setDocuments] = useState<uploadType[]>(new Array());
+  const [modalVisible, setModalVisible] = useState(true);
   const dispatch = useDispatch();
   const [dashNumber, setDashNumber] = useState({
     actionRequired: 0,
     waitingForOthers: 0,
     expiringSoon: 0,
     completed: 0,
+    Requests: 0,
+    AcceptedList: 0,
+    Rejected: 0,
+    Done: 0,
   });
+  const user = useSelector(selectProfileData);
+  const type = user?.user_type;
   const [userData, setUserData] = useState<User>();
   const [loading, setLoading] = useState(false);
   const [signature, setSignature] = useState<any>();
@@ -79,6 +92,9 @@ const HomeScreen = () => {
   //     showHighlight();
   //   }, 1000);
   // }, []);
+  // setTimeout(() => {
+  //   setModalVisible(false);
+  // }, 3000);
 
   const closeHighlight = () => {
     setState((prev) => ({ ...prev, showFTE: false }));
@@ -164,11 +180,18 @@ const HomeScreen = () => {
       })
       .then((response) => {
         const data: DashboardAPI = response.data;
+        // console.log('data =>><><>', data);
+
         // console.log('DashboardAPI', data);
         setDashNumber({
           ...dashNumber,
           waitingForOthers: data.WaitingForOthers,
           completed: data.CompletedEmails,
+          expiringSoon: data.expiredEmails,
+          Requests: data.Requests,
+          AcceptedList: data.AcceptedList,
+          Rejected: data.Rejected,
+          Done: data.Done,
         });
         dispatch(setProfileData(data.user));
         setUserData(data.user);
@@ -200,7 +223,7 @@ const HomeScreen = () => {
   useEffect(() => {
     setDocuments(new Array());
     fetchDashData();
-    console.log('Change name Home', isFocused);
+    // console.log('Change name Home', isFocused);
   }, [navigation, isFocused]);
 
   const pickImage = async () => {
@@ -215,7 +238,7 @@ const HomeScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
     setLoading(true);
     if (!result.canceled) {
       const image = result.assets[0];
@@ -333,8 +356,16 @@ const HomeScreen = () => {
             >
               <Box text={'Action Required'} num={0} />
               <Box text={'Waiting for Others'} num={dashNumber.waitingForOthers} />
-              <Box text={'Expiring Soon'} num={0} />
+              <Box text={'Expiring Soon'} num={dashNumber.expiringSoon} />
               <Box text={'Completed'} num={dashNumber.completed} />
+              {type === 7 && (
+                <>
+                  <Box text={'Requests'} num={dashNumber.Requests} />
+                  <Box text={'Accepted List'} num={dashNumber.AcceptedList} />
+                  <Box text={'Rejected'} num={dashNumber.Rejected} />
+                  <Box text={'Done'} num={dashNumber.Done} />
+                </>
+              )}
             </View>
           </View>
 
@@ -369,6 +400,53 @@ const HomeScreen = () => {
 };
 
 const style = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+    padding: 20,
+    backgroundColor: ' rgba(52, 52, 52, 0.8)',
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    // padding: 35,
+    width: '100%',
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    // marginBottom: 15,
+    fontSize: 20,
+    textAlign: 'center',
+  },
   header: {
     padding: 20,
     flexDirection: 'row',

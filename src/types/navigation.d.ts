@@ -28,7 +28,7 @@ export type RootStackParamList = {
         files?: DocumentPickerOptions.DocumentResult[];
         images?: ImagePicker.ImagePickerAsset[];
         Recipients?: Recipient[];
-        activeIndex: number;
+        activeIndex?: number;
       };
   DocumentEditor: {
     Envelope: GenerateSignature;
@@ -58,7 +58,7 @@ export type RootStackParamList = {
   CreateARequest: { email?: string; From?: string; Notary?: string };
   RequestList: { heading: string };
   RequestDetails: { id: number };
-  ApproveRequest: undefined | number;
+  ApproveRequest: undefined | id;
 };
 
 export type SignUpStackParamList = {
@@ -70,6 +70,7 @@ export type SignUpStackParamList = {
   Step4: { industry: Industry[]; signUpReasons: Industry[] };
   Step5: { token: string | undefined; email: string };
   Step6: { token: string | undefined; email: string };
+  Step7: { token: string | undefined; email: string };
   Browser: { url: string; heading: string };
   Address: { From: Addresses };
 };

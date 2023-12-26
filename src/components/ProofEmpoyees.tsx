@@ -29,7 +29,7 @@ const ProofEmployees = () => {
       })
       .then((response) => {
         const { success, message }: { success: boolean; message: string } = response.data;
-        console.log(success);
+        // console.log(success);
 
         if (success) {
           dispatch(

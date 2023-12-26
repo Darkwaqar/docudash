@@ -33,7 +33,7 @@ const AddStamp = () => {
       setBase64(StampPreview.image_base64.replace('data:image/png;base64,', ''));
       setStampId(String(StampPreview.id));
       setName(StampPreview.title);
-      console.log(StampPreview.id);
+      // console.log(StampPreview.id);
     }
   }, []);
 
@@ -102,7 +102,7 @@ const AddStamp = () => {
             Alert.alert(message);
           }
         }
-        console.log(response.data);
+        // console.log(response.data);
         setLoading(false);
       })
       .catch((err) => {

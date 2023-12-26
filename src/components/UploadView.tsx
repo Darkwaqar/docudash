@@ -103,30 +103,31 @@ export default function UploadView({ documents, setDocuments }) {
 
     // start the document scanner
     const { scannedImages } = await DocumentScanner.scanDocument();
-    console.log('scannedImages', scannedImages);
+    // console.log('scannedImages', scannedImages);
 
     // get back an array with scanned image file paths
     if (scannedImages.length > 0) {
-      // set the img src, so we can view the first scanned image
-      if (Platform.OS === 'android') {
-        const newImageUri = 'file:///' + scannedImages[0].split('file:/').join('');
+      scannedImages.map((x) => {
+        if (Platform.OS === 'android') {
+          const newImageUri = 'file:///' + x.split('file:/').join('');
 
-        const imageToUpload = {
-          uri: newImageUri,
-          name: scannedImages[0].split('/').pop(),
-          type: mime.getType(newImageUri),
-        };
-        setDocuments((prev) => [...prev, imageToUpload]);
-        bottomSheetRef.current?.close();
-      } else {
-        const imageToUpload = {
-          uri: scannedImages[0],
-          name: scannedImages[0].split('/').pop(),
-          type: mime.getType(scannedImages[0]),
-        };
-        setDocuments((prev) => [...prev, imageToUpload]);
-        bottomSheetRef.current?.close();
-      }
+          const imageToUpload = {
+            uri: newImageUri,
+            name: x.split('/').pop(),
+            type: mime.getType(newImageUri),
+          };
+          setDocuments((prev) => [...prev, imageToUpload]);
+        } else {
+          const imageToUpload = {
+            uri: x,
+            name: x.split('/').pop(),
+            type: mime.getType(x),
+          };
+          setDocuments((prev) => [...prev, imageToUpload]);
+        }
+      });
+      bottomSheetRef.current?.close();
+      // set the img src, so we can view the first scanned image
       // setDocuments((prev) => [...prev, scannedImages[0]]);
       // setScannedImage(scannedImages[0]);
     }

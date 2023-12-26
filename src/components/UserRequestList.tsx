@@ -17,7 +17,7 @@ export default function UserRequestList() {
   const accessToken = useSelector(selectAccessToken);
   const [data, setData] = useState<Array<UserRequestListT>>();
   const [loading, setLoading] = useState(false);
-  console.log(accessToken);
+  // console.log(accessToken);
 
   function filter(name: string | undefined) {
     if (name) {
@@ -38,7 +38,7 @@ export default function UserRequestList() {
       .then((response) => {
         setLoading(false);
         const data = response.data;
-        console.log('request data', data);
+        // console.log('request data', data);
         setData(data.data);
       })
       .catch((error) => {

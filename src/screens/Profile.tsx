@@ -30,7 +30,7 @@ const Profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [firstName, setFirstName] = useState<null | string>(user.ProofOfEmployes.toString());
   const [documents, setDocuments] = useState([]);
-  console.log(documents);
+  // console.log(documents);
 
   const onSave = () => {
     const formData = new FormData();
@@ -48,7 +48,7 @@ const Profile = () => {
       })
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
-        console.log('status', status);
+        // console.log('status', status);
 
         if (status) {
           dispatch(
@@ -153,7 +153,7 @@ const Profile = () => {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           fetchDashData();
         });
     }
@@ -168,7 +168,7 @@ const Profile = () => {
       })
       .then((response) => {
         const data: DashboardAPI = response.data;
-        console.log('DashboardAPI', data);
+        // console.log('DashboardAPI', data);
         dispatch(setProfileData(data.user));
         onRefresh();
       });

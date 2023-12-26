@@ -101,7 +101,7 @@ const DocumentViewer = () => {
   const signItem: SignaturePreview = route.params?.item || undefined;
   const stampItem = route.params?.stamp || undefined;
   const [imageSizes, setImageSizes] = useState<{ width: number; height: number }[]>(new Array());
-  console.log('Imagesizes', imageSizes);
+  // console.log('Imagesizes', imageSizes);
   useEffect(() => {
     if (signItem != undefined) {
       let _newIni = draggedElArr.initial.map((element) => ({
@@ -123,7 +123,7 @@ const DocumentViewer = () => {
     }
   }, [route, navigation]);
   draggedElArr.initial.forEach((element, index) => {
-    console.log('element', element);
+    // console.log('element', element);
   });
 
   const date = new Date();
@@ -132,7 +132,7 @@ const DocumentViewer = () => {
   const fetchData = async () => {
     setLoading(true);
     const url = 'https://docudash.net/api/generate-signature/html-editor/';
-    console.log(url + envelope.uniqid + '/' + envelope.signature_id);
+    // console.log(url + envelope.uniqid + '/' + envelope.signature_id);
 
     axios
       .get(url + envelope.uniqid + '/' + envelope.signature_id, {
@@ -142,7 +142,7 @@ const DocumentViewer = () => {
       })
       .then((response) => {
         setLoading(false);
-        console.log('html-editor', response.data);
+        // console.log('html-editor', response.data);
         const {
           status,
           message,
@@ -158,7 +158,7 @@ const DocumentViewer = () => {
           ) {
             const abayYAKiyahy = JSON.parse(generateSignatureDetails[0].view_final_response);
 
-            console.log('draggable', abayYAKiyahy);
+            // console.log('draggable', abayYAKiyahy);
             setDraggedElArr(abayYAKiyahy);
           } else if (
             generateSignatureDetailsFinalise &&
@@ -174,7 +174,7 @@ const DocumentViewer = () => {
               company: generateSignatureDetailsFinalise.draggedElArr.company ?? [],
               title: generateSignatureDetailsFinalise.draggedElArr.title ?? [],
             };
-            console.log('draggable', draggable);
+            // console.log('draggable', draggable);
             setDraggedElArr(draggable);
           }
           setRecipients(generateSignatureDetails);
@@ -198,9 +198,9 @@ const DocumentViewer = () => {
     setLoading(true);
     const url = 'https://docudash.net/api/updateClientResponse/';
     // console.log('draggedElArr', draggedElArr);
-    console.log('post', url + envelope.signature_id);
-    console.log('selected recipient', recipients[selectedRecipient].id);
-    console.log('viewFinalResponseArr', draggedElArr);
+    // console.log('post', url + envelope.signature_id);
+    // console.log('selected recipient', recipients[selectedRecipient].id);
+    // console.log('viewFinalResponseArr', draggedElArr);
 
     const data = new FormData();
     data.append('id', recipients[selectedRecipient].id);
@@ -234,7 +234,7 @@ const DocumentViewer = () => {
   };
 
   const _onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
-    console.log('Visible items are', viewableItems);
+    // console.log('Visible items are', viewableItems);
     // console.log('Changed in this iteration', changed);
   }, []);
   if (loading) return <Loader />;
@@ -322,7 +322,7 @@ const DocumentViewer = () => {
                         x.selected_user_id == String(recipients?.[selectedRecipient].id)
                     )
                     .map((item, index) => {
-                      console.log(Number.parseFloat(item.left), item.top);
+                      // console.log(Number.parseFloat(item.left), item.top);
                       return (
                         <View
                           style={tw`absolute top-[${item.top}] left-[${item.left}]`}
@@ -406,7 +406,7 @@ const DocumentViewer = () => {
                       //   ((Number.parseInt(item.left) * 100) / width) * 15,
                       //   ((Number.parseInt(item.top) * 100) / width) * 15
                       // );
-                      console.log(Number.parseFloat(item.left), item.top);
+                      // console.log(Number.parseFloat(item.left), item.top);
 
                       return (
                         <View
@@ -452,7 +452,7 @@ const DocumentViewer = () => {
                       //   ((Number.parseInt(item.left) * 100) / width) * 15,
                       //   ((Number.parseInt(item.top) * 100) / width) * 15
                       // );
-                      console.log(Number.parseFloat(item.left), item.top);
+                      // console.log(Number.parseFloat(item.left), item.top);
 
                       return (
                         <>
@@ -503,7 +503,7 @@ const DocumentViewer = () => {
                       //   ((Number.parseInt(item.left) * 100) / width) * 15,
                       //   ((Number.parseInt(item.top) * 100) / width) * 15
                       // );
-                      console.log(Number.parseFloat(item.left), item.top);
+                      // console.log(Number.parseFloat(item.left), item.top);
 
                       return (
                         <View
@@ -549,7 +549,7 @@ const DocumentViewer = () => {
                       //   ((Number.parseInt(item.top) * 100) / width) * 15
                       // );
                       // console.log('rerender', `bg-[${color[index].bg}]`);
-                      console.log(item.left, item.top);
+                      // console.log(item.left, item.top);
                       return (
                         <>
                           {item.background ? (
@@ -595,7 +595,7 @@ const DocumentViewer = () => {
                       //   ((Number.parseInt(item.left) * 100) / width) * 15,
                       //   ((Number.parseInt(item.top) * 100) / width) * 15
                       // );
-                      console.log(Number.parseFloat(item.left), item.top);
+                      // console.log(Number.parseFloat(item.left), item.top);
 
                       return (
                         <>
@@ -640,7 +640,7 @@ const DocumentViewer = () => {
                         x.selected_user_id == String(recipients?.[selectedRecipient].id)
                     )
                     .map((item) => {
-                      console.log(Number.parseFloat(item.left), item.top);
+                      // console.log(Number.parseFloat(item.left), item.top);
                       return (
                         <View
                           style={tw`absolute top-[${item.top}] left-[${item.left}]`}

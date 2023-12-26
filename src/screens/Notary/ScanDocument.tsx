@@ -31,7 +31,7 @@ const ScanDocument = () => {
 
     // start the document scanner
     const { scannedImages } = await DocumentScanner.scanDocument();
-    console.log('scannedImages', scannedImages);
+    // console.log('scannedImages', scannedImages);
 
     // get back an array with scanned image file paths
     if (scannedImages.length > 0) {

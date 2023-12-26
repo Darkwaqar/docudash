@@ -16,7 +16,7 @@ export const Popup = ({ heading, alert, description, setAlert }: IPopup) => {
   const [isVisible, setIsVisible] = useState(true);
   useEffect(() => {
     setIsVisible(alert);
-    console.log(alert);
+    // console.log(alert);
   }, [alert]);
 
   return (

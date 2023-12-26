@@ -38,7 +38,7 @@ const VoidEnvelope = ({ inbox, navigation }) => {
       .then((response) => {
         setLoading(false);
         const { status, message }: { status: boolean; message: string } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (status) {
           setModalVisible(false);
           navigation.navigate('Home');
