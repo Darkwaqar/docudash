@@ -36,6 +36,7 @@ export default function StackNavigator() {
   const user = useSelector(selectAccessToken);
   return (
     <StripeProvider
+      merchantIdentifier="merchant.com.Docudash"
       publishableKey={
         'pk_test_51NGLKgENH01nEXEQS9Gnq8NlhNxD5nZ6rXpa9Fr1q5DOyupUahN1k22hE4y9azhfErdmPoMyn6oZzItFyMexZBnl00gAWDSY7G'
       }

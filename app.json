@@ -32,7 +32,7 @@
       [
         "@stripe/stripe-react-native",
         {
-          "merchantIdentifier": ["merchant.com.Docudash"],
+          "merchantIdentifier": "merchant.com.Docudash",
           "enableGooglePay": false
         }
       ]

@@ -551,7 +551,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-document-scanner-plugin (from `../node_modules/react-native-document-scanner-plugin`)
-  - react-native-google-maps (from `/Users/macbookpro/DocudashNew/node_modules/react-native-maps`)
+  - react-native-google-maps (from `/Users/waqarmac/docudash/node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-view-shot (from `../node_modules/react-native-view-shot`)
@@ -672,7 +672,7 @@ EXTERNAL SOURCES:
   react-native-document-scanner-plugin:
     :path: "../node_modules/react-native-document-scanner-plugin"
   react-native-google-maps:
-    :path: "/Users/macbookpro/DocudashNew/node_modules/react-native-maps"
+    :path: "/Users/waqarmac/docudash/node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
