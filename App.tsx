@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import useCachedResources from './src/hooks/useCachedResources';
 import LicenseDocument from '@screens/NotarySignUp/LicenseDocument';
+import CreatePDF from '@screens/CreatePDF';
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -32,6 +33,7 @@ export default function App() {
           <BottomSheetModalProvider>
             <NavigationContainer>
               <StackNavigator />
+              {/* <CreatePDF /> */}
               {/* <LicenseDocument /> */}
             </NavigationContainer>
           </BottomSheetModalProvider>

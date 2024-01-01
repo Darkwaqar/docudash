@@ -16,6 +16,7 @@ import axios from 'axios';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {
+  Alert,
   Image,
   Modal,
   SafeAreaView,
@@ -58,6 +59,8 @@ const Details = () => {
   const [accessCodeText, setAccessCodeText] = useState('');
   const [visible, setVisible] = React.useState(false);
   const openMenu = () => setVisible(true);
+  console.log('inbox', inbox);
+
   const [draggedElArr, setDraggedElArr] = useState<DraggedElArr>({
     signature: [],
     initial: [],
@@ -74,7 +77,7 @@ const Details = () => {
   const openMenuMore = () => setVisibleMore(true);
   const closeMenuMore = () => setVisibleMore(false);
   const [visibleMoreHeader, setVisibleMoreHeader] = React.useState(false);
-  const [incrorrectCode, setIncrorrectCode] = useState(false);
+  const [incorrectCode, setIncorrectCode] = useState(false);
   const openMenuMoreHeader = () => setVisibleMoreHeader(true);
   const closeMenuMoreHeader = () => setVisibleMoreHeader(false);
   const [needToSignButton, setNeedToSignButton] = useState('Sign');
@@ -89,6 +92,7 @@ const Details = () => {
   const fetchData = () => {
     setLoading(true);
     const url = 'https://docudash.net/api/generate-signature/html-editor/';
+    console.log('fetchData');
 
     axios
       .get(url + generate.uniqid + '/' + generate.signature_id, {
@@ -152,8 +156,8 @@ const Details = () => {
             // console.log('res', response.data);
             return response.data;
           })
-          .catch((erro) => {
-            console.log(erro);
+          .catch((err) => {
+            console.log(err);
           });
 
         // console.log('image', arrayBuffer);
@@ -229,6 +233,7 @@ const Details = () => {
   useEffect(() => {
     const url = 'https://docudash.net/api/generate-signature/manage-doc-view/';
     const id = heading === 'Sent' ? inbox.id : inbox.signature_id;
+    console.log("url + inbox.uniqid + '/' + id", url + inbox.uniqid + '/' + id);
 
     axios
       .get(url + inbox.uniqid + '/' + id, {
@@ -238,6 +243,7 @@ const Details = () => {
       })
       .then((response) => {
         const data: ViewDocument = response.data;
+        console.log('data', data);
 
         if (data.success) {
           setData(data);
@@ -325,7 +331,7 @@ const Details = () => {
         <View style={tw`flex-1 justify-center items-center`}>
           <View style={tw`border-2 p-5 gap-4 bg-white rounded-xl`}>
             <Text style={tw`text-4 font-bold `}>Enter Access Code</Text>
-            {incrorrectCode && (
+            {incorrectCode && (
               <Text style={tw`text-red-500`}>Incorrect code. Please try again</Text>
             )}
             <TextInput
@@ -344,7 +350,7 @@ const Details = () => {
                   setTimeout(() => {
                     setAccessCode('');
                     setTimeout(() => {
-                      setIncrorrectCode(false);
+                      setIncorrectCode(false);
                     }, 100);
                   }, 100);
                 }}
@@ -356,7 +362,7 @@ const Details = () => {
                 mode="outlined"
                 onPress={() => {
                   if (accessCode == accessCodeText) {
-                    setIncrorrectCode(false);
+                    setIncorrectCode(false);
                     setTimeout(() => {
                       setAccessCodeModal(false);
                       setTimeout(() => {
@@ -365,7 +371,7 @@ const Details = () => {
                     }, 100);
                     navigation.navigate('DocumentViewer', { Envelope: generate });
                   } else {
-                    setIncrorrectCode(true);
+                    setIncorrectCode(true);
                     setTimeout(() => {
                       setAccessCode('');
                     }, 100);

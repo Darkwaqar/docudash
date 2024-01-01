@@ -47,12 +47,12 @@ const AddAddress = () => {
   });
   const navigation = useNavigation<RootStackScreenProps<'AddAddress'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'AddAddress'>['route']>();
-  const Adress = route.params?.Address as Addresses;
+  const Address = route.params?.Address as Addresses;
   const From = route.params?.From as string;
 
   useEffect(() => {
-    if (Adress) {
-      setAddress(Adress);
+    if (Address) {
+      setAddress(Address);
     }
   }, []);
 
@@ -61,7 +61,7 @@ const AddAddress = () => {
       Alert.alert('Please add a name');
       return;
     }
-    if (Adress) {
+    if (Address) {
       // update
       // console.log('Update');
 
@@ -192,7 +192,7 @@ const AddAddress = () => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Add Address" />
-        {Adress && <Appbar.Action icon="delete" onPress={deleteContact} />}
+        {Address && <Appbar.Action icon="delete" onPress={deleteContact} />}
       </Appbar.Header>
       <View style={tw`flex-1`}>
         <ScrollView contentContainerStyle={tw`mx-2 gap-4`} keyboardShouldPersistTaps="handled">
@@ -359,7 +359,7 @@ const AddAddress = () => {
       </View>
       <View style={tw`flex-row justify-end p-6 py-4`}>
         <Button mode="contained" onPress={createOrUpdate}>
-          {Adress ? 'Update' : 'Add'}
+          {Address ? 'Update' : 'Add'}
         </Button>
       </View>
     </View>

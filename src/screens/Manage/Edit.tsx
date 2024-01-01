@@ -80,6 +80,7 @@ const Edit = () => {
   const accessToken = useSelector(selectAccessToken);
   const navigation = useNavigation<RootStackScreenProps<'Edit'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'Edit'>['route']>();
+  console.log('route', route);
   const [state, setState] = useState<State>({
     activeIndex: route?.params?.activeIndex ?? 0,
     completedStepIndex: undefined,
@@ -135,6 +136,8 @@ const Edit = () => {
           )
           .then((response) => {
             const data: UploadDocumentAPI = response.data;
+            console.log('response', response);
+
             setLoading(false);
             // console.log('', response.data);
             if (data.generateSignatureDetails.length > 0) {
