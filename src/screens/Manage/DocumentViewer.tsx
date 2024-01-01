@@ -13,7 +13,7 @@ import {
 } from '@type/index';
 import axios from 'axios';
 import FormData from 'form-data';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { createRef, useCallback, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   SafeAreaView,
@@ -30,7 +30,8 @@ import { Appbar, Avatar, Badge, Button, IconButton, Text, TextInput } from 'reac
 import { Carousel } from 'react-native-ui-lib';
 import { useSelector } from 'react-redux';
 import tw from 'twrnc';
-
+import { Animated } from 'react-native';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('window');
 
 const color = [
@@ -78,6 +79,63 @@ const color = [
   },
 ];
 const DocumentViewer = () => {
+  const [panEnabled, setPanEnabled] = useState(false);
+
+  const scale = useRef(new Animated.Value(1)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  const pinchRef = createRef();
+  const panRef = createRef();
+
+  const onPinchEvent = Animated.event(
+    [
+      {
+        nativeEvent: { scale },
+      },
+    ],
+    { useNativeDriver: true }
+  );
+
+  const onPanEvent = Animated.event(
+    [
+      {
+        nativeEvent: {
+          translationX: translateX,
+          translationY: translateY,
+        },
+      },
+    ],
+    { useNativeDriver: true }
+  );
+
+  const handlePinchStateChange = ({ nativeEvent }) => {
+    // enabled pan only after pinch-zoom
+    if (nativeEvent.state === State.ACTIVE) {
+      setPanEnabled(true);
+    }
+
+    // when scale < 1, reset scale back to original (1)
+    const nScale = nativeEvent.scale;
+    if (nativeEvent.state === State.END) {
+      if (nScale < 1) {
+        Animated.spring(scale, {
+          toValue: 1,
+          useNativeDriver: true,
+        }).start();
+        Animated.spring(translateX, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+        Animated.spring(translateY, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+
+        setPanEnabled(false);
+      }
+    }
+  };
   const accessToken = useSelector(selectAccessToken);
   const profileData = useSelector(selectProfileData);
 
@@ -122,9 +180,6 @@ const DocumentViewer = () => {
       setDraggedElArr({ ...draggedElArr, stamp: _newStamp });
     }
   }, [route, navigation]);
-  draggedElArr.initial.forEach((element, index) => {
-    // console.log('element', element);
-  });
 
   const date = new Date();
   const cureentDate = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
@@ -132,7 +187,7 @@ const DocumentViewer = () => {
   const fetchData = async () => {
     setLoading(true);
     const url = 'https://docudash.net/api/generate-signature/html-editor/';
-    // console.log(url + envelope.uniqid + '/' + envelope.signature_id);
+    console.log(url + envelope.uniqid + '/' + envelope.signature_id);
 
     axios
       .get(url + envelope.uniqid + '/' + envelope.signature_id, {
@@ -142,7 +197,6 @@ const DocumentViewer = () => {
       })
       .then((response) => {
         setLoading(false);
-        // console.log('html-editor', response.data);
         const {
           status,
           message,
@@ -150,16 +204,32 @@ const DocumentViewer = () => {
           generateSignatureDetails,
           generateSignatureDetailsImages,
         }: HtmlEditorAPI = response.data;
+        // console.log('html-editor', generateSignatureDetailsFinalise);
 
         if (status) {
           if (
             generateSignatureDetails.length > 0 &&
             generateSignatureDetails[0].view_final_response != undefined
           ) {
-            const abayYAKiyahy = JSON.parse(generateSignatureDetails[0].view_final_response);
-
+            const draggableObject: Array<DraggedElArr> = generateSignatureDetails.flatMap((x) =>
+              JSON.parse(x.view_final_response)
+            );
+            const draggable = {
+              signature: draggableObject.map((x) => x.signature ?? []).flat() ?? [],
+              initial: draggableObject.map((x) => x.initial ?? []).flat() ?? [],
+              stamp: draggableObject.map((x) => x.stamp ?? []).flat() ?? [],
+              date: draggableObject.map((x) => x.date ?? []).flat() ?? [],
+              name: draggableObject.map((x) => x.name ?? []).flat() ?? [],
+              email: draggableObject.map((x) => x.email ?? []).flat() ?? [],
+              company: draggableObject.map((x) => x.company ?? []).flat() ?? [],
+              title: draggableObject.map((x) => x.title ?? []).flat() ?? [],
+            };
             // console.log('draggable', abayYAKiyahy);
-            setDraggedElArr(abayYAKiyahy);
+            setDraggedElArr(draggable);
+            console.log(
+              'generateSignatureDetails[0].view_final_response',
+              JSON.stringify(draggable)
+            );
           } else if (
             generateSignatureDetailsFinalise &&
             generateSignatureDetailsFinalise.draggedElArr
@@ -177,6 +247,8 @@ const DocumentViewer = () => {
             // console.log('draggable', draggable);
             setDraggedElArr(draggable);
           }
+          // console.log('generateSignatureDetails', generateSignatureDetails);
+
           setRecipients(generateSignatureDetails);
           setImages(generateSignatureDetailsImages.map((x) => x.filesArr).flat());
         } else {
@@ -185,13 +257,14 @@ const DocumentViewer = () => {
       })
       .catch((error) => {
         setLoading(false);
-        console.log('Error----', error);
+        console.log('Error---->>', error.message);
+        console.log('Error---->>', url + envelope.uniqid + '/' + envelope.signature_id);
       });
   };
   useEffect(() => {
-    if (envelope) {
-      fetchData();
-    }
+    // if (envelope) {
+    fetchData();
+    // }
   }, []);
 
   const save = () => {
@@ -203,11 +276,12 @@ const DocumentViewer = () => {
     // console.log('viewFinalResponseArr', draggedElArr);
 
     const data = new FormData();
+    console.log('ya id hay', recipients[selectedRecipient].id);
     data.append('id', recipients[selectedRecipient].id);
     // data.append('signature_id', envelope.signature_id);
     data.append('viewFinalResponseArr', JSON.stringify(draggedElArr));
     // data.append('save_type', '0');
-
+    console.log('data', data);
     axios
       .post(url + envelope.signature_id, data, {
         headers: {
@@ -232,6 +306,14 @@ const DocumentViewer = () => {
         setLoading(false);
       });
   };
+  useEffect(() => {
+    if (recipients) {
+      console.log();
+      setSelectedRecipient(
+        recipients.findIndex((x) => x.recEmail.toLowerCase() == profileData.email.toLowerCase())
+      );
+    }
+  }, [recipients]);
 
   const _onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
     // console.log('Visible items are', viewableItems);
@@ -245,51 +327,52 @@ const DocumentViewer = () => {
         <Appbar.Content
           title={
             <View style={tw`items-center`}>
-              <Text variant="titleSmall">Viewing Document</Text>
-              <Text variant="labelSmall">Subtitle</Text>
+              {/* <Text variant="titleSmall">Viewing Document</Text>
+              <Text variant="labelSmall">Subtitle</Text> */}
             </View>
           }
         />
         <Button onPress={save}>Save</Button>
       </Appbar.Header>
       <SafeAreaView style={tw`flex-1 `}>
-        <View style={tw` bg-white bottom-0 `}>
+        <View style={tw` bg-white bottom-0`}>
           <ScrollView
-            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+            contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
             horizontal
             showsHorizontalScrollIndicator={false}
           >
             {/* draw */}
             {recipients
-              ?.filter(
-                (item) => item.recEmail.toLowerCase() == profileData.email.toLowerCase()
-                // && item.complete_incomplete === 0
-              )
-              ?.slice(0, 5)
+              // ?.filter(
+              //   (item) => item.recEmail.toLowerCase() == profileData.email.toLowerCase()
+              //   // && item.complete_incomplete === 0
+              // )
               ?.map((item, index) => (
                 <View style={[styles.botton_view_buttons]}>
-                  {index == selectedRecipient ? (
-                    <Badge style={tw`absolute top-0 right-2 z-1`}>✓</Badge>
+                  {item.recEmail.toLowerCase() == profileData.email.toLowerCase() ? (
+                    <>
+                      <Badge style={tw`absolute top-0 right-2 z-1`}>✓</Badge>
+                      <View style={styles.yellow_round}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setSelectedRecipient(index);
+                          }}
+                        >
+                          <Avatar.Text
+                            size={48}
+                            style={tw`bg-[${color[index].background}]`}
+                            // color={color[index].background}
+                            label={item.recName
+                              .replace(/\b(\w)\w+/g, '$1.')
+                              .replace(/\s/g, '')
+                              .replace(/\.$/, '')
+                              .toUpperCase()}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                      <Text style={styles.yellow_round_text}>{item.recName}</Text>
+                    </>
                   ) : null}
-                  <View style={styles.yellow_round}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setSelectedRecipient(index);
-                      }}
-                    >
-                      <Avatar.Text
-                        size={48}
-                        style={tw`bg-[${color[index].background}]`}
-                        // color={color[index].background}
-                        label={item.recName
-                          .replace(/\b(\w)\w+/g, '$1.')
-                          .replace(/\s/g, '')
-                          .replace(/\.$/, '')
-                          .toUpperCase()}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <Text style={styles.yellow_round_text}>{item.recName}</Text>
                 </View>
               ))}
           </ScrollView>
@@ -539,9 +622,8 @@ const DocumentViewer = () => {
                     })}
                   {draggedElArr?.signature
                     ?.filter(
-                      (x) =>
-                        x.element_container_id == `canvasInner-${index}` &&
-                        x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      (x) => x.element_container_id == `canvasInner-${index}`
+                      // && x.selected_user_id == String(recipients?.[selectedRecipient].id)
                     )
                     .map((item) => {
                       // console.log(
@@ -550,6 +632,8 @@ const DocumentViewer = () => {
                       // );
                       // console.log('rerender', `bg-[${color[index].bg}]`);
                       // console.log(item.left, item.top);
+                      // console.log('signature', draggedElArr?.signature);
+                      // console.log('selected recipeient', recipients?.[selectedRecipient].id);
                       return (
                         <>
                           {item.background ? (
@@ -1367,7 +1451,7 @@ const DocumentViewer = () => {
 export default DocumentViewer;
 
 const styles = StyleSheet.create({
-  botton_view_buttons: tw`items-center mx-2 w-20 h-20 gap-1 justify-center`,
+  botton_view_buttons: tw`items-center  w-20 h-20 gap-1 justify-center`,
   yellow_round: tw`h-12 w-12 rounded-full bg-yellow-200 justify-center items-center`,
   yellow_round_text: tw`text-center`,
 });

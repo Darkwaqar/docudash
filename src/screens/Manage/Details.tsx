@@ -87,6 +87,7 @@ const Details = () => {
   const generate: GenerateSignature = {
     signature_id: inbox.signature_id,
     uniqid: inbox.uniqid,
+    id: inbox.id,
   };
 
   const fetchData = () => {
@@ -179,8 +180,8 @@ const Details = () => {
             // console.log(bg);
             const image = await pdfDoc.embedPng(bg);
             page.drawImage(image, {
-              x: (parseFloat(element.left) / 100) * image.width,
-              y: (parseFloat(element.top) / 100) * image.height,
+              x: (parseFloat(element.left) / 100) * image4.width,
+              y: (parseFloat(element.top) / 100) * image4.height,
               width: image.width,
               height: image.height,
             });
@@ -207,12 +208,11 @@ const Details = () => {
           encoding: FileSystem.EncodingType.Base64,
         }).then((data) => {
           setLoading(false);
-
-          // Sharing.shareAsync(fileUri, {
-          //   UTI: '',
-          //   dialogTitle: '',
-          //   mimeType: 'application/pdf',
-          // });
+          Sharing.shareAsync(fileUri, {
+            UTI: '',
+            dialogTitle: '',
+            mimeType: 'application/pdf',
+          });
         });
       })
       .catch((err) => {
@@ -617,9 +617,8 @@ const Details = () => {
       </ScrollView>
       {data?.generateSignatureDetails
         .filter(
-          (item) =>
-            item.recEmail.toLowerCase() == user.email.toLowerCase() &&
-            item.complete_incomplete === 0
+          (item) => item.recEmail.toLowerCase() == user.email.toLowerCase()
+          // && item.complete_incomplete === 0
         )
         .map((item) => (
           <View style={tw`h-15 bg-gray-200  flex-row justify-between items-center px-10`}>
@@ -643,7 +642,7 @@ const Details = () => {
               }}
               mode="outlined"
             >
-              {item.sign_type == '1' ? 'Sign' : 'View'}
+              {item.complete_incomplete == 0 ? 'Sign' : 'View'}
             </Button>
           </View>
         ))}

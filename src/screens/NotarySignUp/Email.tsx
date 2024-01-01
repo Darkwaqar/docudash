@@ -23,7 +23,9 @@ const EmailScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<SignUpStackScreenProps<'Index'>['navigation']>();
   const route = useNavigation<SignUpStackScreenProps<'Index'>['route']>();
-  const [inputVal, setInputVal] = useState<string>('thomas@yopmail.com');
+  // const [inputVal, setInputVal] = useState<string>('thomas@yopmail.com');
+  // const [inputVal, setInputVal] = useState<string>('santiagostokes@yopmail.com');
+  const [inputVal, setInputVal] = useState<string>('leiyattouhinei-6529@yopmail.com');
   const [checked, setChecked] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = React.useState(false);
@@ -38,7 +40,7 @@ const EmailScreen = () => {
       })
       .then((response) => {
         const { data, success, next_code, message, next }: NotraySignUpAPI = response.data;
-        console.log('emailScreen', data.steps);
+        console.log('emailScreen', data);
         if (success) {
           if (data.steps === 6) {
             // @ts-ignore

@@ -128,6 +128,9 @@ const AddSignature = () => {
         } = response.data;
         // console.log(response.data);
         if (success) {
+          console.log(`data:image/png;base64 + ${selectedUri}`);
+          console.log(`data:image/png;base64 + ${selectedInitialUri}`);
+
           navigation.goBack();
           // navigation.navigate('Signatures', {});
         } else {

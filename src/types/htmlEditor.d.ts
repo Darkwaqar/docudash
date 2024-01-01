@@ -47,6 +47,7 @@ export interface DraggedElement {
   top: string;
   element_container_id: string;
   selected_user_id: string;
+  selected_user_id_1: string;
   colors: Colors;
   background?: string;
   content?: string;

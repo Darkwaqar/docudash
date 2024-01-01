@@ -22,10 +22,10 @@ import AddSignature from '@screens/Signatures/AddSignature';
 import Signatures from '@screens/Signatures/List';
 import AddStamp from '@screens/Stamp/AddStamps';
 import Stamps from '@screens/Stamp/List';
-import { selectAccessToken } from '@stores/slices/UserSlice';
+import { selectAccessToken, setUserStep } from '@stores/slices/UserSlice';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootStackParamList } from '../types/navigation';
 import DrawerNavigator from './DrawerNavigator';
 import LoginStackNavigator from './LoginStackNavigator';
@@ -34,6 +34,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function StackNavigator() {
   const user = useSelector(selectAccessToken);
+
   return (
     <StripeProvider
       merchantIdentifier="merchant.com.Docudash"

@@ -1,7 +1,7 @@
 import GreenButton from '@components/GreenButton';
 import Icon from '@expo/vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
-import { setUserType } from '@stores/slices/UserSlice';
+import { setUserStep, setUserType } from '@stores/slices/UserSlice';
 import { SignUpStackScreenProps } from '@type/*';
 import React, { useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -15,6 +15,7 @@ const NotaryOrUser = () => {
   const [dropDownVal, setDropDownVal] = useState<'User' | 'Notary'>('User');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<SignUpStackScreenProps<'NotaryOrUser'>['navigation']>();
+  dispatch(setUserStep(0));
 
   const closeMenu = () => {
     setShowDropDown(false);

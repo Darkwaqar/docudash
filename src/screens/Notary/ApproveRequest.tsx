@@ -236,6 +236,8 @@ const ApproveRequest = () => {
         }
         setImages(NotaryRequestsDetailsDocuments.map((x) => x.docs).flat());
         setRecipients(NotaryRequestsDetails);
+        console.log('recipients =><><=', NotaryRequestsDetails);
+
         setLoadingImg(false);
       })
       .catch((err) => {
@@ -250,6 +252,8 @@ const ApproveRequest = () => {
   }, []);
 
   const save = (type: number) => {
+    // console.log('JSON.stringify(refDraggedElArr.current)', JSON.stringify(refDraggedElArr.current));
+
     // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr.current));
     // return;
 
@@ -507,6 +511,9 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    selected_user_id_1: String(
+                      recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
+                    ),
                     colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
@@ -540,6 +547,9 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    selected_user_id_1: String(
+                      recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
+                    ),
                     colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
@@ -570,6 +580,9 @@ const ApproveRequest = () => {
                     uuid: Crypto.randomUUID(),
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
+                    ),
+                    selected_user_id_1: String(
+                      recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
                     colors: color[selectedRecipient],
                   };
@@ -603,6 +616,9 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    selected_user_id_1: String(
+                      recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
+                    ),
                     colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
@@ -633,6 +649,9 @@ const ApproveRequest = () => {
                     uuid: Crypto.randomUUID(),
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
+                    ),
+                    selected_user_id_1: String(
+                      recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
                     colors: color[selectedRecipient],
                   };
@@ -666,6 +685,9 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    selected_user_id_1: String(
+                      recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
+                    ),
                     colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
@@ -698,6 +720,9 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    selected_user_id_1: String(
+                      recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
+                    ),
                     colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
@@ -728,6 +753,9 @@ const ApproveRequest = () => {
                     uuid: Crypto.randomUUID(),
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
+                    ),
+                    selected_user_id_1: String(
+                      recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
                     colors: color[selectedRecipient],
                   };

@@ -29,7 +29,7 @@ export default function EnvelopeListItem({ item, heading }: IEnvelopeListItem) {
       <View style={tw`flex-row overflow-hidden gap-2 items-center h-16`}>
         <Image style={tw`w-10 h-10 rounded-full`} source={require('@assets/ProfilePic.png')} />
         <View>
-          <Text style={tw`font-bold text-black`}>{item?.emailSubject}</Text>
+          <Text style={tw`font-bold text-black capitalize`}>{item?.emailSubject}</Text>
           <Text style={tw`font-light text-3  text-gray-900`}>{item?.emailMessage}</Text>
           <Text style={tw`font-light text-3  text-gray-900`}>
             <Text style={tw`font-bold text-black`}>Status:</Text> {`${item?.complete_incomplete}`}
