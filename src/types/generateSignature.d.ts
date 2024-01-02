@@ -14,5 +14,6 @@ export interface GenerateSignature {
   deleted?: number;
   created_at?: date;
   updated_at?: date;
+  email: string;
   user?: User;
 }

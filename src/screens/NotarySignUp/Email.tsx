@@ -42,24 +42,37 @@ const EmailScreen = () => {
         const { data, success, next_code, message, next }: NotraySignUpAPI = response.data;
         console.log('emailScreen', data);
         if (success) {
-          if (data.steps === 6) {
+          if (data.user_type === 3) {
             // @ts-ignore
             navigation.navigate('SignUpIndex', {
-              screen: 'Step5' as any,
-              params: {
-                api: next,
-                email: data.email,
-              },
-            });
-          } else {
-            // @ts-ignore
-            navigation.replace('NotaryLoginStackNavigator', {
               screen: ('Step' + data.steps) as any,
               params: {
                 api: next,
                 email: data.email,
               },
             });
+          } else {
+            if (data.steps === 6) {
+              alert('data.steps === 6');
+              // @ts-ignore
+              navigation.navigate('SignUpIndex', {
+                screen: 'Step5' as any,
+                params: {
+                  api: next,
+                  email: data.email,
+                },
+              });
+            } else {
+              alert('else');
+              // @ts-ignore
+              navigation.replace('NotaryLoginStackNavigator', {
+                screen: ('Step' + data.steps) as any,
+                params: {
+                  api: next,
+                  email: data.email,
+                },
+              });
+            }
           }
           dispatch(setSignUpToken(next_code));
           dispatch(setNotaryStep(data.steps));

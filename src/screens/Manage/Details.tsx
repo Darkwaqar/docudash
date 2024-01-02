@@ -88,7 +88,10 @@ const Details = () => {
     signature_id: inbox.signature_id,
     uniqid: inbox.uniqid,
     id: inbox.id,
+    emailSubject: inbox.emailSubject,
+    email: inbox.recEmail,
   };
+  console.log('inbox', inbox);
 
   const fetchData = () => {
     setLoading(true);

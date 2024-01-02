@@ -40,24 +40,46 @@ const EmailScreen = () => {
         const { data, success, next_access, message, next }: SignUpAPI = response.data;
         console.log('emailScreen', response.data);
         if (success) {
-          if (data.steps === 6) {
-            // @ts-ignore
-            navigation.navigate('SignUpIndex', {
-              screen: 'Step5',
-              params: {
-                api: next,
-                email: data.email,
-              },
-            });
+          if (data.user_type === 7) {
+            if (data.steps === 6) {
+              // @ts-ignore
+              navigation.navigate('SignUpIndex', {
+                screen: 'Step5' as any,
+                params: {
+                  api: next,
+                  email: data.email,
+                },
+              });
+            } else {
+              // @ts-ignore
+              navigation.navigate('NotaryLoginStackNavigator', {
+                screen: 'Step' + data.steps,
+                params: {
+                  api: next,
+                  email: data.email,
+                },
+              });
+            }
           } else {
-            // @ts-ignore
-            navigation.replace('SignUpIndex', {
-              screen: ('Step' + data.steps) as any,
-              params: {
-                api: next,
-                email: data.email,
-              },
-            });
+            if (data.steps === 6) {
+              // @ts-ignore
+              navigation.navigate('SignUpIndex', {
+                screen: 'Step5',
+                params: {
+                  api: next,
+                  email: data.email,
+                },
+              });
+            } else {
+              // @ts-ignore
+              navigation.replace('SignUpIndex', {
+                screen: ('Step' + data.steps) as any,
+                params: {
+                  api: next,
+                  email: data.email,
+                },
+              });
+            }
           }
           dispatch(setSignUpToken(next_access));
           dispatch(setUserStep(data.steps));

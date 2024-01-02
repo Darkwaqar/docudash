@@ -31,7 +31,7 @@ import { Carousel } from 'react-native-ui-lib';
 import { useSelector } from 'react-redux';
 import tw from 'twrnc';
 import { Animated } from 'react-native';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import { PanGestureHandler, PinchGestureHandler, State } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('window');
 
 const color = [
@@ -160,26 +160,26 @@ const DocumentViewer = () => {
   const stampItem = route.params?.stamp || undefined;
   const [imageSizes, setImageSizes] = useState<{ width: number; height: number }[]>(new Array());
   // console.log('Imagesizes', imageSizes);
-  useEffect(() => {
-    if (signItem != undefined) {
-      let _newIni = draggedElArr.initial.map((element) => ({
-        ...element,
-        background: signItem.initial,
-      }));
-      let _newSign = draggedElArr.signature.map((element) => ({
-        ...element,
-        background: signItem.signature,
-      }));
-      setDraggedElArr({ ...draggedElArr, initial: _newIni, signature: _newSign });
-    }
-    if (stampItem != undefined) {
-      let _newStamp = draggedElArr.stamp.map((element) => ({
-        ...element,
-        background: stampItem.image_base64,
-      }));
-      setDraggedElArr({ ...draggedElArr, stamp: _newStamp });
-    }
-  }, [route, navigation]);
+  // useEffect(() => {
+  //   if (signItem != undefined) {
+  //     let _newIni = draggedElArr.initial.map((element) => ({
+  //       ...element,
+  //       background: signItem.initial,
+  //     }));
+  //     let _newSign = draggedElArr.signature.map((element) => ({
+  //       ...element,
+  //       background: signItem.signature,
+  //     }));
+  //     setDraggedElArr({ ...draggedElArr, initial: _newIni, signature: _newSign });
+  //   }
+  //   if (stampItem != undefined) {
+  //     let _newStamp = draggedElArr.stamp.map((element) => ({
+  //       ...element,
+  //       background: stampItem.image_base64,
+  //     }));
+  //     setDraggedElArr({ ...draggedElArr, stamp: _newStamp });
+  //   }
+  // }, [route, navigation]);
 
   const date = new Date();
   const cureentDate = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
@@ -187,7 +187,7 @@ const DocumentViewer = () => {
   const fetchData = async () => {
     setLoading(true);
     const url = 'https://docudash.net/api/generate-signature/html-editor/';
-    console.log(url + envelope.uniqid + '/' + envelope.signature_id);
+    console.log('=>', url + envelope.uniqid + '/' + envelope.signature_id + '/' + envelope.id);
 
     axios
       .get(url + envelope.uniqid + '/' + envelope.signature_id, {
@@ -204,7 +204,7 @@ const DocumentViewer = () => {
           generateSignatureDetails,
           generateSignatureDetailsImages,
         }: HtmlEditorAPI = response.data;
-        // console.log('html-editor', generateSignatureDetailsFinalise);
+        console.log('html-editor', response.data);
 
         if (status) {
           if (
@@ -214,6 +214,7 @@ const DocumentViewer = () => {
             const draggableObject: Array<DraggedElArr> = generateSignatureDetails.flatMap((x) =>
               JSON.parse(x.view_final_response)
             );
+            alert('If');
             const draggable = {
               signature: draggableObject.map((x) => x.signature ?? []).flat() ?? [],
               initial: draggableObject.map((x) => x.initial ?? []).flat() ?? [],
@@ -225,15 +226,16 @@ const DocumentViewer = () => {
               title: draggableObject.map((x) => x.title ?? []).flat() ?? [],
             };
             // console.log('draggable', abayYAKiyahy);
-            setDraggedElArr(draggable);
-            console.log(
-              'generateSignatureDetails[0].view_final_response',
-              JSON.stringify(draggable)
-            );
+            // setDraggedElArr(draggable);
+            // console.log(
+            //   'generateSignatureDetails[0].view_final_response',
+            //   JSON.stringify(draggable)
+            // );
           } else if (
             generateSignatureDetailsFinalise &&
             generateSignatureDetailsFinalise.draggedElArr
           ) {
+            alert('hELLO');
             const draggable = {
               signature: generateSignatureDetailsFinalise.draggedElArr.signature ?? [],
               initial: generateSignatureDetailsFinalise.draggedElArr.initial ?? [],
@@ -244,7 +246,7 @@ const DocumentViewer = () => {
               company: generateSignatureDetailsFinalise.draggedElArr.company ?? [],
               title: generateSignatureDetailsFinalise.draggedElArr.title ?? [],
             };
-            // console.log('draggable', draggable);
+            console.log('draggable', generateSignatureDetailsFinalise.draggedElArr.signature);
             setDraggedElArr(draggable);
           }
           // console.log('generateSignatureDetails', generateSignatureDetails);
@@ -335,9 +337,9 @@ const DocumentViewer = () => {
         <Button onPress={save}>Save</Button>
       </Appbar.Header>
       <SafeAreaView style={tw`flex-1 `}>
-        <View style={tw` bg-white bottom-0`}>
+        <View style={tw` bg-white bottom-0 `}>
           <ScrollView
-            contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
+            contentContainerStyle={{ flexGrow: 1 }}
             horizontal
             showsHorizontalScrollIndicator={false}
           >
@@ -378,389 +380,413 @@ const DocumentViewer = () => {
           </ScrollView>
         </View>
         <View style={tw`flex-1`}>
-          <FlatList
-            data={images}
-            // onViewableItemsChanged={_onViewableItemsChanged}
-            // viewabilityConfig={{
-            //   itemVisiblePercentThreshold: 50,
-            // }}
-            renderItem={({ item, index }) => {
-              return (
-                <View id={index + '_'} style={tw`my-2 `}>
-                  <AutoHeightImage
-                    onLoad={({
-                      nativeEvent: {
-                        source: { width, height },
-                      },
-                    }) => setImageSizes((prev) => [...prev, { width, height }])}
-                    width={width}
-                    source={{
-                      uri: item,
-                    }}
-                  />
-                  {draggedElArr?.company
-                    ?.filter(
-                      (x) =>
-                        x.element_container_id == `canvasInner-${index}` &&
-                        x.selected_user_id == String(recipients?.[selectedRecipient].id)
-                    )
-                    .map((item, index) => {
-                      // console.log(Number.parseFloat(item.left), item.top);
-                      return (
-                        <View
-                          style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                          // renderColor="red"
-                        >
-                          {item.content == undefined ? (
-                            <TouchableOpacity
-                              onPress={() =>
-                                setDraggedElArr((prev) => ({
-                                  ...prev,
-                                  date: prev.date.map((x) => ({
-                                    ...x,
-                                    content: profileData.company,
-                                  })),
-                                }))
-                              }
-                              style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
-                            >
-                              <IconButton
-                                size={10}
-                                style={tw`m-0 `}
-                                icon="office-building"
-                              ></IconButton>
-                              <Text style={tw`text-[10px] `}>Company</Text>
-                            </TouchableOpacity>
-                          ) : (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <Text style={tw`text-4 text-black font-medium`}>{item.content}</Text>
-                            </View>
-                          )}
-                        </View>
-                      );
-                    })}
-                  {draggedElArr?.date
-                    ?.filter(
-                      (x) =>
-                        x.element_container_id == `canvasInner-${index}` &&
-                        x.selected_user_id == String(recipients?.[selectedRecipient].id)
-                    )
-                    .map((item, index) => {
-                      return (
-                        <View
-                          style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                          // renderColor="red"
-                        >
-                          {item.content == undefined ? (
-                            <TouchableOpacity
-                              onPress={() =>
-                                setDraggedElArr((prev) => ({
-                                  ...prev,
-                                  date: prev.date.map((x) => ({ ...x, content: cureentDate })),
-                                }))
-                              }
-                              style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
-                            >
-                              <IconButton size={10} style={tw`m-0 `} icon="calendar"></IconButton>
-                              <Text style={tw`text-[10px] `}>Date</Text>
-                            </TouchableOpacity>
-                          ) : (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <Text style={tw`text-4 text-black font-medium`}>{item.content}</Text>
-                            </View>
-                          )}
-                        </View>
-                      );
-                    })}
-                  {draggedElArr?.email
-                    ?.filter(
-                      (x) =>
-                        x.element_container_id == `canvasInner-${index}` &&
-                        x.selected_user_id == String(recipients?.[selectedRecipient].id)
-                    )
-                    .map((item, index) => {
-                      // console.log(
-                      //   ((Number.parseInt(item.left) * 100) / width) * 15,
-                      //   ((Number.parseInt(item.top) * 100) / width) * 15
-                      // );
-                      // console.log(Number.parseFloat(item.left), item.top);
-
-                      return (
-                        <View
-                          style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                          // renderColor="red"
-                        >
-                          {item.content == undefined ? (
-                            <TouchableOpacity
-                              onPress={() =>
-                                setDraggedElArr((prev) => ({
-                                  ...prev,
-                                  date: prev.date.map((x) => ({
-                                    ...x,
-                                    content: profileData.email,
-                                  })),
-                                }))
-                              }
-                              style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
-                            >
-                              <IconButton size={10} style={tw`m-0 `} icon="email"></IconButton>
-                              <Text style={tw`text-[10px] `}>Email</Text>
-                            </TouchableOpacity>
-                          ) : (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <Text style={tw`text-4 text-black font-medium`}>{item.content}</Text>
-                            </View>
-                          )}
-                        </View>
-                      );
-                    })}
-
-                  {draggedElArr?.initial
-                    ?.filter(
-                      (x) =>
-                        x.element_container_id == `canvasInner-${index}` &&
-                        x.selected_user_id == String(recipients?.[selectedRecipient].id)
-                    )
-                    .map((item, index) => {
-                      // console.log(
-                      //   ((Number.parseInt(item.left) * 100) / width) * 15,
-                      //   ((Number.parseInt(item.top) * 100) / width) * 15
-                      // );
-                      // console.log(Number.parseFloat(item.left), item.top);
-
-                      return (
-                        <>
-                          {item.background ? (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <Image
-                                resizeMode="contain"
-                                style={[tw`w-14 h-8 bg-grey-500`, { zIndex: 999 }]}
-                                source={{ uri: item.background }}
-                              />
-                            </View>
-                          ) : (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <View
+          <PinchGestureHandler
+            ref={pinchRef}
+            onGestureEvent={onPinchEvent}
+            simultaneousHandlers={[panRef]}
+            onHandlerStateChange={handlePinchStateChange}
+          >
+            <Animated.FlatList
+              data={images}
+              // onViewableItemsChanged={_onViewableItemsChanged}
+              // viewabilityConfig={{
+              //   itemVisiblePercentThreshold: 50,
+              // }}
+              renderItem={({ item, index }) => {
+                return (
+                  <Animated.View id={index + '_'} style={tw`my-2 `}>
+                    <AutoHeightImage
+                      animated={true}
+                      onLoad={({
+                        nativeEvent: {
+                          source: { width, height },
+                        },
+                      }) => setImageSizes((prev) => [...prev, { width, height }])}
+                      width={width}
+                      source={{
+                        uri: item,
+                      }}
+                    />
+                    {draggedElArr?.company
+                      ?.filter(
+                        (x) =>
+                          x.element_container_id == `canvasInner-${index}` &&
+                          x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      )
+                      .map((item, index) => {
+                        // console.log(Number.parseFloat(item.left), item.top);
+                        return (
+                          <View
+                            style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                            // renderColor="red"
+                          >
+                            {item.content == undefined ? (
+                              <TouchableOpacity
+                                onPress={() =>
+                                  setDraggedElArr((prev) => ({
+                                    ...prev,
+                                    date: prev.date.map((x) => ({
+                                      ...x,
+                                      content: profileData.company,
+                                    })),
+                                  }))
+                                }
                                 style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
                               >
                                 <IconButton
                                   size={10}
                                   style={tw`m-0 `}
-                                  icon="signature-text"
-                                  onPress={() =>
-                                    navigation.navigate('SignatureSelection', {
-                                      Envelope: envelope,
-                                    })
-                                  }
+                                  icon="office-building"
                                 ></IconButton>
-                                <Text style={tw`text-[10px] `}>Initial</Text>
-                              </View>
-                            </View>
-                          )}
-                        </>
-                      );
-                    })}
-                  {draggedElArr?.name
-                    ?.filter(
-                      (x) =>
-                        x.element_container_id == `canvasInner-${index}` &&
-                        x.selected_user_id == String(recipients?.[selectedRecipient].id)
-                    )
-                    .map((item, index) => {
-                      // console.log(
-                      //   ((Number.parseInt(item.left) * 100) / width) * 15,
-                      //   ((Number.parseInt(item.top) * 100) / width) * 15
-                      // );
-                      // console.log(Number.parseFloat(item.left), item.top);
-
-                      return (
-                        <View
-                          style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                          // renderColor="red"
-                        >
-                          {item.content == undefined ? (
-                            <TouchableOpacity
-                              onPress={() =>
-                                setDraggedElArr((prev) => ({
-                                  ...prev,
-                                  name: prev.name.map((x) => ({
-                                    ...x,
-                                    content: profileData.first_name + ' ' + profileData.last_name,
-                                  })),
-                                }))
-                              }
-                              style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
-                            >
-                              <IconButton size={10} style={tw`m-0 `} icon="face-man"></IconButton>
-                              <Text style={tw`text-[10px] `}>Name</Text>
-                            </TouchableOpacity>
-                          ) : (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <Text style={tw`text-4 text-black font-medium`}>{item.content}</Text>
-                            </View>
-                          )}
-                        </View>
-                      );
-                    })}
-                  {draggedElArr?.signature
-                    ?.filter(
-                      (x) => x.element_container_id == `canvasInner-${index}`
-                      // && x.selected_user_id == String(recipients?.[selectedRecipient].id)
-                    )
-                    .map((item) => {
-                      // console.log(
-                      //   ((Number.parseInt(item.left) * 100) / width) * 15,
-                      //   ((Number.parseInt(item.top) * 100) / width) * 15
-                      // );
-                      // console.log('rerender', `bg-[${color[index].bg}]`);
-                      // console.log(item.left, item.top);
-                      // console.log('signature', draggedElArr?.signature);
-                      // console.log('selected recipeient', recipients?.[selectedRecipient].id);
-                      return (
-                        <>
-                          {item.background ? (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <Image
-                                resizeMode="contain"
-                                style={[tw`w-14 h-8 bg-grey-500`, { zIndex: 999 }]}
-                                source={{ uri: item.background }}
-                              />
-                            </View>
-                          ) : (
-                            <TouchableOpacity
-                              onPress={() =>
-                                navigation.navigate('SignatureSelection', {
-                                  Envelope: envelope,
-                                })
-                              }
-                              style={tw`absolute  top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
+                                <Text style={tw`text-[10px] `}>Company</Text>
+                              </TouchableOpacity>
+                            ) : (
                               <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <Text style={tw`text-4 text-black font-medium`}>
+                                  {item.content}
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                        );
+                      })}
+                    {draggedElArr?.date
+                      ?.filter(
+                        (x) =>
+                          x.element_container_id == `canvasInner-${index}` &&
+                          x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      )
+                      .map((item, index) => {
+                        return (
+                          <View
+                            style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                            // renderColor="red"
+                          >
+                            {item.content == undefined ? (
+                              <TouchableOpacity
+                                onPress={() =>
+                                  setDraggedElArr((prev) => ({
+                                    ...prev,
+                                    date: prev.date.map((x) => ({ ...x, content: cureentDate })),
+                                  }))
+                                }
                                 style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
                               >
-                                <IconButton size={10} style={tw`m-0 `} icon="draw"></IconButton>
-                                <Text style={tw`text-[10px] `}>Signature</Text>
-                              </View>
-                            </TouchableOpacity>
-                          )}
-                        </>
-                      );
-                    })}
-                  {draggedElArr?.stamp
-                    ?.filter(
-                      (x) =>
-                        x.element_container_id == `canvasInner-${index}` &&
-                        x.selected_user_id == String(recipients?.[selectedRecipient].id)
-                    )
-                    .map((item) => {
-                      // console.log(
-                      //   ((Number.parseInt(item.left) * 100) / width) * 15,
-                      //   ((Number.parseInt(item.top) * 100) / width) * 15
-                      // );
-                      // console.log(Number.parseFloat(item.left), item.top);
-
-                      return (
-                        <>
-                          {item.background ? (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <Image
-                                resizeMode="cover"
-                                style={[tw`w-8 h-8 rounded-full bg-grey-500`, { zIndex: 999 }]}
-                                source={{ uri: item.background }}
-                              />
-                            </View>
-                          ) : (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
+                                <IconButton size={10} style={tw`m-0 `} icon="calendar"></IconButton>
+                                <Text style={tw`text-[10px] `}>Date</Text>
+                              </TouchableOpacity>
+                            ) : (
                               <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <Text style={tw`text-4 text-black font-medium`}>
+                                  {item.content}
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                        );
+                      })}
+                    {draggedElArr?.email
+                      ?.filter(
+                        (x) =>
+                          x.element_container_id == `canvasInner-${index}` &&
+                          x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      )
+                      .map((item, index) => {
+                        // console.log(
+                        //   ((Number.parseInt(item.left) * 100) / width) * 15,
+                        //   ((Number.parseInt(item.top) * 100) / width) * 15
+                        // );
+                        // console.log(Number.parseFloat(item.left), item.top);
+
+                        return (
+                          <View
+                            style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                            // renderColor="red"
+                          >
+                            {item.content == undefined ? (
+                              <TouchableOpacity
+                                onPress={() =>
+                                  setDraggedElArr((prev) => ({
+                                    ...prev,
+                                    date: prev.date.map((x) => ({
+                                      ...x,
+                                      content: profileData.email,
+                                    })),
+                                  }))
+                                }
+                                style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
+                              >
+                                <IconButton size={10} style={tw`m-0 `} icon="email"></IconButton>
+                                <Text style={tw`text-[10px] `}>Email</Text>
+                              </TouchableOpacity>
+                            ) : (
+                              <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <Text style={tw`text-4 text-black font-medium`}>
+                                  {item.content}
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                        );
+                      })}
+
+                    {draggedElArr?.initial
+                      ?.filter(
+                        (x) =>
+                          x.element_container_id == `canvasInner-${index}` &&
+                          x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      )
+                      .map((item, index) => {
+                        // console.log(
+                        //   ((Number.parseInt(item.left) * 100) / width) * 15,
+                        //   ((Number.parseInt(item.top) * 100) / width) * 15
+                        // );
+                        // console.log(Number.parseFloat(item.left), item.top);
+
+                        return (
+                          <>
+                            {item.background ? (
+                              <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <Image
+                                  resizeMode="contain"
+                                  style={[tw`w-14 h-8 bg-grey-500`, { zIndex: 999 }]}
+                                  source={{ uri: item.background }}
+                                />
+                              </View>
+                            ) : (
+                              <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <View
+                                  style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
+                                >
+                                  <IconButton
+                                    size={10}
+                                    style={tw`m-0 `}
+                                    icon="signature-text"
+                                    onPress={() =>
+                                      navigation.navigate('SignatureSelection', {
+                                        Envelope: envelope,
+                                      })
+                                    }
+                                  ></IconButton>
+                                  <Text style={tw`text-[10px] `}>Initial</Text>
+                                </View>
+                              </View>
+                            )}
+                          </>
+                        );
+                      })}
+                    {draggedElArr?.name
+                      ?.filter(
+                        (x) =>
+                          x.element_container_id == `canvasInner-${index}` &&
+                          x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      )
+                      .map((item, index) => {
+                        // console.log(
+                        //   ((Number.parseInt(item.left) * 100) / width) * 15,
+                        //   ((Number.parseInt(item.top) * 100) / width) * 15
+                        // );
+                        // console.log(Number.parseFloat(item.left), item.top);
+
+                        return (
+                          <View
+                            style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                            // renderColor="red"
+                          >
+                            {item.content == undefined ? (
+                              <TouchableOpacity
+                                onPress={() =>
+                                  setDraggedElArr((prev) => ({
+                                    ...prev,
+                                    name: prev.name.map((x) => ({
+                                      ...x,
+                                      content: profileData.first_name + ' ' + profileData.last_name,
+                                    })),
+                                  }))
+                                }
+                                style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
+                              >
+                                <IconButton size={10} style={tw`m-0 `} icon="face-man"></IconButton>
+                                <Text style={tw`text-[10px] `}>Name</Text>
+                              </TouchableOpacity>
+                            ) : (
+                              <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <Text style={tw`text-4 text-black font-medium`}>
+                                  {item.content}
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                        );
+                      })}
+                    {draggedElArr?.signature
+                      ?.filter(
+                        (x) => x.element_container_id == `canvasInner-${index}`
+                        // && x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      )
+                      .map((item) => {
+                        // console.log(
+                        //   ((Number.parseInt(item.left) * 100) / width) * 15,
+                        //   ((Number.parseInt(item.top) * 100) / width) * 15
+                        // );
+                        // console.log('rerender', `bg-[${color[index].bg}]`);
+                        // console.log(item.left, item.top);
+                        // console.log('signature', draggedElArr?.signature);
+                        // console.log('selected recipeient', recipients?.[selectedRecipient].id);
+                        return (
+                          <>
+                            {item.background ? (
+                              <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <Image
+                                  resizeMode="contain"
+                                  style={[tw`w-14 h-8 bg-grey-500`, { zIndex: 999 }]}
+                                  source={{ uri: item.background }}
+                                />
+                              </View>
+                            ) : (
+                              <TouchableOpacity
+                                onPress={() =>
+                                  navigation.navigate('SignatureSelection', {
+                                    Envelope: envelope,
+                                  })
+                                }
+                                style={tw`absolute  top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <View
+                                  style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
+                                >
+                                  <IconButton size={10} style={tw`m-0 `} icon="draw"></IconButton>
+                                  <Text style={tw`text-[10px] `}>Signature</Text>
+                                </View>
+                              </TouchableOpacity>
+                            )}
+                          </>
+                        );
+                      })}
+                    {draggedElArr?.stamp
+                      ?.filter(
+                        (x) =>
+                          x.element_container_id == `canvasInner-${index}` &&
+                          x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      )
+                      .map((item) => {
+                        // console.log(
+                        //   ((Number.parseInt(item.left) * 100) / width) * 15,
+                        //   ((Number.parseInt(item.top) * 100) / width) * 15
+                        // );
+                        // console.log(Number.parseFloat(item.left), item.top);
+
+                        return (
+                          <>
+                            {item.background ? (
+                              <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <Image
+                                  resizeMode="cover"
+                                  style={[tw`w-8 h-8 rounded-full bg-grey-500`, { zIndex: 999 }]}
+                                  source={{ uri: item.background }}
+                                />
+                              </View>
+                            ) : (
+                              <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <View
+                                  style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
+                                >
+                                  <IconButton
+                                    size={10}
+                                    style={tw`m-0 `}
+                                    icon="stamper"
+                                    onPress={() =>
+                                      navigation.navigate('StampSelection', {
+                                        Envelope: envelope,
+                                      })
+                                    }
+                                  ></IconButton>
+                                  <Text style={tw`text-[10px] `}>Stamp</Text>
+                                </View>
+                              </View>
+                            )}
+                          </>
+                        );
+                      })}
+                    {draggedElArr?.title
+                      ?.filter(
+                        (x) =>
+                          x.element_container_id == `canvasInner-${index}` &&
+                          x.selected_user_id == String(recipients?.[selectedRecipient].id)
+                      )
+                      .map((item) => {
+                        // console.log(Number.parseFloat(item.left), item.top);
+                        return (
+                          <View
+                            style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                            // renderColor="red"
+                          >
+                            {item.content == undefined ? (
+                              <TouchableOpacity
+                                onPress={() =>
+                                  setDraggedElArr((prev) => ({
+                                    ...prev,
+                                    date: prev.date.map((x) => ({
+                                      ...x,
+                                      content: profileData.first_name,
+                                    })),
+                                  }))
+                                }
                                 style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
                               >
                                 <IconButton
                                   size={10}
                                   style={tw`m-0 `}
-                                  icon="stamper"
-                                  onPress={() =>
-                                    navigation.navigate('StampSelection', { Envelope: envelope })
-                                  }
+                                  icon="briefcase"
                                 ></IconButton>
-                                <Text style={tw`text-[10px] `}>Stamp</Text>
+                                <Text style={tw`text-[10px] `}>Title</Text>
+                              </TouchableOpacity>
+                            ) : (
+                              <View
+                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                // renderColor="red"
+                              >
+                                <Text style={tw`text-4 text-black font-medium`}>
+                                  {item.content}
+                                </Text>
                               </View>
-                            </View>
-                          )}
-                        </>
-                      );
-                    })}
-                  {draggedElArr?.title
-                    ?.filter(
-                      (x) =>
-                        x.element_container_id == `canvasInner-${index}` &&
-                        x.selected_user_id == String(recipients?.[selectedRecipient].id)
-                    )
-                    .map((item) => {
-                      // console.log(Number.parseFloat(item.left), item.top);
-                      return (
-                        <View
-                          style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                          // renderColor="red"
-                        >
-                          {item.content == undefined ? (
-                            <TouchableOpacity
-                              onPress={() =>
-                                setDraggedElArr((prev) => ({
-                                  ...prev,
-                                  date: prev.date.map((x) => ({
-                                    ...x,
-                                    content: profileData.first_name,
-                                  })),
-                                }))
-                              }
-                              style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
-                            >
-                              <IconButton size={10} style={tw`m-0 `} icon="briefcase"></IconButton>
-                              <Text style={tw`text-[10px] `}>Title</Text>
-                            </TouchableOpacity>
-                          ) : (
-                            <View
-                              style={tw`absolute top-[${item.top}] left-[${item.left}]`}
-                              // renderColor="red"
-                            >
-                              <Text style={tw`text-4 text-black font-medium`}>{item.content}</Text>
-                            </View>
-                          )}
-                        </View>
-                      );
-                    })}
-                </View>
-              );
-            }}
-          />
+                            )}
+                          </View>
+                        );
+                      })}
+                  </Animated.View>
+                );
+              }}
+            />
+          </PinchGestureHandler>
           {/* <ScrollView>
             {images?.map((item) => {
               let imageUrl = '';
