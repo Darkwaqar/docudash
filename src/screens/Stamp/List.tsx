@@ -28,6 +28,9 @@ export default function List() {
       })
       .then((response) => {
         const { data, message, status } = response.data as StampListAPI;
+        console.log('status', status);
+        console.log('response.data', response.data);
+
         if (status) {
           setList(data.data);
         } else {

@@ -13,6 +13,7 @@ import {
 } from '@type/index';
 import axios from 'axios';
 import FormData from 'form-data';
+import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 import React, { createRef, useCallback, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
@@ -214,7 +215,6 @@ const DocumentViewer = () => {
             const draggableObject: Array<DraggedElArr> = generateSignatureDetails.flatMap((x) =>
               JSON.parse(x.view_final_response)
             );
-            alert('If');
             const draggable = {
               signature: draggableObject.map((x) => x.signature ?? []).flat() ?? [],
               initial: draggableObject.map((x) => x.initial ?? []).flat() ?? [],
@@ -226,7 +226,7 @@ const DocumentViewer = () => {
               title: draggableObject.map((x) => x.title ?? []).flat() ?? [],
             };
             // console.log('draggable', abayYAKiyahy);
-            // setDraggedElArr(draggable);
+            setDraggedElArr(draggable);
             // console.log(
             //   'generateSignatureDetails[0].view_final_response',
             //   JSON.stringify(draggable)
@@ -235,7 +235,6 @@ const DocumentViewer = () => {
             generateSignatureDetailsFinalise &&
             generateSignatureDetailsFinalise.draggedElArr
           ) {
-            alert('hELLO');
             const draggable = {
               signature: generateSignatureDetailsFinalise.draggedElArr.signature ?? [],
               initial: generateSignatureDetailsFinalise.draggedElArr.initial ?? [],
@@ -380,19 +379,22 @@ const DocumentViewer = () => {
           </ScrollView>
         </View>
         <View style={tw`flex-1`}>
-          <PinchGestureHandler
-            ref={pinchRef}
-            onGestureEvent={onPinchEvent}
-            simultaneousHandlers={[panRef]}
-            onHandlerStateChange={handlePinchStateChange}
+          <ReactNativeZoomableView
+            maxZoom={1.5}
+            minZoom={0.5}
+            zoomStep={0.5}
+            initialZoom={1}
+            bindToBorders={true}
+            // onZoomAfter={this.logOutZoomState}
+            style={
+              {
+                // padding: 10,
+                // backgroundColor: 'red',
+              }
+            }
           >
-            <Animated.FlatList
-              data={images}
-              // onViewableItemsChanged={_onViewableItemsChanged}
-              // viewabilityConfig={{
-              //   itemVisiblePercentThreshold: 50,
-              // }}
-              renderItem={({ item, index }) => {
+            <View>
+              {images?.map((item, index) => {
                 return (
                   <Animated.View id={index + '_'} style={tw`my-2 `}>
                     <AutoHeightImage
@@ -480,10 +482,10 @@ const DocumentViewer = () => {
                               </TouchableOpacity>
                             ) : (
                               <View
-                                style={tw`absolute top-[${item.top}] left-[${item.left}]`}
+                                style={tw`absolute top-[${item.top}] left-[${item.left}] w-15  h-10 `}
                                 // renderColor="red"
                               >
-                                <Text style={tw`text-4 text-black font-medium`}>
+                                <Text style={tw`text-4 text-black font-medium text-[7px]`}>
                                   {item.content}
                                 </Text>
                               </View>
@@ -784,9 +786,19 @@ const DocumentViewer = () => {
                       })}
                   </Animated.View>
                 );
+              })}
+              {/* <Animated.FlatList
+              data={images}
+              // onViewableItemsChanged={_onViewableItemsChanged}
+              // viewabilityConfig={{
+              //   itemVisiblePercentThreshold: 50,
+              // }}
+              renderItem={({ item, index }) => {
+             
               }}
-            />
-          </PinchGestureHandler>
+            /> */}
+            </View>
+          </ReactNativeZoomableView>
           {/* <ScrollView>
             {images?.map((item) => {
               let imageUrl = '';

@@ -46,7 +46,7 @@ const RON_DocUpload = () => {
     });
 
     axios
-      .post('https://docudash.net/api/notary-sign-up-5/' + token, formData, {})
+      .post('https://docudash.net/api/notary-sign-up-6/' + token, formData, {})
       .then((response) => {
         const { success = true, data, message }: NotarySignUpStep5 = response.data;
         // console.log('optScreen-', response.data);

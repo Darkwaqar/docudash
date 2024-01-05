@@ -96,6 +96,7 @@ export default function List() {
       StatusUpdate(item.id, !isSwitchOn ? 1 : 0);
       fetchList();
     };
+    console.log('item', item);
 
     return (
       <View style={tw` bg-white p-2 my-1 gap-2 px-3`}>
@@ -107,13 +108,17 @@ export default function List() {
                 style={tw`w-full h-20  `}
                 resizeMode="contain"
                 source={{
-                  uri: item.signature,
+                  uri: item.signature_img,
                 }}
               />
             </View>
             <View>
               <Text style={tw`font-medium`}>Initials</Text>
-              <Image style={tw`w-full h-20`} resizeMode="contain" source={{ uri: item.initial }} />
+              <Image
+                style={tw`w-full h-20`}
+                resizeMode="contain"
+                source={{ uri: item.initial_img }}
+              />
             </View>
             <View style={tw`gap-4  `}>
               <Text style={tw`font-medium overflow-hidden`}>Signature Code</Text>

@@ -60,7 +60,7 @@ const LicenseDocument = () => {
           <View style={tw`absolute top-10 left-5`}>
             <Chip>
               {/* <Text variant="labelLarge">{`4/7`}</Text> */}
-              <Text variant="labelLarge">{`3/7`}</Text>
+              <Text variant="labelLarge">{`4/7`}</Text>
             </Chip>
           </View>
           <Image

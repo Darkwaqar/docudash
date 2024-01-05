@@ -19,6 +19,7 @@ import {
   Alert,
   Image,
   Modal,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -30,7 +31,7 @@ import { Button, Divider, IconButton, Menu, TextInput } from 'react-native-paper
 import { useSelector } from 'react-redux';
 import tw from 'twrnc';
 import VoidEnvelopeModel from '@components/VoidEnvelopeModel';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, PageSizes, StandardFonts, rgb } from 'pdf-lib';
 import * as FileSystem from 'expo-file-system';
 import * as Permissions from 'expo-permissions';
 import * as MediaLibrary from 'expo-media-library';
@@ -58,9 +59,9 @@ const Details = () => {
   const [accessCode, setAccessCode] = useState('');
   const [accessCodeText, setAccessCodeText] = useState('');
   const [visible, setVisible] = React.useState(false);
+  const [selectedDownload, setSelectedDownload] = useState('0');
   const openMenu = () => setVisible(true);
-  console.log('inbox', inbox);
-
+  console.log('inbox', accessToken);
   const [draggedElArr, setDraggedElArr] = useState<DraggedElArr>({
     signature: [],
     initial: [],
@@ -82,7 +83,7 @@ const Details = () => {
   const closeMenuMoreHeader = () => setVisibleMoreHeader(false);
   const [needToSignButton, setNeedToSignButton] = useState('Sign');
   const [loading, setLoading] = useState(false);
-
+  const [modalVisible, setModalVisible] = useState(false);
   //@ts-ignore
   const generate: GenerateSignature = {
     signature_id: inbox.signature_id,
@@ -146,6 +147,87 @@ const Details = () => {
     fetchData();
   }, []);
 
+  const Concern = () => {
+    const url = 'https://docudash.net/api/getConcernedData';
+    console.log('generate.uniqid', generate.uniqid);
+
+    axios
+      .post(
+        url,
+        { uniqid: generate.uniqid },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then(async (response) => {
+        console.log('response.data ==>>', response.data.data);
+        if (response.data.status) {
+          if (response.data.data.length > 0) {
+            const createPDFConcert = async () => {
+              const pdfDoc = await PDFDocument.create();
+              const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+              const page = pdfDoc.addPage();
+              console.log('page ==><><=', page);
+              const promises = response.data.data.map(async (element, index) => {
+                const image = await pdfDoc.embedPng(element.base64Image);
+                const jpgDims = image.scale(0.25);
+                const fontSize = 10;
+                const { width, height } = page.getSize();
+                page.drawText(
+                  `By signing below, I voluntarily consent to participate in [activity/event] and acknowledge that I have read, understood,
+ and agreed to the terms outlined in this consent form.`,
+                  {
+                    x: index > 0 ? 10 * index + 1 : 10,
+                    y: height - 4 * fontSize,
+                    size: fontSize,
+                    font: timesRomanFont,
+                    color: rgb(0, 0, 0),
+                  }
+                );
+                page.drawImage(image, {
+                  x: index > 0 ? 10 * index + 1 : 10,
+                  y: 500,
+                  width: jpgDims.width,
+                  height: jpgDims.height,
+                });
+              });
+              await Promise.all(promises);
+              const pdfBytes = await pdfDoc.saveAsBase64();
+              console.log('pdfBytes ==><><===', pdfBytes);
+              return pdfBytes;
+            };
+            setLoading(true);
+            createPDFConcert()
+              .then((res) => {
+                const fileUri = `${FileSystem.documentDirectory}pdf1.pdf`;
+                // console.log(fileUri);
+                FileSystem.writeAsStringAsync(fileUri, res, {
+                  encoding: FileSystem.EncodingType.Base64,
+                }).then((data) => {
+                  setLoading(false);
+                  Sharing.shareAsync(fileUri, {
+                    UTI: '',
+                    dialogTitle: '',
+                    mimeType: 'application/pdf',
+                  });
+                  setSelectedDownload('0');
+                  // setModalVisible(false);
+                });
+              })
+              .catch((err) => {
+                setLoading(false);
+                console.log('err', err);
+              });
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('Error----', error);
+        setLoading(false);
+      });
+  };
   const createpdf = () => {
     const createPDF = async () => {
       const pdfDoc = await PDFDocument.create();
@@ -216,6 +298,8 @@ const Details = () => {
             dialogTitle: '',
             mimeType: 'application/pdf',
           });
+          setSelectedDownload('0');
+          setModalVisible(false);
         });
       })
       .catch((err) => {
@@ -556,7 +640,7 @@ const Details = () => {
                 loading={loading}
                 mode="elevated"
                 onPress={() => {
-                  createpdf();
+                  setModalVisible(true);
                 }}
               >
                 Download
@@ -650,6 +734,103 @@ const Details = () => {
           </View>
         ))}
       <SafeAreaView style={tw`flex-1 bg-gray-200`}></SafeAreaView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={[styles.modalView, tw`gap-3`]}>
+            <View style={{ borderBottomWidth: 1, height: 30 }}>
+              <Text>Download</Text>
+            </View>
+            <View style={tw`gap-3`}>
+              <TouchableOpacity
+                onPress={() => setSelectedDownload('1')}
+                style={[
+                  tw`flex-row items-center justify-between gap-2 w-[100%]`,
+                  {
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    padding: 10,
+                    borderColor: selectedDownload === '1' ? '#6fac46' : 'black',
+                  },
+                ]}
+              >
+                <Image style={tw`w-8 h-8`} source={require('../../../assets/zip.png')} />
+                <View style={tw`gap-1`}>
+                  <Text style={styles.modalText}>Both</Text>
+                  <Text style={styles.modalText}>
+                    Download a ZIP file with both Concern PDF and uploaded Document.
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setSelectedDownload('2')}
+                style={[
+                  tw`flex-row items-center justify-between gap-2 w-[100%]`,
+                  {
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    padding: 10,
+                    borderColor: selectedDownload === '2' ? '#6fac46' : 'black',
+                  },
+                ]}
+              >
+                <Image style={tw`w-8 h-8`} source={require('../../../assets/pdf.png')} />
+                <View style={tw`gap-1`}>
+                  <Text style={styles.modalText}>Download Concern</Text>
+                  <Text style={styles.modalText}>
+                    Get a PDF focused on highlighted concerns in the request.
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setSelectedDownload('3')}
+                style={[
+                  tw`flex-row items-center justify-between gap-2 w-[100%]`,
+                  {
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    padding: 10,
+                    borderColor: selectedDownload === '3' ? '#6fac46' : 'black',
+                  },
+                ]}
+              >
+                <Image style={tw`w-8 h-8`} source={require('../../../assets/pdf.png')} />
+                <View style={tw`gap-1`}>
+                  <Text style={styles.modalText}>Download Document</Text>
+                  <Text style={styles.modalText}>Retrieve the uploaded Document as a PDF.</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={tw`flex-row items-end justify-end w-[100%] gap-4`}>
+              <Button onPress={() => setModalVisible(false)} style={{ width: 100 }} mode="outlined">
+                {'Cancel'}
+              </Button>
+              <Button
+                onPress={() => {
+                  if (selectedDownload === '1') {
+                    createpdf();
+                  } else if (selectedDownload === '2') {
+                    Concern();
+                  } else {
+                    createpdf();
+                  }
+                }}
+                style={{ width: 150 }}
+                mode="outlined"
+              >
+                {'Download'}
+              </Button>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </Fragment>
   );
 };
@@ -665,5 +846,51 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    // marginTop: 22,
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    // paddingHorizontal: 10,
+    padding: 20,
+    width: '100%',
+    height: Platform.OS === 'android' ? 400 : 380,
+    // alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    width: '60%',
+    // marginBottom: 15,
+    // textAlign: 'center',
   },
 });

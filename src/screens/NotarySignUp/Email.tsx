@@ -52,7 +52,7 @@ const EmailScreen = () => {
               },
             });
           } else {
-            if (data.steps === 6) {
+            if (data.steps === 7) {
               alert('data.steps === 6');
               // @ts-ignore
               navigation.navigate('SignUpIndex', {

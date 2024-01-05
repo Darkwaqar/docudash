@@ -17,6 +17,7 @@
     "@expo/webpack-config": "^18.0.1",
     "@gorhom/bottom-sheet": "^4.4.7",
     "@material/material-color-utilities": "^0.2.7",
+    "@openspacelabs/react-native-zoomable-view": "^2.1.5",
     "@pchmn/expo-material3-theme": "^1.0.1",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-community/datetimepicker": "6.7.3",

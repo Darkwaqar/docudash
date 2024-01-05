@@ -7,7 +7,7 @@ import axios from 'axios';
 import React, { useRef, useState } from 'react';
 
 import Icon from '@expo/vector-icons/AntDesign';
-import { selectAccessToken, setNotaryStep } from '@stores/slices/UserSlice';
+import { selectAccessToken, selectSignupToken, setNotaryStep } from '@stores/slices/UserSlice';
 import { placeTypeToDelta } from '@utils/placeTypeToDelta';
 import { usaStates } from '@utils/states';
 import {
@@ -30,7 +30,7 @@ const Address = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const [showDropDownState, setShowDropDownState] = useState(false);
-  const token = useSelector(selectAccessToken);
+  const token = useSelector(selectSignupToken);
   const map = useRef<MapView>(null);
   const dispatch = useDispatch();
   const [address, setAddress] = useState<{
@@ -68,7 +68,7 @@ const Address = () => {
       zip_code: address.zip_code,
     });
     axios
-      .post('https://docudash.net/api/notary-sign-up-4/' + token, {
+      .post('https://docudash.net/api/notary-sign-up-5/' + token, {
         address1: address.address1,
         address2: address.address2,
         country: address.country,
@@ -81,6 +81,7 @@ const Address = () => {
       .then((response) => {
         const { success, data, message }: NotraySignUpAPI = response.data;
         console.log('optScreen-', response.data);
+        console.log('token ', token);
 
         if (success) {
           console.log(data.steps);
@@ -95,7 +96,9 @@ const Address = () => {
             }),
             dispatch(setNotaryStep(data.steps));
         } else {
-          if (message) Object.values(message).map((x) => Alert.alert('Failed', x.toString()));
+          console.log('else', message);
+
+          // if (message) Object.values(message).map((x) => Alert.alert('Failed', x.toString()));
           setLoading(false);
         }
       })

@@ -1802,6 +1802,13 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@openspacelabs/react-native-zoomable-view@^2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@openspacelabs/react-native-zoomable-view/-/react-native-zoomable-view-2.1.5.tgz#e738a6493733461f0ab8327033b3dfbee2e93998"
+  integrity sha512-AE2y7S+8cFXXrrpKJQVrTCLh5E9Iu506/T1xgDBx9SJeiUeNFCIyoZdWhAAtsmppY5vLaUeI7qz+JVBDzmQsEA==
+  dependencies:
+    prop-types "^15.7.2"
+
 "@pchmn/expo-material3-theme@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@pchmn/expo-material3-theme/-/expo-material3-theme-1.0.1.tgz#1b136450a1ccbb5f37de414ab8d985020276a5e0"

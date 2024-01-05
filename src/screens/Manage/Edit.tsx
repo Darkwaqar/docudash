@@ -347,7 +347,7 @@ const Edit = () => {
       })
       .catch((error) => {
         setLoading(false);
-        console.log('error', error);
+        console.log('error ==><>', error);
       });
   };
 

@@ -25,12 +25,13 @@ const SetPasswordScreen = () => {
   const fetchData = async () => {
     setLoading(true);
     axios
-      .post('https://docudash.net/api/sign-up-4/' + token, {
+      .post('https://docudash.net/api/notary-sign-up-4/' + token, {
         password: password,
       })
       .then((response) => {
         const { data, success, message }: iStep4 = response.data;
-        console.log('PasswordScreen', data);
+        console.log('PasswordScreen ==>', response.data);
+        console.log('Api ==>', 'https://docudash.net/api/notary-sign-up-4/' + token);
         if (success) {
           //@ts-ignore
           navigation.replace('NotaryLoginStackNavigator', {
