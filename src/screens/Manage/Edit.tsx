@@ -257,6 +257,7 @@ const Edit = () => {
                 if (status) navigation.navigate('Home');
                 else {
                   alert(message);
+                  navigation.navigate('Home');
                   console.log('message', message);
                 }
               })
@@ -321,6 +322,7 @@ const Edit = () => {
       .post('https://docudash.net/api/generate-signature/upload-document', formData, { headers })
       .then((response) => {
         setLoading(false);
+        console.log('response ==><><><== message', response.data);
         const {
           status,
           message,

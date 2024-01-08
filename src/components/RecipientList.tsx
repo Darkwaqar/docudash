@@ -163,7 +163,7 @@ const RecipientList = ({ data, setData }) => {
           style={tw`flex-1 h-20 flex-row bg-white justify-center  border border-gray-200 items-center text-white text-xl font-bold text-center`}
         >
           <Text style={tw`w-14 text-center`} variant="labelLarge">
-            {_index}
+            {_index + 1}
           </Text>
           <View style={tw`w-14 text-center`}>
             <Avatar.Text size={40} label="XD" />

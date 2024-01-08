@@ -33,8 +33,9 @@ const FilterModal = ({ onPress }: IFilter) => {
                 <Text variant="titleLarge">Filter</Text>
                 <IconButton
                   icon={'close-circle'}
+                  style={tw`left-3`}
                   onPress={() => setModalVisible(false)}
-                ></IconButton>
+                />
               </View>
               <Divider></Divider>
               <View style={tw`gap-2 py-2`}>

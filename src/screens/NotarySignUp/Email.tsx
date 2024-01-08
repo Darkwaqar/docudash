@@ -53,7 +53,7 @@ const EmailScreen = () => {
             });
           } else {
             if (data.steps === 7) {
-              alert('data.steps === 6');
+              // alert('data.steps === 6');
               // @ts-ignore
               navigation.navigate('SignUpIndex', {
                 screen: 'Step5' as any,
@@ -63,7 +63,7 @@ const EmailScreen = () => {
                 },
               });
             } else {
-              alert('else');
+              // alert('else');
               // @ts-ignore
               navigation.replace('NotaryLoginStackNavigator', {
                 screen: ('Step' + data.steps) as any,

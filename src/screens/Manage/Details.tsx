@@ -634,18 +634,21 @@ const Details = () => {
                 <Menu.Item onPress={DeleteEnvelope} title="Delete" />
               </Menu>
             </View>
-            <View style={tw`flex-row items-center gap-5 py-2 justify-center`}>
-              <Button
-                disabled={loading}
-                loading={loading}
-                mode="elevated"
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-              >
-                Download
-              </Button>
-            </View>
+            {data?.generateSignatureDetails.every((obj) => obj.complete_incomplete == 1) && (
+              <View style={tw`flex-row items-center gap-5 py-2 justify-center`}>
+                <Button
+                  disabled={loading}
+                  loading={loading}
+                  mode="elevated"
+                  onPress={() => {
+                    // setModalVisible(true);
+                    console.log('Data ', data);
+                  }}
+                >
+                  Download
+                </Button>
+              </View>
+            )}
             <View style={tw`flex-row items-center gap-5 py-2 justify-center`}></View>
           </View>
           <View style={tw`flex-row items-center py-2 gap-7 p-5 justify-end`}>
@@ -745,12 +748,21 @@ const Details = () => {
       >
         <View style={styles.centeredView}>
           <View style={[styles.modalView, tw`gap-3`]}>
-            <View style={{ borderBottomWidth: 1, height: 30 }}>
+            <View
+              style={[
+                tw`flex-row items-center justify-between`,
+                { borderBottomWidth: 1, height: 35 },
+              ]}
+            >
               <Text>Download</Text>
+              <Icon name="close" size={25} onPress={() => setModalVisible(!modalVisible)} />
             </View>
             <View style={tw`gap-3`}>
               <TouchableOpacity
-                onPress={() => setSelectedDownload('1')}
+                onPress={() => {
+                  setSelectedDownload('1');
+                  createpdf();
+                }}
                 style={[
                   tw`flex-row items-center justify-between gap-2 w-[100%]`,
                   {
@@ -770,7 +782,10 @@ const Details = () => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setSelectedDownload('2')}
+                onPress={() => {
+                  setSelectedDownload('2');
+                  Concern();
+                }}
                 style={[
                   tw`flex-row items-center justify-between gap-2 w-[100%]`,
                   {
@@ -790,7 +805,10 @@ const Details = () => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setSelectedDownload('3')}
+                onPress={() => {
+                  setSelectedDownload('3');
+                  createpdf();
+                }}
                 style={[
                   tw`flex-row items-center justify-between gap-2 w-[100%]`,
                   {
@@ -808,7 +826,7 @@ const Details = () => {
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={tw`flex-row items-end justify-end w-[100%] gap-4`}>
+            {/* <View style={tw`flex-row items-end justify-end w-[100%] gap-4`}>
               <Button onPress={() => setModalVisible(false)} style={{ width: 100 }} mode="outlined">
                 {'Cancel'}
               </Button>
@@ -827,7 +845,7 @@ const Details = () => {
               >
                 {'Download'}
               </Button>
-            </View>
+            </View> */}
           </View>
         </View>
       </Modal>
@@ -861,7 +879,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 10,
     padding: 20,
     width: '100%',
-    height: Platform.OS === 'android' ? 400 : 380,
+    height: Platform.OS === 'android' ? 400 : 355,
     // alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {

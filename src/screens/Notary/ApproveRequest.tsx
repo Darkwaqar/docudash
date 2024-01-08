@@ -212,7 +212,9 @@ const ApproveRequest = () => {
       .then((response) => {
         // console.log('ApproveRequest ===><><>', response.data);
         const { NotaryRequests, NotaryRequestsDetails, NotaryRequestsDetailsDocuments } =
-          response.data;
+          response.data.data;
+        console.log('response.data', response.data);
+        if (!response.data.status) return alert(response.data.message);
         //     if (status) {
         // console.log(
         //   'NotaryRequestsDetailsDocuments.map((x) => x.docs).flat()',
@@ -234,7 +236,12 @@ const ApproveRequest = () => {
           setDraggedElArr(draggable);
           refDraggedElArr.current = draggable;
         }
-        setImages(NotaryRequestsDetailsDocuments.map((x) => x.docs).flat());
+        console.log(
+          'NotaryRequestsDetailsDocuments?.map((x) => x.docs).flat()',
+          NotaryRequestsDetailsDocuments
+        );
+
+        setImages(NotaryRequestsDetailsDocuments?.map((x) => x.docs).flat());
         setRecipients(NotaryRequestsDetails);
         console.log('recipients =><><=', NotaryRequestsDetails);
 
@@ -326,6 +333,7 @@ const ApproveRequest = () => {
   // }, [index]);
 
   // console.log(images, 'images');
+  console.log('images', images);
   return (
     <View style={tw`h-full `}>
       <Modal visible={deleteModal.active} transparent={true} animationType="none">
@@ -418,7 +426,7 @@ const ApproveRequest = () => {
         >
           {/* draw */}
           {recipients
-            ?.filter((x) => x.sign_type == '1')
+            ?.filter((x) => x.sign_type == '1' || x.sign_type == '2')
             .slice(0, 5)
             ?.map((item, index) => (
               <View key={index + '$'} style={[styles.botton_view_buttons]}>

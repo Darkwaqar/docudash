@@ -338,7 +338,6 @@ const HomeScreen = () => {
                       }}
                       resizeMode="contain"
                     />
-
                     <Text style={tw`text-white text-4 w-50`}>{signature.signature_code}</Text>
                   </>
                 ) : (
@@ -373,7 +372,13 @@ const HomeScreen = () => {
           {[...documents].length > 0 ? (
             <Button
               mode="contained"
-              onPress={() => navigation.navigate('Edit', { files: documents })}
+              onPress={() => {
+                if (signature?.signature) {
+                  navigation.navigate('Edit', { files: documents });
+                } else {
+                  alert('Please Add Your Signature');
+                }
+              }}
             >
               Start Now
             </Button>
