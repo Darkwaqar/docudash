@@ -202,8 +202,8 @@ export default function PlayGround({
                   >
                     <IconButton size={10} style={tw`m-0 `} icon={icons[item.type]}></IconButton>
                     <Text style={tw`text-[10px] `}>{item.type}</Text>
-                    <Text style={tw`text-[10px] `}>left :{item.leftMobile}</Text>
-                    <Text style={tw`text-[10px] `}>top:{item.topMobile}</Text>
+                    {/* <Text style={tw`text-[10px] `}>left :{item.leftMobile}</Text>
+                    <Text style={tw`text-[10px] `}>top:{item.topMobile}</Text> */}
                   </Pressable>
                 </Draggable>
               );

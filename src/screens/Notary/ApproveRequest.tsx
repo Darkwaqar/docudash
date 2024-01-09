@@ -211,10 +211,13 @@ const ApproveRequest = () => {
       )
       .then((response) => {
         // console.log('ApproveRequest ===><><>', response.data);
-        const { NotaryRequests, NotaryRequestsDetails, NotaryRequestsDetailsDocuments } =
-          response.data.data;
         console.log('response.data', response.data);
-        if (!response.data.status) return alert(response.data.message);
+        if (!response.data.status) {
+          alert(response.data.message);
+          navigation.goBack();
+        }
+        const { NotaryRequests, NotaryRequestsDetails, NotaryRequestsDetailsDocuments, status } =
+          response.data.data;
         //     if (status) {
         // console.log(
         //   'NotaryRequestsDetailsDocuments.map((x) => x.docs).flat()',
@@ -266,6 +269,8 @@ const ApproveRequest = () => {
 
     const url = `https://docudash.net/api/notary/request-detail-accept/${id}`;
     // console.log(`Bearer ${accessToken}`);
+    console.log('url', url);
+
     const data = new FormData();
     data.append('draggedElArr', JSON.stringify(refDraggedElArr.current));
     // save for 0 send for 1
@@ -468,7 +473,8 @@ const ApproveRequest = () => {
             setDeleteModal={setDeleteModal}
             image={images[index]}
             draggedElArr={draggedElArr}
-            setDraggedElArr={refDraggedElArr}
+            setDraggedElArr={setDraggedElArr}
+            // setDraggedElArr={refDraggedElArr}
             selectedRecipient={selectedRecipient}
             index={index}
             recipients={recipients}
