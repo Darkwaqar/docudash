@@ -45,7 +45,7 @@ export default function SignatureSelection() {
             initial: x.initial.replace(/(\r\n|\n|\r)/gm, ''),
           };
         });
-
+        console.log(changeData);
         setList(changeData);
         setIsFetching(false);
       })
@@ -125,7 +125,7 @@ export default function SignatureSelection() {
                     style={tw`w-35 h-20   `}
                     resizeMode="contain"
                     source={{
-                      uri: item.signature,
+                      uri: item.signature_img,
                     }}
                   />
                 </View>
@@ -134,7 +134,7 @@ export default function SignatureSelection() {
                   <Image
                     style={tw`w-35 h-20 `}
                     resizeMode="contain"
-                    source={{ uri: item.initial }}
+                    source={{ uri: item.initial_img }}
                   />
                 </View>
               </View>
@@ -157,7 +157,7 @@ export default function SignatureSelection() {
           title={
             <View style={tw`items-center`}>
               <Text variant="titleSmall">Sign</Text>
-              <Text variant="labelSmall">Subtitle</Text>
+              <Text variant="labelSmall">Select Sign or Create New</Text>
             </View>
           }
         />

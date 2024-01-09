@@ -1,36 +1,25 @@
+import COLORS from '@constants/colors';
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { selectAccessToken } from '@stores/slices/UserSlice';
+import { RootStackScreenProps } from '@type/index';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Alert, SafeAreaView, ScrollView, View } from 'react-native';
 import {
-  Alert,
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import tw from 'twrnc';
-import {
-  TextInput,
-  Text,
-  IconButton,
   Button,
-  Modal,
-  useTheme,
+  Checkbox,
+  Chip,
+  Divider,
   HelperText,
   Menu,
-  Divider,
-  Chip,
-  Checkbox,
+  Text,
+  TextInput,
 } from 'react-native-paper';
 import DropDown from 'react-native-paper-dropdown';
-import COLORS from '@constants/colors';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import { Contact, ContactList, RootStackParamList, RootStackScreenProps } from '@type/index';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { selectAccessToken } from '@stores/slices/UserSlice';
 import { SearchContact, SearchContactList } from 'src/types/SearchContact';
+import tw from 'twrnc';
 const actionList = [
   {
     label: 'Needs to Sign',
@@ -175,6 +164,7 @@ export default function AddRecipient() {
         />
 
         <Menu
+          style={tw`w-11/12`}
           anchorPosition="bottom"
           visible={dropdownVisible}
           onDismiss={() => {
@@ -199,6 +189,7 @@ export default function AddRecipient() {
             />
           }
         >
+          {/* <ScrollView> */}
           {searchedContact?.map((item, index) => (
             <View key={index}>
               <Menu.Item
@@ -216,6 +207,7 @@ export default function AddRecipient() {
               {searchedContact.length != 1 && <Divider />}
             </View>
           ))}
+          {/* </ScrollView> */}
         </Menu>
 
         {recipient.sign_type == '2' ? (
@@ -249,6 +241,7 @@ export default function AddRecipient() {
           />
         )}
         <Menu
+          style={tw`w-11/12`}
           visible={recipient.visible}
           anchorPosition="bottom"
           onDismiss={() => {

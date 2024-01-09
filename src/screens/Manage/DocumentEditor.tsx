@@ -114,7 +114,6 @@ const DocumentEditor = () => {
     company: [],
     title: [],
   });
-  const refDraggedElArr = useRef<DraggedElArr>();
   const [recipients, setRecipients] = useState<GenerateSignatureDetail[]>();
   const [selectedRecipient, setSelectedRecipient] = useState<number>(0);
   const [loading, setLoading] = useState(false);
@@ -201,7 +200,29 @@ const DocumentEditor = () => {
   }, []);
 
   const save = (type: number) => {
-    // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr.current));
+    console.log('refDraggedElArr', JSON.stringify(draggedElArr));
+
+    const updatedObject = {};
+
+    Object.entries(draggedElArr).forEach(([key, value]) => {
+      // Check if the value is an array before applying the map function
+      if (Array.isArray(value)) {
+        // Function to update 'left' and 'top' properties based on 'leftMobile' and 'topMobile'
+        const updateLeftTopProperties = (item) => ({
+          ...item,
+          left: item.leftMobile,
+          top: item.topMobile,
+        });
+
+        // Apply the function using map on each array and save in the new object
+        updatedObject[key] = value.map(updateLeftTopProperties);
+      } else {
+        // Copy non-array values directly to the new object
+        updatedObject[key] = value;
+      }
+    });
+
+    // console.log('refDraggedElArr', JSON.stringify(updatedObject));
     // return;
 
     const url = 'https://docudash.net/api/generate-signature/html-editor/';
@@ -210,7 +231,7 @@ const DocumentEditor = () => {
     const data = new FormData();
     data.append('uniqid', envelope.uniqid);
     data.append('signature_id', envelope.signature_id);
-    data.append('draggedElArr', JSON.stringify(refDraggedElArr.current));
+    data.append('draggedElArr', JSON.stringify(updatedObject));
     // save for 0 send for 1
     data.append('save_type', type);
 
@@ -264,18 +285,6 @@ const DocumentEditor = () => {
       });
   };
 
-  useEffect(() => {
-    if (refDraggedElArr.current) setDraggedElArr(refDraggedElArr.current);
-    // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr));
-  }, [index]);
-
-  // useEffect(() => {
-  //   FlatListRef?.current?.scrollToIndex({
-  //     animated: true,
-  //     index: index + 1,
-  //   });
-  // }, [index]);
-
   return (
     <View style={tw`h-full `}>
       <Modal visible={deleteModal.active} transparent={true} animationType="none">
@@ -296,32 +305,9 @@ const DocumentEditor = () => {
                 style={styles.yesno_button}
                 onPress={() => {
                   const type = deleteModal.type;
-                  const arr = draggedElArr[type];
-                  const filtered = arr.filter((x) => x.uudid == deleteModal.uudid);
-                  if (type == 'signature') {
-                    setDraggedElArr((prev) => ({ ...prev, signature: filtered }));
-                  }
-                  if (type == 'initial') {
-                    setDraggedElArr((prev) => ({ ...prev, initial: filtered }));
-                  }
-                  if (type == 'stamp') {
-                    setDraggedElArr((prev) => ({ ...prev, stamp: filtered }));
-                  }
-                  if (type == 'date') {
-                    setDraggedElArr((prev) => ({ ...prev, date: filtered }));
-                  }
-                  if (type == 'name') {
-                    setDraggedElArr((prev) => ({ ...prev, name: filtered }));
-                  }
-                  if (type == 'email') {
-                    setDraggedElArr((prev) => ({ ...prev, email: filtered }));
-                  }
-                  if (type == 'company') {
-                    setDraggedElArr((prev) => ({ ...prev, company: filtered }));
-                  }
-                  if (type == 'title') {
-                    setDraggedElArr((prev) => ({ ...prev, title: filtered }));
-                  }
+                  const arr: DraggedElement[] = draggedElArr[type];
+                  const filtered = arr.filter((x) => x.uuid != deleteModal.uudid);
+                  setDraggedElArr((prev) => ({ ...prev, [type]: filtered }));
                   setDeleteModal({
                     active: false,
                     type: '',
@@ -410,10 +396,8 @@ const DocumentEditor = () => {
             setDeleteModal={setDeleteModal}
             image={images[index]}
             draggedElArr={draggedElArr}
-            setDraggedElArr={refDraggedElArr}
-            selectedRecipient={selectedRecipient}
+            setDraggedElArr={setDraggedElArr}
             index={index}
-            recipients={recipients}
           />
         )}
 
@@ -442,16 +426,15 @@ const DocumentEditor = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
                     colors: color[selectedRecipient],
+                    leftMobile: '10%',
+                    topMobile: '10%',
+                    selected_user_id_1: '',
                   };
+
                   setDraggedElArr((prev) => ({
                     ...prev,
                     signature: [...prev?.signature, newData],
                   }));
-
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    signature: [...draggedElArr?.signature, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -475,15 +458,14 @@ const DocumentEditor = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
                     colors: color[selectedRecipient],
+                    leftMobile: '20%',
+                    topMobile: '20%',
+                    selected_user_id_1: '',
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     initial: [...prev?.initial, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    initial: [...draggedElArr?.initial, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -506,15 +488,14 @@ const DocumentEditor = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
                     colors: color[selectedRecipient],
+                    leftMobile: '30%',
+                    topMobile: '30%',
+                    selected_user_id_1: '',
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     stamp: [...prev?.stamp, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    stamp: [...draggedElArr?.stamp, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -538,15 +519,14 @@ const DocumentEditor = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
                     colors: color[selectedRecipient],
+                    leftMobile: '40%',
+                    topMobile: '40%',
+                    selected_user_id_1: '',
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     date: [...prev?.date, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    date: [...draggedElArr?.date, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -569,15 +549,14 @@ const DocumentEditor = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
                     colors: color[selectedRecipient],
+                    leftMobile: '50%',
+                    topMobile: '50%',
+                    selected_user_id_1: '',
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     name: [...prev?.name, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    name: [...draggedElArr?.name, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -592,8 +571,8 @@ const DocumentEditor = () => {
                   const newData: DraggedElement = {
                     type: 'email',
                     element_container_id: `canvasInner-${index}`,
-                    left: '60%',
-                    top: '60%',
+                    leftMobile: '60%',
+                    topMobile: '60%',
                     icon: 'fa fa-user-circle-o',
                     name: 'email',
                     uuid: Crypto.randomUUID(),
@@ -601,15 +580,14 @@ const DocumentEditor = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
                     colors: color[selectedRecipient],
+                    left: '60%',
+                    top: '60%',
+                    selected_user_id_1: '',
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     email: [...prev?.email, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    email: [...draggedElArr?.email, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -633,15 +611,14 @@ const DocumentEditor = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
                     colors: color[selectedRecipient],
+                    leftMobile: '70%',
+                    topMobile: '70%',
+                    selected_user_id_1: '',
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     company: [...prev?.company, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    company: [...draggedElArr?.company, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -664,15 +641,14 @@ const DocumentEditor = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
                     colors: color[selectedRecipient],
+                    leftMobile: '80%',
+                    topMobile: '80%',
+                    selected_user_id_1: '',
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     title: [...prev?.title, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    title: [...draggedElArr?.title, newData],
-                  };
                 }}
               ></IconButton>
             </View>

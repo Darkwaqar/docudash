@@ -45,15 +45,20 @@ export interface DraggedElement {
   uuid: string;
   left: string;
   top: string;
+  leftMobile: string;
+  topMobile: string;
   element_container_id: string;
   selected_user_id: string;
   selected_user_id_1: string;
   colors: Colors;
   background?: string;
   content?: string;
+  uniq_code?: string;
 }
 
 export interface Colors {
   primary: string;
   bg: string;
+  border: string;
+  background: string;
 }

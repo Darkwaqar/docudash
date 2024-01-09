@@ -98,7 +98,7 @@ const Edit = () => {
   const [forVisible, setForVisible] = useState(false);
   const [documents, setDocuments] = useState<uploadType[]>(new Array());
   const [loading, setLoading] = useState(false);
-  const [numberOfDay, setNumberOfDay] = useState('0');
+  const [numberOfDay, setNumberOfDay] = useState('10');
   const [expiration, setExpiration] = useState<any>('120');
   const [generateSignature, setGenerateSignature] = useState<GenerateSignature>();
   const [generateSignatureDetailsImages, setGenerateSignatureDetailsImages] = useState<

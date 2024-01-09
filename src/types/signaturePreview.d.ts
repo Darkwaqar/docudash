@@ -6,10 +6,10 @@ export interface SignaturePreview {
   deleted: number;
   id: number;
   initial: string;
-  signature: string;
-  signature_img: string;
-  signature_code: string;
   initial_img: string;
+  signature: string;
+  signature_code: string;
+  signature_img: string;
   status: number;
   updated_at: string;
   updated_by: number;

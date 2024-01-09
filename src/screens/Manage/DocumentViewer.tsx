@@ -161,26 +161,29 @@ const DocumentViewer = () => {
   const stampItem = route.params?.stamp || undefined;
   const [imageSizes, setImageSizes] = useState<{ width: number; height: number }[]>(new Array());
   // console.log('Imagesizes', imageSizes);
-  // useEffect(() => {
-  //   if (signItem != undefined) {
-  //     let _newIni = draggedElArr.initial.map((element) => ({
-  //       ...element,
-  //       background: signItem.initial,
-  //     }));
-  //     let _newSign = draggedElArr.signature.map((element) => ({
-  //       ...element,
-  //       background: signItem.signature,
-  //     }));
-  //     setDraggedElArr({ ...draggedElArr, initial: _newIni, signature: _newSign });
-  //   }
-  //   if (stampItem != undefined) {
-  //     let _newStamp = draggedElArr.stamp.map((element) => ({
-  //       ...element,
-  //       background: stampItem.image_base64,
-  //     }));
-  //     setDraggedElArr({ ...draggedElArr, stamp: _newStamp });
-  //   }
-  // }, [route, navigation]);
+  useEffect(() => {
+    if (signItem != undefined) {
+      let _newIni = draggedElArr.initial.map((element) => ({
+        ...element,
+        background: signItem.initial_img,
+        uniq_code: signItem.signature_code,
+      }));
+      let _newSign = draggedElArr.signature.map((element) => ({
+        ...element,
+        background: signItem.signature_img,
+        uniq_code: signItem.signature_code,
+      }));
+      setDraggedElArr({ ...draggedElArr, initial: _newIni, signature: _newSign });
+    }
+    if (stampItem != undefined) {
+      let _newStamp = draggedElArr.stamp.map((element) => ({
+        ...element,
+        background: stampItem.image_base64,
+        uniq_code: stampItem.stamp_code,
+      }));
+      setDraggedElArr({ ...draggedElArr, stamp: _newStamp });
+    }
+  }, [route, navigation]);
 
   const date = new Date();
   const cureentDate = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
@@ -216,14 +219,14 @@ const DocumentViewer = () => {
               JSON.parse(x.view_final_response)
             );
             const draggable = {
-              signature: draggableObject.map((x) => x.signature ?? []).flat() ?? [],
-              initial: draggableObject.map((x) => x.initial ?? []).flat() ?? [],
-              stamp: draggableObject.map((x) => x.stamp ?? []).flat() ?? [],
-              date: draggableObject.map((x) => x.date ?? []).flat() ?? [],
-              name: draggableObject.map((x) => x.name ?? []).flat() ?? [],
-              email: draggableObject.map((x) => x.email ?? []).flat() ?? [],
-              company: draggableObject.map((x) => x.company ?? []).flat() ?? [],
-              title: draggableObject.map((x) => x.title ?? []).flat() ?? [],
+              signature: draggableObject.map((x) => x?.signature ?? []).flat() ?? [],
+              initial: draggableObject.map((x) => x?.initial ?? []).flat() ?? [],
+              stamp: draggableObject.map((x) => x?.stamp ?? []).flat() ?? [],
+              date: draggableObject.map((x) => x?.date ?? []).flat() ?? [],
+              name: draggableObject.map((x) => x?.name ?? []).flat() ?? [],
+              email: draggableObject.map((x) => x?.email ?? []).flat() ?? [],
+              company: draggableObject.map((x) => x?.company ?? []).flat() ?? [],
+              title: draggableObject.map((x) => x?.title ?? []).flat() ?? [],
             };
             // console.log('draggable', abayYAKiyahy);
             setDraggedElArr(draggable);

@@ -171,7 +171,19 @@ const Details = () => {
               const page = pdfDoc.addPage();
               console.log('page ==><><=', page);
               const promises = response.data.data.map(async (element, index) => {
-                const image = await pdfDoc.embedPng(element.base64Image);
+                const arrayBuffer = await axios({
+                  method: 'get',
+                  url: element.base64Image,
+                  responseType: 'arraybuffer',
+                })
+                  .then((response) => {
+                    // console.log('res', response.data);
+                    return response.data;
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+                const image = await pdfDoc.embedPng(arrayBuffer);
                 const jpgDims = image.scale(0.25);
                 const fontSize = 10;
                 const { width, height } = page.getSize();
@@ -641,8 +653,8 @@ const Details = () => {
                   loading={loading}
                   mode="elevated"
                   onPress={() => {
-                    // setModalVisible(true);
-                    console.log('Data ', data);
+                    setModalVisible(true);
+                    // console.log('Data ', data);
                   }}
                 >
                   Download

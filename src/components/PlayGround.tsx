@@ -1,4 +1,12 @@
-import { View, Text, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  Dimensions,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import AutoHeightImage from 'react-native-auto-height-image';
 import tw from 'twrnc';
@@ -67,32 +75,18 @@ export default function PlayGround({
   image,
   draggedElArr,
   setDraggedElArr,
-  selectedRecipient,
   index,
-  recipients,
   setDeleteModal,
-  setLoadingImg,
-  loadingImg,
-  onLoadEnd,
 }: {
   image: string;
   draggedElArr: DraggedElArr;
-  setDraggedElArr: React.MutableRefObject<DraggedElArr>;
-  selectedRecipient: number;
+  setDraggedElArr: React.Dispatch<React.SetStateAction<DraggedElArr>>;
   index: number;
-  recipients;
   setDeleteModal;
-  setLoadingImg: any;
-  loadingImg: any;
-  onLoadEnd: any;
 }) {
   const [scroll, setScroll] = useState(true);
-  // const [loading, setLoading] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [openModalDelete, setOpenModalDelete] = useState({
-    active: false,
-    type: '',
-  });
+
   const [imageRealSize, setImageRealSize] = useState<{
     x: number;
     y: number;
@@ -104,46 +98,18 @@ export default function PlayGround({
   const ref = useRef<View>(null);
   // console.log('Render');
   const handleScroll = (event) => {
-    const positionX = event.nativeEvent.contentOffset.x;
     const positionY = event.nativeEvent.contentOffset.y;
     setScrollY(positionY);
-    // console.log(positionY);
   };
-
-  //   useEffect(() => {
-  //     setLoading(true);
-  //     Image.getSize(
-  //       image:number,
-  //       (width, height) => {
-  //         setLoading(false);
-  //         setImageRealSize({ width, height });
-  //       },
-  //       (error) => {
-  //         console.log(error);
-  //         setLoading(false);
-  //       }
-  //     );
-  //   }, [image]);
-
-  //   if (loading) return <ActivityIndicator />;
-  // console.log('setLoading', setLoading);
 
   return (
     <ScrollView scrollEnabled={scroll} onScroll={handleScroll} contentContainerStyle={tw`flex-1`}>
       <View style={tw` flex-1 border`} ref={ref}>
         <Image
-          // height={imageRealSize?.height || width}
-          // height={height}
-          // resizeMode="contain"
-          // width={imageRealSize?.width < width ? '100%' : imageRealSize?.width}
-          // width={'100%'}
           source={{
             uri: image,
           }}
-          // onLoadStart={() => setLoadingImg(true)}
-          onLoadEnd={onLoadEnd}
           style={[tw` flex-1 `, { flex: 1, width: null, height: null, resizeMode: 'contain' }]}
-          // loader={<ActivityIndicator />}
           onLoad={({
             nativeEvent: {
               source: { width, height },
@@ -161,32 +127,19 @@ export default function PlayGround({
         {imageRealSize &&
           Object.values(draggedElArr)
             .flat(1)
-            ?.filter(
-              (x) =>
-                x.element_container_id == `canvasInner-${index}` &&
-                x.selected_user_id == String(recipients?.[selectedRecipient].id)
-            )
+            ?.filter((x) => x.element_container_id == `canvasInner-${index}`)
             .map((item: DraggedElement, elementIndex) => {
-              //   const { x, y, width, height, pageX, pageY } = markerDimensions;
-              //   console.log('y', y);
-
-              // console.log('markerDimensions', markerDimensions);
-              // console.log('left in percent', item.left, 'top in percent', item.top);
-              // console.log(
-              //   'left in pixel',
-              //   (Number.parseInt(item.left) / 100) * width,
-              //   'top in pixel',
-              //   (Number.parseInt(item.top) / 100) * height
-              // );
               const left = parseInt((parseInt(item.left) / 100) * width + '');
               const top = parseInt((parseInt(item.top) / 100) * imageRealSize.height + '');
+
               // console.log('left', left, item.left, 'top', top, item.top);
               return (
                 <Draggable
                   x={left}
                   y={top}
-                  key={elementIndex + item.type}
+                  key={item.uuid}
                   onDragRelease={(event, gestureState, bounds) => {
+                    console.log('Release');
                     const nativeEvent = event.nativeEvent;
                     let top = nativeEvent.pageY - imageRealSize.pageY + scrollY;
 
@@ -200,7 +153,6 @@ export default function PlayGround({
 
                     // console.log('left', leftinpercent);
                     // console.log('top', topinpercent);
-
                     const newItem = {
                       ...item,
                       left: leftinpercent,
@@ -208,71 +160,21 @@ export default function PlayGround({
                     };
                     // console.log(item);
                     // console.log(newItem);
-                    // console.log(item.type);
-                    if (item.type == 'signature') {
-                      setDraggedElArr.current = {
-                        ...draggedElArr,
-                        signature: draggedElArr.signature.map((sig) =>
-                          sig.uuid == item.uuid ? newItem : sig
-                        ),
-                      };
-                    }
-                    if (item.type == 'initial') {
-                      setDraggedElArr.current = {
-                        ...draggedElArr,
-                        initial: draggedElArr.initial.map((sig) =>
-                          sig.uuid == item.uuid ? newItem : sig
-                        ),
-                      };
-                    }
-                    if (item.type == 'stamp') {
-                      setDraggedElArr.current = {
-                        ...draggedElArr,
-                        stamp: draggedElArr.stamp.map((sig) =>
-                          sig.uuid == item.uuid ? newItem : sig
-                        ),
-                      };
-                    }
-                    if (item.type == 'date') {
-                      setDraggedElArr.current = {
-                        ...draggedElArr,
-                        date: draggedElArr.date.map((sig) =>
-                          sig.uuid == item.uuid ? newItem : sig
-                        ),
-                      };
-                    }
-                    if (item.type == 'name') {
-                      setDraggedElArr.current = {
-                        ...draggedElArr,
-                        name: draggedElArr.name.map((sig) =>
-                          sig.uuid == item.uuid ? newItem : sig
-                        ),
-                      };
-                    }
-                    if (item.type == 'email') {
-                      setDraggedElArr.current = {
-                        ...draggedElArr,
-                        email: draggedElArr.email.map((sig) =>
-                          sig.uuid == item.uuid ? newItem : sig
-                        ),
-                      };
-                    }
-                    if (item.type == 'company') {
-                      setDraggedElArr.current = {
-                        ...draggedElArr,
-                        company: draggedElArr.company.map((sig) =>
-                          sig.uuid == item.uuid ? newItem : sig
-                        ),
-                      };
-                    }
-                    if (item.type == 'title') {
-                      setDraggedElArr.current = {
-                        ...draggedElArr,
-                        title: draggedElArr.title.map((sig) =>
-                          sig.uuid == item.uuid ? newItem : sig
-                        ),
-                      };
-                    }
+                    console.log('current', item);
+                    console.log('new Item', newItem);
+
+                    setDraggedElArr((prev) => ({
+                      ...prev,
+                      [item.type]: draggedElArr[item.type].map((sig: DraggedElement) =>
+                        sig.uuid == item.uuid
+                          ? {
+                              ...sig,
+                              leftMobile: leftinpercent,
+                              topMobile: topinpercent,
+                            }
+                          : sig
+                      ),
+                    }));
                   }}
                   minX={0}
                   maxX={0 + width}
@@ -281,7 +183,7 @@ export default function PlayGround({
                   // renderColor="red"
                   renderText={item.type}
                 >
-                  <TouchableOpacity
+                  <Pressable
                     onPressIn={() => {
                       setScroll(false); // important step to disable scroll when long press this button
                     }}
@@ -296,15 +198,13 @@ export default function PlayGround({
                         uudid: item.uuid,
                       }))
                     }
-                    style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
+                    style={tw`w-15 h-10  border border-[${item.colors.border}] rounded-lg items-center bg-[${item.colors.background}]`}
                   >
                     <IconButton size={10} style={tw`m-0 `} icon={icons[item.type]}></IconButton>
                     <Text style={tw`text-[10px] `}>{item.type}</Text>
-                    {/* <Text style={tw`text-[10px] `}>left :{item.left}</Text>
-                    <Text style={tw`text-[10px] `}>top:{item.top}</Text>
-                    <Text style={tw`text-[10px] `}>left:{left}</Text>
-                    <Text style={tw`text-[10px] `}>top:{top}</Text> */}
-                  </TouchableOpacity>
+                    <Text style={tw`text-[10px] `}>left :{item.leftMobile}</Text>
+                    <Text style={tw`text-[10px] `}>top:{item.topMobile}</Text>
+                  </Pressable>
                 </Draggable>
               );
             })}

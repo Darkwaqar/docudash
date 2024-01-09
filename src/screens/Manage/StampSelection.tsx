@@ -131,6 +131,7 @@ export default function StampSelection() {
           title={
             <View style={tw`items-center`}>
               <Text variant="titleMedium">Stamp</Text>
+              <Text variant="labelSmall">Create new or select Existing</Text>
             </View>
           }
         />
