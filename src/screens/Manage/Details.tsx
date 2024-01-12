@@ -577,7 +577,7 @@ const Details = () => {
             <View style={tw`flex-row items-center gap-5 py-2 justify-center`}>
               {data?.generateSignatureDetails.filter(
                 (item) =>
-                  item.recEmail.toLowerCase() == user.email.toLowerCase() &&
+                  item?.recEmail?.toLowerCase() == user?.email?.toLowerCase() &&
                   item.complete_incomplete === 0
               ).length > 0 && (
                 <Button
@@ -586,8 +586,8 @@ const Details = () => {
                     data.generateSignatureDetails
                       .filter(
                         (item) =>
-                          item.recEmail.toLowerCase() == user.email.toLowerCase() &&
-                          item.complete_incomplete === 0
+                          item?.recEmail?.toLowerCase() == user?.email?.toLowerCase() &&
+                          item?.complete_incomplete === 0
                       )
                       .map((item) => {
                         if (item.access_code) {
@@ -719,7 +719,7 @@ const Details = () => {
       </ScrollView>
       {data?.generateSignatureDetails
         .filter(
-          (item) => item.recEmail.toLowerCase() == user.email.toLowerCase()
+          (item) => item?.recEmail?.toLowerCase() == user?.email?.toLowerCase()
           // && item.complete_incomplete === 0
         )
         .map((item) => (

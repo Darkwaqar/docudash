@@ -181,7 +181,7 @@ const CreateARequest = () => {
       Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
       Alert.alert('Success', 'Your order is confirmed!');
-      navigation.goBack();
+      navigation.navigate('Home');
     }
   };
   const createRequestPayment = (NotaryRequestsReturnID: string, amount: number) => {
@@ -281,7 +281,7 @@ const CreateARequest = () => {
             } else {
               setValue('Message');
               // console.log(input);
-              navigation.goBack();
+              navigation.navigate('Home');
             }
           }}
         >

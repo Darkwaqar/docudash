@@ -104,8 +104,8 @@ const color = [
 const ApproveRequest = () => {
   const accessToken = useSelector(selectAccessToken);
   const navigation = useNavigation<RootStackScreenProps<'DocumentEditor'>['navigation']>();
-  const route = useRoute<RootStackScreenProps<'DocumentEditor'>['route']>();
-  const id: number = route?.params?.id;
+  const route = useRoute<RootStackScreenProps<'ApproveRequest'>['route']>();
+  const id = route?.params?.id;
   const [draggedElArr, setDraggedElArr] = useState<DraggedElArr>({
     signature: [],
     initial: [],
@@ -116,7 +116,6 @@ const ApproveRequest = () => {
     company: [],
     title: [],
   });
-  const refDraggedElArr = useRef<DraggedElArr>();
 
   const [recipients, setRecipients] = useState<GenerateSignatureDetail[]>();
   const [selectedRecipient, setSelectedRecipient] = useState<number>(0);
@@ -128,7 +127,7 @@ const ApproveRequest = () => {
     type: '',
     uudid: '',
   });
-  const envelope: GenerateSignature = route.params?.Envelope;
+  const envelope = route.params?.Envelope;
   // const envelope: GenerateSignature = {
   //   uniqid: 'd4e421647a894ba55dd90f9857e76b50',
   //   signature_id: 41,
@@ -237,7 +236,6 @@ const ApproveRequest = () => {
           };
 
           setDraggedElArr(draggable);
-          refDraggedElArr.current = draggable;
         }
         console.log(
           'NotaryRequestsDetailsDocuments?.map((x) => x.docs).flat()',
@@ -262,17 +260,34 @@ const ApproveRequest = () => {
   }, []);
 
   const save = (type: number) => {
-    // console.log('JSON.stringify(refDraggedElArr.current)', JSON.stringify(refDraggedElArr.current));
+    console.log('refDraggedElArr', JSON.stringify(draggedElArr));
 
-    // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr.current));
-    // return;
+    const updatedObject = {};
+
+    Object.entries(draggedElArr).forEach(([key, value]) => {
+      // Check if the value is an array before applying the map function
+      if (Array.isArray(value)) {
+        // Function to update 'left' and 'top' properties based on 'leftMobile' and 'topMobile'
+        const updateLeftTopProperties = (item) => ({
+          ...item,
+          left: item.leftMobile,
+          top: item.topMobile,
+        });
+
+        // Apply the function using map on each array and save in the new object
+        updatedObject[key] = value.map(updateLeftTopProperties);
+      } else {
+        // Copy non-array values directly to the new object
+        updatedObject[key] = value;
+      }
+    });
 
     const url = `https://docudash.net/api/notary/request-detail-accept/${id}`;
     // console.log(`Bearer ${accessToken}`);
     console.log('url', url);
 
     const data = new FormData();
-    data.append('draggedElArr', JSON.stringify(refDraggedElArr.current));
+    data.append('draggedElArr', JSON.stringify(updatedObject));
     // save for 0 send for 1
     data.append('save_type', type);
 
@@ -287,7 +302,7 @@ const ApproveRequest = () => {
       })
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
-        // console.log('save', response.data);
+        console.log('save', response.data);
 
         if (status) {
           alert(message);
@@ -325,20 +340,6 @@ const ApproveRequest = () => {
       });
   };
 
-  useEffect(() => {
-    if (refDraggedElArr.current) setDraggedElArr(refDraggedElArr.current);
-    // console.log('refDraggedElArr', JSON.stringify(refDraggedElArr));
-  }, [index]);
-
-  // useEffect(() => {
-  //   FlatListRef?.current?.scrollToIndex({
-  //     animated: true,
-  //     index: index + 1,
-  //   });
-  // }, [index]);
-
-  // console.log(images, 'images');
-  console.log('images', images);
   return (
     <View style={tw`h-full `}>
       <Modal visible={deleteModal.active} transparent={true} animationType="none">
@@ -359,32 +360,9 @@ const ApproveRequest = () => {
                 style={styles.yesno_button}
                 onPress={() => {
                   const type = deleteModal.type;
-                  const arr = draggedElArr[type];
-                  const filtered = arr.filter((x) => x.uudid == deleteModal.uudid);
-                  if (type == 'signature') {
-                    setDraggedElArr((prev) => ({ ...prev, signature: filtered }));
-                  }
-                  if (type == 'initial') {
-                    setDraggedElArr((prev) => ({ ...prev, initial: filtered }));
-                  }
-                  if (type == 'stamp') {
-                    setDraggedElArr((prev) => ({ ...prev, stamp: filtered }));
-                  }
-                  if (type == 'date') {
-                    setDraggedElArr((prev) => ({ ...prev, date: filtered }));
-                  }
-                  if (type == 'name') {
-                    setDraggedElArr((prev) => ({ ...prev, name: filtered }));
-                  }
-                  if (type == 'email') {
-                    setDraggedElArr((prev) => ({ ...prev, email: filtered }));
-                  }
-                  if (type == 'company') {
-                    setDraggedElArr((prev) => ({ ...prev, company: filtered }));
-                  }
-                  if (type == 'title') {
-                    setDraggedElArr((prev) => ({ ...prev, title: filtered }));
-                  }
+                  const arr: DraggedElement[] = draggedElArr[type];
+                  const filtered = arr.filter((x) => x.uuid != deleteModal.uudid);
+                  setDraggedElArr((prev) => ({ ...prev, [type]: filtered }));
                   setDeleteModal({
                     active: false,
                     type: '',
@@ -431,10 +409,16 @@ const ApproveRequest = () => {
         >
           {/* draw */}
           {recipients
-            ?.filter((x) => x.sign_type == '1' || x.sign_type == '2')
-            .slice(0, 5)
+            // ?.filter((x) => x.sign_type == '1' || x.sign_type == '2')
+            // .slice(0, 5)
             ?.map((item, index) => (
-              <View key={index + '$'} style={[styles.botton_view_buttons]}>
+              <View
+                key={index + '$'}
+                style={[
+                  styles.botton_view_buttons,
+                  tw`${item.sign_type == '1' || item.sign_type == '2' ? 'block' : 'hidden'}`,
+                ]}
+              >
                 {index == selectedRecipient ? (
                   <Badge style={tw`absolute top-0 right-2 z-1`}>✓</Badge>
                 ) : null}
@@ -456,6 +440,8 @@ const ApproveRequest = () => {
                     />
                   </TouchableOpacity>
                 </View>
+                {/* <Text style={styles.yellow_round_text}>{item.id}</Text>
+                <Text style={styles.yellow_round_text}>{item.generateSignatureDetailsID}</Text> */}
                 <Text style={styles.yellow_round_text}>{item.recName}</Text>
               </View>
             ))}
@@ -474,13 +460,7 @@ const ApproveRequest = () => {
             image={images[index]}
             draggedElArr={draggedElArr}
             setDraggedElArr={setDraggedElArr}
-            // setDraggedElArr={refDraggedElArr}
-            selectedRecipient={selectedRecipient}
             index={index}
-            recipients={recipients}
-            loadingImg={loadingImg}
-            onLoadEnd={() => setLoadingImg(false)}
-            setLoadingImg={setLoadingImg}
           />
         )}
         {loadingImg && (
@@ -529,16 +509,14 @@ const ApproveRequest = () => {
                       recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
                     colors: color[selectedRecipient],
+                    leftMobile: '10%',
+                    topMobile: '10%',
                   };
+
                   setDraggedElArr((prev) => ({
                     ...prev,
                     signature: [...prev?.signature, newData],
                   }));
-
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    signature: [...draggedElArr?.signature, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -561,19 +539,17 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    colors: color[selectedRecipient],
+                    leftMobile: '20%',
+                    topMobile: '20%',
                     selected_user_id_1: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
-                    colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     initial: [...prev?.initial, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    initial: [...draggedElArr?.initial, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -595,19 +571,17 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    colors: color[selectedRecipient],
+                    leftMobile: '30%',
+                    topMobile: '30%',
                     selected_user_id_1: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
-                    colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     stamp: [...prev?.stamp, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    stamp: [...draggedElArr?.stamp, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -630,19 +604,17 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    colors: color[selectedRecipient],
+                    leftMobile: '40%',
+                    topMobile: '40%',
                     selected_user_id_1: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
-                    colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     date: [...prev?.date, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    date: [...draggedElArr?.date, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -664,19 +636,17 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    colors: color[selectedRecipient],
+                    leftMobile: '50%',
+                    topMobile: '50%',
                     selected_user_id_1: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
-                    colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     name: [...prev?.name, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    name: [...draggedElArr?.name, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -691,27 +661,25 @@ const ApproveRequest = () => {
                   const newData: DraggedElement = {
                     type: 'email',
                     element_container_id: `canvasInner-${index}`,
-                    left: '60%',
-                    top: '60%',
+                    leftMobile: '60%',
+                    topMobile: '60%',
                     icon: 'fa fa-user-circle-o',
                     name: 'email',
                     uuid: Crypto.randomUUID(),
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    colors: color[selectedRecipient],
+                    left: '60%',
+                    top: '60%',
                     selected_user_id_1: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
-                    colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     email: [...prev?.email, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    email: [...draggedElArr?.email, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -734,19 +702,17 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    colors: color[selectedRecipient],
+                    leftMobile: '70%',
+                    topMobile: '70%',
                     selected_user_id_1: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
-                    colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     company: [...prev?.company, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    company: [...draggedElArr?.company, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -768,19 +734,17 @@ const ApproveRequest = () => {
                     selected_user_id: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.id
                     ),
+                    colors: color[selectedRecipient],
+                    leftMobile: '80%',
+                    topMobile: '80%',
                     selected_user_id_1: String(
                       recipients?.find((x, i) => i == selectedRecipient)?.generateSignatureDetailsID
                     ),
-                    colors: color[selectedRecipient],
                   };
                   setDraggedElArr((prev) => ({
                     ...prev,
                     title: [...prev?.title, newData],
                   }));
-                  refDraggedElArr.current = {
-                    ...draggedElArr,
-                    title: [...draggedElArr?.title, newData],
-                  };
                 }}
               ></IconButton>
             </View>
@@ -793,10 +757,7 @@ const ApproveRequest = () => {
           <IconButton
             icon="chevron-down"
             onPress={() => {
-              if (index < images?.length - 1) {
-                setLoadingImg(true);
-                setIndex(index + 1);
-              }
+              if (index < images?.length - 1) setIndex(index + 1);
             }}
           ></IconButton>
 
@@ -804,10 +765,7 @@ const ApproveRequest = () => {
             icon="chevron-up"
             onPress={() => {
               // console.log(index, images.length);
-              if (index > 0) {
-                setLoadingImg(true);
-                setIndex(index - 1);
-              }
+              if (index > 0) setIndex(index - 1);
             }}
           ></IconButton>
           <Text variant="labelLarge">{` ${index + 1} / ${images?.length} documents`}</Text>
@@ -842,14 +800,30 @@ const ApproveRequest = () => {
               title="Discard"
             />
             <Divider />
-            <Menu.Item onPress={() => {}} title="Edit message" />
+            <Menu.Item
+              onPress={() => {
+                closeMenu();
+                navigation.push('Edit', { activeIndex: 0 });
+              }}
+              title="Edit Recipient"
+            />
+            <Menu.Item
+              onPress={() => {
+                closeMenu();
+                navigation.push('Edit', { activeIndex: 1 });
+              }}
+              title="Edit message"
+            />
             <Divider />
-            <Menu.Item onPress={() => {}} title="Edit Recipient" />
             <Divider />
             <Menu.Item
               onPress={() => {
                 closeMenu();
+                navigation.push('Edit', { activeIndex: 2 });
               }}
+              // onPress={() => {
+              //   closeMenu();
+              // }}
               title="Edit document"
             />
           </Menu>
