@@ -401,7 +401,7 @@ const DocumentViewer = () => {
               console.log('item', item);
 
               return (
-                <View id={index + '_'} style={tw`my-2 relative`}>
+                <View id={index + '_'} style={tw`m-2 relative `}>
                   <AutoHeightImage
                     animated={true}
                     onLoad={({
@@ -414,6 +414,9 @@ const DocumentViewer = () => {
                       uri: item,
                     }}
                   />
+                  <Text style={tw`absolute  text-[6px]`}>
+                    Docudash Envelope ID: 6D93CB260E9F465297F2CB45629B58B7
+                  </Text>
                   {draggedElArr?.company
                     ?.filter(
                       (x) =>
@@ -511,6 +514,7 @@ const DocumentViewer = () => {
 
                       return (
                         <View
+                          key={item.uuid}
                           style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                           // renderColor="red"
                         >
@@ -532,6 +536,7 @@ const DocumentViewer = () => {
                             </TouchableOpacity>
                           ) : (
                             <View
+                              key={item.uuid}
                               style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                               // renderColor="red"
                             >
@@ -559,6 +564,7 @@ const DocumentViewer = () => {
                         <>
                           {item.background ? (
                             <View
+                              key={item.uuid}
                               style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                               // renderColor="red"
                             >
@@ -570,6 +576,7 @@ const DocumentViewer = () => {
                             </View>
                           ) : (
                             <View
+                              key={item.uuid}
                               style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                               // renderColor="red"
                             >
@@ -586,7 +593,7 @@ const DocumentViewer = () => {
                                     })
                                   }
                                 ></IconButton>
-                                <Text style={tw`text-[10px] `}>Initial</Text>
+                                <Text style={tw`text-[10px] `}>Initial {item.left}</Text>
                               </View>
                             </View>
                           )}
@@ -608,6 +615,7 @@ const DocumentViewer = () => {
 
                       return (
                         <View
+                          key={item.uuid}
                           style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                           // renderColor="red"
                         >
@@ -629,6 +637,7 @@ const DocumentViewer = () => {
                             </TouchableOpacity>
                           ) : (
                             <View
+                              key={item.uuid}
                               style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                               // renderColor="red"
                             >
@@ -657,6 +666,7 @@ const DocumentViewer = () => {
                         <>
                           {item.background ? (
                             <View
+                              key={item.uuid}
                               style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                               // renderColor="red"
                             >
@@ -677,10 +687,13 @@ const DocumentViewer = () => {
                               // renderColor="red"
                             >
                               <View
+                                key={item.uuid}
                                 style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
                               >
                                 <IconButton size={10} style={tw`m-0 `} icon="draw"></IconButton>
                                 <Text style={tw`text-[10px] `}>Signature</Text>
+                                <Text style={tw`text-[10px] `}>{item.left}</Text>
+                                <Text style={tw`text-[10px] `}>{item.top}</Text>
                               </View>
                             </TouchableOpacity>
                           )}
@@ -704,6 +717,7 @@ const DocumentViewer = () => {
                         <>
                           {item.background ? (
                             <View
+                              key={item.uuid}
                               style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                               // renderColor="red"
                             >
@@ -719,6 +733,7 @@ const DocumentViewer = () => {
                               // renderColor="red"
                             >
                               <View
+                                key={item.uuid}
                                 style={tw`w-15 h-10  border border-[${color[selectedRecipient].border}] rounded-lg items-center bg-[${color[selectedRecipient].background}]`}
                               >
                                 <IconButton
@@ -732,6 +747,8 @@ const DocumentViewer = () => {
                                   }
                                 ></IconButton>
                                 <Text style={tw`text-[10px] `}>Stamp</Text>
+                                <Text style={tw`text-[10px] `}>{item.top}</Text>
+                                <Text style={tw`text-[10px] `}>{item.left}</Text>
                               </View>
                             </View>
                           )}
@@ -748,6 +765,7 @@ const DocumentViewer = () => {
                       // console.log(Number.parseFloat(item.left), item.top);
                       return (
                         <View
+                          key={item.uuid}
                           style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                           // renderColor="red"
                         >
@@ -769,6 +787,7 @@ const DocumentViewer = () => {
                             </TouchableOpacity>
                           ) : (
                             <View
+                              key={item.uuid}
                               style={tw`absolute top-[${item.top}] left-[${item.left}]`}
                               // renderColor="red"
                             >

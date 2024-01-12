@@ -285,6 +285,29 @@ const DocumentEditor = () => {
       });
   };
 
+  // useEffect(() => {
+  //   const updatedObject = {};
+
+  //   Object.entries(draggedElArr).forEach(([key, value]) => {
+  //     // Check if the value is an array before applying the map function
+  //     if (Array.isArray(value)) {
+  //       // Function to update 'left' and 'top' properties based on 'leftMobile' and 'topMobile'
+  //       const updateLeftTopProperties = (item) => ({
+  //         ...item,
+  //         left: item.leftMobile,
+  //         top: item.topMobile,
+  //       });
+
+  //       // Apply the function using map on each array and save in the new object
+  //       updatedObject[key] = value.map(updateLeftTopProperties);
+  //     } else {
+  //       // Copy non-array values directly to the new object
+  //       updatedObject[key] = value;
+  //     }
+  //   });
+  //   setDraggedElArr(updatedObject);
+  // }, [index]);
+
   return (
     <View style={tw`h-full `}>
       <Modal visible={deleteModal.active} transparent={true} animationType="none">

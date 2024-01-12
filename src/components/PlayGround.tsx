@@ -127,11 +127,12 @@ export default function PlayGround({
         {imageRealSize &&
           Object.values(draggedElArr)
             .flat(1)
-            ?.filter((x) => x.element_container_id == `canvasInner-${index}`)
+            // ?.filter((x) => x.element_container_id == `canvasInner-${index}`)
             .map((item: DraggedElement, elementIndex) => {
-              const left = parseInt((parseInt(item.left) / 100) * width + '');
-              const top = parseInt((parseInt(item.top) / 100) * imageRealSize.height + '');
-
+              const left = parseFloat((parseFloat(item.left) / 100) * imageRealSize.width + '');
+              const top = parseFloat((parseFloat(item.top) / 100) * imageRealSize.height + '');
+              console.log('drawleft', left);
+              console.log('drawtop', top);
               // console.log('left', left, item.left, 'top', top, item.top);
               return (
                 <Draggable
@@ -139,12 +140,13 @@ export default function PlayGround({
                   y={top}
                   key={item.uuid}
                   onDragRelease={(event, gestureState, bounds) => {
-                    console.log('Release');
+                    console.log('Release', gestureState);
                     const nativeEvent = event.nativeEvent;
                     let top = nativeEvent.pageY - imageRealSize.pageY + scrollY;
-
-                    const newLeft = parseInt((nativeEvent.pageX / width) * 100 + '');
-                    var newTop = parseInt((top / imageRealSize.height) * 100 + '');
+                    const newLeft = parseFloat(
+                      (nativeEvent.pageX / (imageRealSize.width + 280)) * 100 + ''
+                    );
+                    var newTop = parseFloat((top / (imageRealSize.height + 100)) * 100 + '');
                     if (newTop < 0) newTop = 0;
                     if (newTop > 100) newTop = 100;
 
@@ -160,8 +162,12 @@ export default function PlayGround({
                     };
                     // console.log(item);
                     // console.log(newItem);
-                    console.log('current', item);
-                    console.log('new Item', newItem);
+
+                    //left 11.58
+                    // top:31.53
+
+                    console.log('top', top / imageRealSize.height);
+                    console.log('left', nativeEvent.pageX / imageRealSize.width);
 
                     setDraggedElArr((prev) => ({
                       ...prev,
@@ -198,7 +204,11 @@ export default function PlayGround({
                         uudid: item.uuid,
                       }))
                     }
-                    style={tw`w-15 h-10  border border-[${item.colors.border}] rounded-lg items-center bg-[${item.colors.background}]`}
+                    style={tw`w-15 h-10 ${
+                      item.element_container_id != `canvasInner-${index}` ? 'hidden' : 'block'
+                    }  border border-[${item.colors.border}] rounded-lg items-center bg-[${
+                      item.colors.background
+                    }]`}
                   >
                     <IconButton size={10} style={tw`m-0 `} icon={icons[item.type]}></IconButton>
                     <Text style={tw`text-[10px] `}>{item.type}</Text>

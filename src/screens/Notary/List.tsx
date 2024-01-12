@@ -82,7 +82,7 @@ const Map = () => {
             // @ts-ignore
             location_sign_up: JSON.parse(x.location_sign_up) as locationNotary,
           }));
-          setData(notaryList);
+          setData(notaryList.filter((x) => x.location_sign_in != null));
           setModalVisible(false);
           // if (notaryList.length > 0) {
           //   const selectedPlace = notaryList[0];
