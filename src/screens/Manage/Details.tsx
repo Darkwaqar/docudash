@@ -162,7 +162,7 @@ const Details = () => {
         }
       )
       .then(async (response) => {
-        console.log('response.data ==>>', response.data.data);
+        console.log('response.data ==>>', response.data);
         if (response.data.status) {
           if (response.data.data.length > 0) {
             const createPDFConcert = async () => {
@@ -274,7 +274,6 @@ const Details = () => {
           .filter((x) => x.element_container_id == `canvasInner-${i}`)
           .map(async (element) => {
             const bg = element.background.replace(/(\r\n|\n|\r)/gm, '');
-            // console.log(bg);
             const image = await pdfDoc.embedPng(bg);
             page.drawImage(image, {
               x: (parseFloat(element.left) / 100) * image4.width,
