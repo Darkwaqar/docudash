@@ -7,6 +7,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Avatar, Divider, Menu } from 'react-native-paper';
 import { useSelector } from 'react-redux';
+import tw from 'twrnc';
 
 export default function HomeHeader({
   heading,
@@ -47,6 +48,7 @@ export default function HomeHeader({
         )}
       </View>
       <Text style={{ color: COLORS.primary, fontWeight: 'bold', fontSize: 16 }}>{heading}</Text>
+
       <Menu
         anchorPosition="bottom"
         visible={visible}

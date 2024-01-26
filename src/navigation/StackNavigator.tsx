@@ -24,17 +24,70 @@ import AddStamp from '@screens/Stamp/AddStamps';
 import Stamps from '@screens/Stamp/List';
 import { selectAccessToken, setUserStep } from '@stores/slices/UserSlice';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStackParamList } from '../types/navigation';
 import DrawerNavigator from './DrawerNavigator';
 import LoginStackNavigator from './LoginStackNavigator';
 import NotaryLoginStackNavigator from './NotaryLoginStackNavigator';
-const Stack = createNativeStackNavigator<RootStackParamList>();
+import Calling from '@screens/Calling';
+import Call from '@screens/Call';
+import IncomingCallScreen from '@screens/IncomingCall';
+import { Voximplant } from 'react-native-voximplant';
 
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const APP_NAME = 'docudash';
+const ACC_NAME = 'wizard.n2';
+const password = '123123';
+const username = 'urspecial1one';
 export default function StackNavigator() {
   const user = useSelector(selectAccessToken);
 
+  const voximplant = Voximplant.getInstance();
+  function convertCodeMessage(code: number) {
+    switch (code) {
+      case 401:
+        return 'Invalid password';
+      case 404:
+        return 'Invalid user';
+      case 491:
+        return 'Invalid state';
+      default:
+        return 'Try again later';
+    }
+  }
+  useEffect(() => {
+    const Login = async () => {
+      try {
+        let clientState = await voximplant.getClientState();
+        if (clientState === Voximplant.ClientState.DISCONNECTED) {
+          await voximplant.connect();
+          await voximplant.login(`${username}@${APP_NAME}.${ACC_NAME}.voximplant.com`, password);
+          console.log('connected');
+        }
+        if (clientState === Voximplant.ClientState.CONNECTED) {
+          await voximplant.login(`${username}@${APP_NAME}.${ACC_NAME}.voximplant.com`, password);
+          console.log('connected');
+        }
+      } catch (e: any) {
+        let message;
+        switch (e.name) {
+          case Voximplant.ClientEvents.ConnectionFailed:
+            message = 'Connection error, check your internet connection';
+            break;
+          case Voximplant.ClientEvents.AuthResult:
+            message = convertCodeMessage(e.code);
+            break;
+          default:
+            message = 'Unknown error. Try again';
+        }
+        console.log('Error on Voximplant', message);
+        // showLoginError(message);
+      }
+    };
+
+    Login();
+  }, []);
   return (
     <StripeProvider
       merchantIdentifier="merchant.com.Docudash"
@@ -73,6 +126,9 @@ export default function StackNavigator() {
             <Stack.Screen name="RequestDetails" component={RequestDetails} />
             <Stack.Screen name="ApproveRequest" component={ApproveRequest} />
             <Stack.Screen name="Map" component={Map} />
+            <Stack.Screen name="Call" component={Call} />
+            <Stack.Screen name="Calling" component={Calling} />
+            <Stack.Screen name="IncomingCall" component={IncomingCallScreen} />
 
             {/* <Stack.Screen name="ManageDrawer" component={ManageDrawer} /> */}
             {/* <Stack.Screen name="TemplateHistory" component={TemplateHistory} /> */}

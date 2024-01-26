@@ -58,6 +58,7 @@ export type RootStackParamList = {
   CreateARequest: { email?: string; From?: string; Notary?: string };
   RequestList: { heading: string };
   RequestDetails: { id: number };
+  Calling: { user: {} };
   ApproveRequest: { id?: number; Envelope: GenerateSignature };
 };
 

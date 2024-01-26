@@ -1,8 +1,8 @@
 import CustomLogoMarker from '../components/CustomLogoMarker';
 import { selectAccessToken, selectProfileData } from '../stores/slices/UserSlice';
 import * as Location from 'expo-location';
-import React, { useEffect, useRef, useState } from 'react';
-import { Alert, StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Alert, StyleSheet, View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,8 @@ import {
 import axios from 'axios';
 import COLORS from '../constants/colors';
 import { useNavigation } from '@react-navigation/native';
+import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import moment from 'moment';
 
 const Map = ({ route }) => {
   const { notary_id } = route?.params?.details;
@@ -27,10 +29,15 @@ const Map = ({ route }) => {
   const destination = useSelector(selectDestination);
   const accessToken = useSelector(selectAccessToken);
   const navigation = useNavigation();
+  const [notaryDetail, setNotaryDetail] = useState([]);
   const dispatch = useDispatch();
-
+  const snapPoints = useMemo(() => ['10', '67'], []);
   const mapRef = useRef<MapView>(null);
-
+  const panelRef = useRef(null);
+  console.log('notaryDetail', notaryDetail.first_name);
+  const handleSheetChanges = useCallback((index: number) => {
+    // console.log('handleSheetChanges', index);
+  }, []);
   useEffect(() => {
     if (!origin || !destination) return;
 
@@ -86,6 +93,13 @@ const Map = ({ route }) => {
   };
   const PostCurrentLocation = (region: any) => {
     // console.log(region);
+    console.log('obj', {
+      NotaryRequestsReturnID: notary_id,
+      long: region.lng,
+      lat: region.lat,
+      accessToken,
+    });
+
     axios
       .post(
         'https://docudash.net/api/create-request-locations-update',
@@ -102,7 +116,8 @@ const Map = ({ route }) => {
       )
       .then((response) => {
         const data = response.data;
-        // console.log('PostCurrentLocation', data);
+        setNotaryDetail(response.data);
+        console.log('PostCurrentLocation', data);
       })
       .catch((err) => {
         false;
@@ -199,6 +214,127 @@ const Map = ({ route }) => {
           />
         )}
       </MapView>
+
+      <BottomSheet
+        // animateOnMount={false}
+        ref={panelRef}
+        index={0}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <View style={[tw`gap-2`, { paddingHorizontal: 10 }]}>
+          <Text style={tw`text-lg text-center mb-2 mt-2 font-bold`}>{`See All Detail`}</Text>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Notary:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.notary_details?.first_name}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Amount:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.amount}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Create Date:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {moment(notaryDetail?.NotaryRequests?.created_at).format('MMM Do YY')}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center `}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Create Date:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.notary_details?.address1 +
+                ',' +
+                notaryDetail?.NotaryRequests?.notary_details?.city +
+                ',' +
+                notaryDetail?.NotaryRequests?.notary_details?.state}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center `}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
+              Request Location:
+            </Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.reasonOfRequest}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
+              Number of User To sign:
+            </Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.numOfRecipients}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
+              Reason of the request:
+            </Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.numOfRecipients === 1
+                ? 'Notary Document (legal Document)'
+                : 'Hello'}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>User:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.individual_details?.first_name}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
+              Availability Date:
+            </Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.requestDate}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
+              Number of Documents:
+            </Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequestsDetailsDocuments?.length}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Employees:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.notary_details?.ProofOfEmployes}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>About:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.individual_details?.about_notary ?? 'null'}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Reviews:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>{notaryDetail?.NotaryReviewCount}</Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Hired times:</Text>
+            <Text style={{ fontSize: 18, color: 'black' }}>
+              {notaryDetail?.NotaryRequests?.individual_details?.hired_time === null
+                ? 0
+                : notaryDetail?.NotaryRequests?.individual_details?.hired_time}
+            </Text>
+          </View>
+          <View style={tw`flex-row items-center gap-2`}>
+            <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Verified:</Text>
+            <Image
+              source={require('@assets/verified-notary-badge.png')}
+              style={{ width: 30, height: 30 }}
+            />
+          </View>
+        </View>
+        {/* </View> */}
+        {/* </View> */}
+      </BottomSheet>
     </SafeAreaView>
   );
 };

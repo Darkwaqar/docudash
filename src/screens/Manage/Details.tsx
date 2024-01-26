@@ -37,6 +37,7 @@ import * as Permissions from 'expo-permissions';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
 import * as Linking from 'expo-linking';
+import { Voximplant } from 'react-native-voximplant';
 
 interface IButton {
   text: string;
@@ -147,6 +148,17 @@ const Details = () => {
     fetchData();
   }, []);
 
+  const voximplant = Voximplant.getInstance();
+
+  useEffect(() => {
+    voximplant.on(Voximplant.ClientEvents.IncomingCall, (incomingCallEvent: any) => {
+      navigation.navigate('IncomingCall', { call: incomingCallEvent.call });
+    });
+
+    return () => {
+      voximplant.off(Voximplant.ClientEvents.IncomingCall);
+    };
+  }, []);
   const Concern = () => {
     const url = 'https://docudash.net/api/getConcernedData';
     console.log('generate.uniqid', generate.uniqid);
@@ -167,8 +179,70 @@ const Details = () => {
           if (response.data.data.length > 0) {
             const createPDFConcert = async () => {
               const pdfDoc = await PDFDocument.create();
-              const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
               const page = pdfDoc.addPage();
+              page.drawText(`CERTIFICATE OF INFORMED CONSENT`, { x: 120, y: 800, size: 20 });
+              page.drawText(`Docudash Envelope ID: ${response.data.NotaryRequests.uniqid}`, {
+                x: 50,
+                y: 750,
+                size: 18,
+              });
+              page.drawText(
+                `I have read and understood the information provided in this consent form.`,
+                {
+                  x: 25,
+                  y: 650,
+                  size: 15,
+                }
+              );
+              page.drawText(
+                `By signing below, I voluntarily consent to participate in [activity/event] and `,
+                {
+                  x: 25,
+                  y: 620,
+                  size: 15,
+                }
+              );
+              page.drawText(
+                `acknowledge that I have read, understood, and agreed to the terms outlined `,
+                {
+                  x: 25,
+                  y: 600,
+                  size: 15,
+                }
+              );
+              page.drawText(`in this consent form.`, {
+                x: 25,
+                y: 580,
+                size: 15,
+              });
+              page.drawText(`Topic of Document:`, {
+                x: 25,
+                y: 525,
+                size: 15,
+              });
+              page.drawText(
+                `Number of Pages: ${response?.data?.NotaryRequestsDetailsDocuments?.length}`,
+                {
+                  x: 25,
+                  y: 500,
+                  size: 15,
+                }
+              );
+              page.drawText(
+                `Notarize Type: ${
+                  response.data?.NotaryRequests?.individual_details?.notary_document_staus === 0
+                    ? 'In -Person'
+                    : 'R.O.N'
+                }`,
+                {
+                  x: 25,
+                  y: 473,
+                  size: 18,
+                }
+              );
+
+              const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+
               console.log('page ==><><=', page);
               const promises = response.data.data.map(async (element, index) => {
                 const arrayBuffer = await axios({
@@ -187,34 +261,66 @@ const Details = () => {
                 const jpgDims = image.scale(0.25);
                 const fontSize = 10;
                 const { width, height } = page.getSize();
-                page.drawText(
-                  `By signing below, I voluntarily consent to participate in [activity/event] and acknowledge that I have read, understood,
- and agreed to the terms outlined in this consent form.`,
-                  {
-                    x: index > 0 ? 10 * index + 1 : 10,
-                    y: height - 4 * fontSize,
-                    size: fontSize,
-                    font: timesRomanFont,
-                    color: rgb(0, 0, 0),
-                  }
-                );
+                const heigthStarting = index + 1;
+
+                //                 page.drawText(
+                //                   `
+                //                   By signing below, I voluntarily consent to participate in [activity/event] and acknowledge that I have read, understood,
+                //  and agreed to the terms outlined in this consent form.`,
+                //                   {
+                //                     x: index > 0 ? 10 * index + 1 : 10,
+                //                     y: height - 4 * fontSize,
+                //                     size: fontSize,
+                //                     font: timesRomanFont,
+                //                     color: rgb(0, 0, 0),
+                //                   }
+                //                 );
+                console.log('width', width, 'height', height);
+                page.drawText(`Recipient:`, {
+                  x: 25,
+                  y: 400 - index * 100,
+                  size: 18,
+                });
+                page.drawText(`Date:`, {
+                  x: 25,
+                  y: 370 - index * 100,
+                  size: 18,
+                });
                 page.drawImage(image, {
-                  x: index > 0 ? 10 * index + 1 : 10,
-                  y: 500,
+                  x: 200,
+                  y: 395 - index * 100,
+                  width: jpgDims.width,
+                  height: jpgDims.height,
+                });
+                // for notary
+                page.drawText(`Notary:`, {
+                  x: 595.28 - 250,
+                  y: 400 - index * 100,
+                  size: 18,
+                });
+                page.drawText(`Date:`, {
+                  x: 595.28 - 250,
+                  y: 370 - index * 100,
+                  size: 18,
+                });
+                // for notary
+                page.drawImage(image, {
+                  x: 595.28 - 100,
+                  y: 395 - index * 100,
                   width: jpgDims.width,
                   height: jpgDims.height,
                 });
               });
               await Promise.all(promises);
               const pdfBytes = await pdfDoc.saveAsBase64();
-              console.log('pdfBytes ==><><===', pdfBytes);
+              // console.log('pdfBytes ==><><===', pdfBytes);
               return pdfBytes;
             };
             setLoading(true);
             createPDFConcert()
               .then((res) => {
                 const fileUri = `${FileSystem.documentDirectory}pdf1.pdf`;
-                // console.log(fileUri);
+                console.log('fileUri', fileUri);
                 FileSystem.writeAsStringAsync(fileUri, res, {
                   encoding: FileSystem.EncodingType.Base64,
                 }).then((data) => {
@@ -505,6 +611,22 @@ const Details = () => {
         </Menu>
       </View>
       <ScrollView>
+        <Icon
+          name="phone"
+          size={28}
+          onPress={() => {
+            const user: {
+              user_id: string;
+              user_name: string;
+              user_display_name: string;
+            } = {
+              user_id: '3',
+              user_name: 'testapp',
+              user_display_name: 'Test User',
+            };
+            navigation.navigate('Calling', { user });
+          }}
+        />
         <View style={tw`p-4 gap-3 py-10 pt-3`}>
           <View style={tw`flex-row items-center gap-3`}>
             <Text style={styles.heading}>{data?.generateSignatureDetails[0]?.emailSubject}</Text>

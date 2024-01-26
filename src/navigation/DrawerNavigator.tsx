@@ -15,17 +15,25 @@ import RequestList from '@screens/Request/List';
 import UserRequestList from '@screens/Request/UserList';
 import SignatureList from '@screens/Signatures/List';
 import StampList from '@screens/Stamp/List';
-import { selectProfileData } from '@stores/slices/UserSlice';
+import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
 import { colors } from '@utils/Colors';
 import { useSelector } from 'react-redux';
 import ScanDocument from '@screens/Notary/ScanDocument';
-
+import Notification from '@screens/Notification';
+import useGetRequest from '../hooks/useGetRequest';
+import { Text, View } from 'react-native';
+import tw from 'twrnc';
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   const user = useSelector(selectProfileData);
   const type = user?.user_type;
   const route = useRoute();
+  const accessToken = useSelector(selectAccessToken);
+  const { data, loading, error } = useGetRequest({
+    url: 'https://docudash.net/api/get-notifications',
+    token: accessToken,
+  });
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -184,6 +192,36 @@ const DrawerNavigator = () => {
           {(props) => (
             <DrawerScreenContainer>
               <Profile />
+            </DrawerScreenContainer>
+          )}
+        </Drawer.Screen>
+        <Drawer.Screen
+          name="Notification"
+          options={{
+            drawerIcon: ({ color }) => (
+              <View>
+                {data?.NotificationsCount != 0 && (
+                  <View
+                    style={{
+                      backgroundColor: 'red',
+                      width: 20,
+                      height: 20,
+                      borderRadius: 50,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Text style={tw`text-white`}>{data?.NotificationsCount}</Text>
+                  </View>
+                )}
+                <Icon name="bell-outline" size={25} style={{ marginRight: -20, color }} />
+              </View>
+            ),
+          }}
+        >
+          {(props) => (
+            <DrawerScreenContainer>
+              <Notification />
             </DrawerScreenContainer>
           )}
         </Drawer.Screen>

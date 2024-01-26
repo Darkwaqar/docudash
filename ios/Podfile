@@ -1,4 +1,3 @@
-source 'https://cdn.cocoapods.org/'
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 require File.join(File.dirname(`node --print "require.resolve('react-native/package.json')"`), "scripts/react_native_pods")
 require File.join(File.dirname(`node --print "require.resolve('@react-native-community/cli-platform-ios/package.json')"`), "native_modules")
@@ -52,6 +51,35 @@ target 'Docudash' do
   # Flags change depending on the env values.
   flags = get_default_flags()
 
+# @generated begin withReactNativeFirebase - expo prebuild (DO NOT MODIFY) sync-ffa5cc853aa2e09f1b1ba3ffe87d16330c3a0d31
+
+$static_library = [
+ 'React',
+ 'Google-Maps-iOS-Utils',
+ 'GoogleMaps',
+ 'react-native-maps',
+ 'react-native-google-maps',
+ 'React-hermes'
+]
+
+pre_install do |installer|
+    Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+    installer.pod_targets.each do |pod|
+      bt = pod.send(:build_type)
+      if $static_library.include?(pod.name)
+        puts "Overriding the build_type to static_library from static_framework for #{pod.name}"
+        def pod.build_type;
+          Pod::BuildType.static_library
+        end
+      end
+    end
+    installer.pod_targets.each do |pod|
+      bt = pod.send(:build_type)
+      puts "#{pod.name} (#{bt})"
+      puts "  linkage: #{bt.send(:linkage)} packaging: #{bt.send(:packaging)}"
+    end
+end
+# @generated end withReactNativeFirebase
   use_react_native!(
     :path => config[:reactNativePath],
     :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',

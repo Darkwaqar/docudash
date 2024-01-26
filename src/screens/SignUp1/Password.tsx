@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { setAccessToken, setUserStep } from '@stores/slices/UserSlice';
 import { SignUpStackScreenProps } from '@type/index';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Image,
@@ -18,22 +18,37 @@ import {
 import { Appbar, Button } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import tw from 'twrnc';
-
+import messaging from '@react-native-firebase/messaging';
 const PasswordScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<SignUpStackScreenProps<'Step5'>['navigation']>();
   const route = useRoute<SignUpStackScreenProps<'Step5'>['route']>();
   const { token, email } = route.params;
-
+  const [device_token, setDevice_token] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  useEffect(() => {
+    CreateToken();
+  }, []);
+  const CreateToken = async () => {
+    const device_token = await messaging().getToken();
+    console.log(device_token);
 
+    setDevice_token(device_token);
+  };
   const dispatch = useDispatch();
   const LoginButton = async () => {
+    console.log('Obj', {
+      email: email,
+      password: password,
+      device_token,
+    });
+
     setLoading(true);
     await axios
       .post('https://docudash.net/api/log-in/' + token, {
         email: email,
         password: password,
+        device_token,
       })
       .then((response) => {
         const {

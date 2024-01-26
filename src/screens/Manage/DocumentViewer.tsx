@@ -24,6 +24,7 @@ import {
   View,
   Image,
   FlatList,
+  Alert,
 } from 'react-native';
 import AutoHeightImage from 'react-native-auto-height-image';
 import Draggable from 'react-native-draggable';
@@ -156,7 +157,8 @@ const DocumentViewer = () => {
   const [selectedRecipient, setSelectedRecipient] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<string[]>();
-  const envelope: GenerateSignature = route.params.Envelope;
+  const envelope: GenerateSignature = route.params?.Envelope;
+  const LinkToView: string = route?.params?.LinkToView;
   const signItem: SignaturePreview = route.params?.item || undefined;
   const stampItem = route.params?.stamp || undefined;
   const [imageSizes, setImageSizes] = useState<{ width: number; height: number }[]>(new Array());
@@ -189,81 +191,158 @@ const DocumentViewer = () => {
   const cureentDate = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
 
   const fetchData = async () => {
-    setLoading(true);
-    const url = 'https://docudash.net/api/generate-signature/html-editor/';
-    console.log('=>', url + envelope.uniqid + '/' + envelope.signature_id + '/' + envelope.id);
+    if (LinkToView) {
+      console.log('LinkToView', LinkToView, accessToken);
 
-    axios
-      .get(url + envelope.uniqid + '/' + envelope.signature_id, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        setLoading(false);
-        const {
-          status,
-          message,
-          generateSignatureDetailsFinalise,
-          generateSignatureDetails,
-          generateSignatureDetailsImages,
-        }: HtmlEditorAPI = response.data;
-        console.log('html-editor', response.data);
+      setLoading(true);
+      axios
+        .get(LinkToView, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((response) => {
+          setLoading(false);
+          const {
+            status,
+            message,
+            generateSignatureDetailsFinalise,
+            generateSignatureDetails,
+            generateSignatureDetailsImages,
+          }: HtmlEditorAPI = response.data;
+          console.log('html-editor', response.data);
 
-        if (status) {
-          if (
-            generateSignatureDetails?.length > 0 &&
-            generateSignatureDetails[0]?.view_final_response != undefined
-          ) {
-            const draggableObject: Array<DraggedElArr> = generateSignatureDetails.flatMap((x) =>
-              JSON.parse(x.view_final_response)
-            );
-            const draggable = {
-              signature: draggableObject.map((x) => x?.signature ?? []).flat() ?? [],
-              initial: draggableObject.map((x) => x?.initial ?? []).flat() ?? [],
-              stamp: draggableObject.map((x) => x?.stamp ?? []).flat() ?? [],
-              date: draggableObject.map((x) => x?.date ?? []).flat() ?? [],
-              name: draggableObject.map((x) => x?.name ?? []).flat() ?? [],
-              email: draggableObject.map((x) => x?.email ?? []).flat() ?? [],
-              company: draggableObject.map((x) => x?.company ?? []).flat() ?? [],
-              title: draggableObject.map((x) => x?.title ?? []).flat() ?? [],
-            };
-            // console.log('draggable', abayYAKiyahy);
-            setDraggedElArr(draggable);
-            // console.log(
-            //   'generateSignatureDetails[0].view_final_response',
-            //   JSON.stringify(draggable)
-            // );
-          } else if (
-            generateSignatureDetailsFinalise &&
-            generateSignatureDetailsFinalise?.draggedElArr
-          ) {
-            const draggable = {
-              signature: generateSignatureDetailsFinalise?.draggedElArr?.signature ?? [],
-              initial: generateSignatureDetailsFinalise?.draggedElArr?.initial ?? [],
-              stamp: generateSignatureDetailsFinalise?.draggedElArr?.stamp ?? [],
-              date: generateSignatureDetailsFinalise?.draggedElArr?.date ?? [],
-              name: generateSignatureDetailsFinalise?.draggedElArr?.name ?? [],
-              email: generateSignatureDetailsFinalise?.draggedElArr?.email ?? [],
-              company: generateSignatureDetailsFinalise?.draggedElArr?.company ?? [],
-              title: generateSignatureDetailsFinalise?.draggedElArr?.title ?? [],
-            };
-            // console.log('draggable', generateSignatureDetailsFinalise?.draggedElArr?.signature);
-            setDraggedElArr(draggable);
+          if (status) {
+            if (
+              generateSignatureDetails?.length > 0 &&
+              generateSignatureDetails[0]?.view_final_response != undefined
+            ) {
+              const draggableObject: Array<DraggedElArr> = generateSignatureDetails.flatMap((x) =>
+                JSON.parse(x.view_final_response)
+              );
+              const draggable = {
+                signature: draggableObject.map((x) => x?.signature ?? []).flat() ?? [],
+                initial: draggableObject.map((x) => x?.initial ?? []).flat() ?? [],
+                stamp: draggableObject.map((x) => x?.stamp ?? []).flat() ?? [],
+                date: draggableObject.map((x) => x?.date ?? []).flat() ?? [],
+                name: draggableObject.map((x) => x?.name ?? []).flat() ?? [],
+                email: draggableObject.map((x) => x?.email ?? []).flat() ?? [],
+                company: draggableObject.map((x) => x?.company ?? []).flat() ?? [],
+                title: draggableObject.map((x) => x?.title ?? []).flat() ?? [],
+              };
+              // console.log('draggable', abayYAKiyahy);
+              setDraggedElArr(draggable);
+              // console.log(
+              //   'generateSignatureDetails[0].view_final_response',
+              //   JSON.stringify(draggable)
+              // );
+            } else if (
+              generateSignatureDetailsFinalise &&
+              generateSignatureDetailsFinalise?.draggedElArr
+            ) {
+              const draggable = {
+                signature: generateSignatureDetailsFinalise?.draggedElArr?.signature ?? [],
+                initial: generateSignatureDetailsFinalise?.draggedElArr?.initial ?? [],
+                stamp: generateSignatureDetailsFinalise?.draggedElArr?.stamp ?? [],
+                date: generateSignatureDetailsFinalise?.draggedElArr?.date ?? [],
+                name: generateSignatureDetailsFinalise?.draggedElArr?.name ?? [],
+                email: generateSignatureDetailsFinalise?.draggedElArr?.email ?? [],
+                company: generateSignatureDetailsFinalise?.draggedElArr?.company ?? [],
+                title: generateSignatureDetailsFinalise?.draggedElArr?.title ?? [],
+              };
+              // console.log('draggable', generateSignatureDetailsFinalise?.draggedElArr?.signature);
+              setDraggedElArr(draggable);
+            }
+            // console.log('generateSignatureDetails', generateSignatureDetails);
+
+            setRecipients(generateSignatureDetails);
+            setImages(generateSignatureDetailsImages.map((x) => x.filesArr).flat());
+          } else {
+            alert(message);
           }
-          // console.log('generateSignatureDetails', generateSignatureDetails);
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log('Error---->>', error.message);
+        });
+    } else {
+      Alert.alert('else');
+      setLoading(true);
+      const url = 'https://docudash.net/api/generate-signature/html-editor/';
+      console.log('=>', url + envelope.uniqid + '/' + envelope.signature_id + '/' + envelope.id);
 
-          setRecipients(generateSignatureDetails);
-          setImages(generateSignatureDetailsImages.map((x) => x.filesArr).flat());
-        } else {
-          alert(message);
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.log('Error---->>', error.message);
-        console.log('Error---->>', url + envelope.uniqid + '/' + envelope.signature_id);
-      });
+      axios
+        .get(url + envelope.uniqid + '/' + envelope.signature_id, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((response) => {
+          setLoading(false);
+          const {
+            status,
+            message,
+            generateSignatureDetailsFinalise,
+            generateSignatureDetails,
+            generateSignatureDetailsImages,
+          }: HtmlEditorAPI = response.data;
+          console.log('html-editor', response.data);
+
+          if (status) {
+            if (
+              generateSignatureDetails?.length > 0 &&
+              generateSignatureDetails[0]?.view_final_response != undefined
+            ) {
+              const draggableObject: Array<DraggedElArr> = generateSignatureDetails.flatMap((x) =>
+                JSON.parse(x.view_final_response)
+              );
+              const draggable = {
+                signature: draggableObject.map((x) => x?.signature ?? []).flat() ?? [],
+                initial: draggableObject.map((x) => x?.initial ?? []).flat() ?? [],
+                stamp: draggableObject.map((x) => x?.stamp ?? []).flat() ?? [],
+                date: draggableObject.map((x) => x?.date ?? []).flat() ?? [],
+                name: draggableObject.map((x) => x?.name ?? []).flat() ?? [],
+                email: draggableObject.map((x) => x?.email ?? []).flat() ?? [],
+                company: draggableObject.map((x) => x?.company ?? []).flat() ?? [],
+                title: draggableObject.map((x) => x?.title ?? []).flat() ?? [],
+              };
+              // console.log('draggable', abayYAKiyahy);
+              setDraggedElArr(draggable);
+              // console.log(
+              //   'generateSignatureDetails[0].view_final_response',
+              //   JSON.stringify(draggable)
+              // );
+            } else if (
+              generateSignatureDetailsFinalise &&
+              generateSignatureDetailsFinalise?.draggedElArr
+            ) {
+              const draggable = {
+                signature: generateSignatureDetailsFinalise?.draggedElArr?.signature ?? [],
+                initial: generateSignatureDetailsFinalise?.draggedElArr?.initial ?? [],
+                stamp: generateSignatureDetailsFinalise?.draggedElArr?.stamp ?? [],
+                date: generateSignatureDetailsFinalise?.draggedElArr?.date ?? [],
+                name: generateSignatureDetailsFinalise?.draggedElArr?.name ?? [],
+                email: generateSignatureDetailsFinalise?.draggedElArr?.email ?? [],
+                company: generateSignatureDetailsFinalise?.draggedElArr?.company ?? [],
+                title: generateSignatureDetailsFinalise?.draggedElArr?.title ?? [],
+              };
+              // console.log('draggable', generateSignatureDetailsFinalise?.draggedElArr?.signature);
+              setDraggedElArr(draggable);
+            }
+            // console.log('generateSignatureDetails', generateSignatureDetails);
+
+            setRecipients(generateSignatureDetails);
+            setImages(generateSignatureDetailsImages.map((x) => x.filesArr).flat());
+          } else {
+            alert(message);
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log('Error---->>', error.message);
+          console.log('Error---->>', url + envelope.uniqid + '/' + envelope.signature_id);
+        });
+    }
   };
   useEffect(() => {
     // if (envelope) {
