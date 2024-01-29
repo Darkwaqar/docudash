@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, useColorScheme } from 'react-native';
 import 'react-native-gesture-handler';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import useCachedResources from './src/hooks/useCachedResources';
 import LicenseDocument from '@screens/NotarySignUp/LicenseDocument';
@@ -18,6 +18,9 @@ import Calling from '@screens/Calling';
 import IncomingCall from '@screens/IncomingCall';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance, EventType } from '@notifee/react-native';
+import axios from 'axios';
+import Root from './Root'
+import { selectAccessToken } from '@stores/slices/UserSlice';
 export default function App({ navigation }) {
   const isLoadingComplete = useCachedResources();
   const [notifi, setNotifi] = useState('');
@@ -59,14 +62,14 @@ export default function App({ navigation }) {
       await messaging().registerDeviceForRemoteMessages();
     }
     // Get the token
-    const token = await messaging().getToken();
-    console.log('token', token);
+
     // Save the token
     // await postToApi('/users/1234/tokens', { token });
   }
   useEffect(() => {
     onAppBootstrap();
   }, []);
+
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();
 
@@ -85,7 +88,7 @@ export default function App({ navigation }) {
         <PaperProvider theme={paperTheme}>
           <BottomSheetModalProvider>
             <NavigationContainer>
-              <StackNavigator />
+              <Root />
               {/* <Calling /> */}
               {/* <CreatePDF /> */}
               {/* <LicenseDocument /> */}

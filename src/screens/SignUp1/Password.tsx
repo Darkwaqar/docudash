@@ -40,7 +40,7 @@ const PasswordScreen = () => {
     console.log('Obj', {
       email: email,
       password: password,
-      device_token,
+      // device_token,
     });
 
     setLoading(true);
