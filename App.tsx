@@ -19,7 +19,7 @@ import IncomingCall from '@screens/IncomingCall';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance, EventType } from '@notifee/react-native';
 import axios from 'axios';
-import Root from './Root'
+import Root from './Root';
 import { selectAccessToken } from '@stores/slices/UserSlice';
 export default function App({ navigation }) {
   const isLoadingComplete = useCachedResources();
@@ -27,6 +27,7 @@ export default function App({ navigation }) {
   const onMessageReceived = async (message: any) => {
     // const {type, timestamp} = message.data;
     // Request permissions (required for iOS)
+    // console.log('message', message);
     setNotifi(message);
     // Create a channel (required for Android)
     const channelId = await notifee.createChannel({
@@ -48,12 +49,7 @@ export default function App({ navigation }) {
     // }
   };
   messaging().onMessage(onMessageReceived);
-  notifee.onForegroundEvent(({ type, detail }) => {
-    if (type === EventType.PRESS) {
-      console.log('message.data', detail);
-      navigation.navigate('DocumentViewer', { LinkToView: detail.LinkToView });
-    }
-  });
+
   // messaging().setBackgroundMessageHandler(onMessageReceived);
   async function onAppBootstrap() {
     // Register the device with FCM
@@ -69,6 +65,12 @@ export default function App({ navigation }) {
   useEffect(() => {
     onAppBootstrap();
   }, []);
+  notifee.onForegroundEvent(({ type, detail }) => {
+    if (type === EventType.PRESS) {
+      console.log('message.data', detail);
+      // navigation.navigate('DocumentViewer', { LinkToView: detail.LinkToView });
+    }
+  });
 
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();
