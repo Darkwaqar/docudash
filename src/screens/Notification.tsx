@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useGetRequest from '../hooks/useGetRequest';
 import { selectAccessToken } from '@stores/slices/UserSlice';
 import { useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import tw from 'twrnc';
 import { Avatar } from 'react-native-paper';
 import HomeHeader from '@components/HomeHeader';
 import { useNavigation } from '@react-navigation/native';
+import NotFound from '@components/NotFound';
 
 const Notification = () => {
   const accessToken = useSelector(selectAccessToken);
@@ -22,7 +23,7 @@ const Notification = () => {
     url: 'https://docudash.net/api/get-notifications',
     token: accessToken,
   });
-  // console.log('Notification', data);
+  console.log('Dataa', data.NotificationsDetailsList);
 
   return (
     <SafeAreaView style={tw`flex-1 `}>
@@ -52,8 +53,10 @@ const Notification = () => {
         </View>
       )}
       <FlatList
-        data={data?.NotificationsArr}
-        contentContainerStyle={tw`gap-5`}
+        contentContainerStyle={tw`flex-grow gap-5`}
+        ListEmptyComponent={<NotFound onPress={() => console.log('Hello')} />}
+        data={data?.NotificationsDetailsList}
+        // contentContainerStyle={tw`gap-5`}
         renderItem={({ item, i }) => {
           return (
             <TouchableOpacity
@@ -71,7 +74,7 @@ const Notification = () => {
                 />
                 <View style={tw`gap-1`}>
                   <Text>{item.title}</Text>
-                  <Text>{item.message}</Text>
+                  <Text>{item.body}</Text>
                 </View>
               </View>
               <Text>{item.date}</Text>
