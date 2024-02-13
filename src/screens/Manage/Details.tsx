@@ -447,7 +447,7 @@ const Details = () => {
       })
       .then((response) => {
         const data: ViewDocument = response.data;
-        console.log('data', data);
+        console.log('data', data.generateSignatureDetails);
 
         if (data.success) {
           setData(data);
@@ -611,22 +611,6 @@ const Details = () => {
         </Menu>
       </View>
       <ScrollView>
-        <Icon
-          name="phone"
-          size={28}
-          onPress={() => {
-            const user: {
-              user_id: string;
-              user_name: string;
-              user_display_name: string;
-            } = {
-              user_id: '3',
-              user_name: 'testapp',
-              user_display_name: 'Test User',
-            };
-            navigation.navigate('Calling', { user });
-          }}
-        />
         <View style={tw`p-4 gap-3 py-10 pt-3`}>
           <View style={tw`flex-row items-center gap-3`}>
             <Text style={styles.heading}>{data?.generateSignatureDetails[0]?.emailSubject}</Text>
