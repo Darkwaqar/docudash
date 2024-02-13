@@ -1,7 +1,7 @@
 import COLORS from '@constants/colors';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { selectProfileData } from '@stores/slices/UserSlice';
+import { selectNotification, selectProfileData } from '@stores/slices/UserSlice';
 import { HomeDrawerScreenProps } from '@type/*';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -19,7 +19,7 @@ export default function HomeHeader({
   const navigation = useNavigation<HomeDrawerScreenProps<'HomeScreen'>['navigation']>();
   const route = useRoute<HomeDrawerScreenProps<'HomeScreen'>['route']>();
   const [visible, setVisible] = React.useState(false);
-
+  const Notification = useSelector(selectNotification);
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
@@ -54,16 +54,37 @@ export default function HomeHeader({
         visible={visible}
         onDismiss={closeMenu}
         anchor={
-          <TouchableOpacity onPress={openMenu} ref={(r) => addTarget && addTarget(r, '1')}>
-            <Avatar.Image
-              source={{
-                uri: user
-                  ? user.profile_photo
-                  : 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+          <View>
+            <TouchableOpacity onPress={openMenu} ref={(r) => addTarget && addTarget(r, '1')}>
+              <Avatar.Image
+                source={{
+                  uri: user
+                    ? user.profile_photo
+                    : 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+                }}
+                size={30}
+              />
+            </TouchableOpacity>
+            {/* {Notification?.NotificationsCount != 0 && ( */}
+            <View
+              style={{
+                backgroundColor: 'red',
+                width: 16,
+                height: 16,
+                borderRadius: 50,
+                position: 'absolute',
+                top: -7,
+                right: -5,
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
-              size={30}
-            />
-          </TouchableOpacity>
+            >
+              <Text style={[tw`text-white`, { fontSize: 9, fontWeight: 'bold' }]}>
+                {Notification?.NotificationsCount}
+              </Text>
+            </View>
+            {/* )} */}
+          </View>
         }
       >
         <Menu.Item

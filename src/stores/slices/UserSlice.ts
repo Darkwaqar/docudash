@@ -10,6 +10,11 @@ const initialState: IUserSlice = {
   notaryStep: 0,
   userStep: 0,
   signUpToken: null,
+  notification:{
+    NotificationsCount:0,
+    NotificationsDetailsList:[],
+    status:false
+   }
 };
 
 // Define an async thunk to handle registration
@@ -25,6 +30,9 @@ const userSlice = createSlice({
   reducers: {
     setAccessToken: (state, action: PayloadAction<string | null>) => {
       state.accessToken = action.payload;
+    },
+    setNotification: (state, action: PayloadAction<[]>) => {
+      state.notification = action.payload;
     },
     logoutUser: (state) => {
       state.accessToken = null;
@@ -72,6 +80,7 @@ export const {
   setUserStep,
   setNotaryStep,
   setSignUpToken,
+  setNotification,
 } = userSlice.actions;
 
 export default userSlice.reducer;
@@ -79,6 +88,7 @@ export default userSlice.reducer;
 // Selectors
 export const selectUser = (state: { user: IUserSlice }) => state.user;
 export const selectAccessToken = (state: { user: IUserSlice }) => state.user.accessToken;
+export const selectNotification = (state: { user: IUserSlice }) => state.user.notification;
 export const selectProfileData = (state: { user: IUserSlice }) => state.user.profile;
 export const selectWishlist = (state: { user: IUserSlice }) => state.user.wishList;
 export const selectUserStep = (state: { user: IUserSlice }) => state.user.userStep;

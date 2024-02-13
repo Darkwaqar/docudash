@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import useGetRequest from '../hooks/useGetRequest';
-import { selectAccessToken } from '@stores/slices/UserSlice';
+import { selectAccessToken, selectNotification } from '@stores/slices/UserSlice';
 import { useSelector } from 'react-redux';
 import tw from 'twrnc';
 import { Avatar } from 'react-native-paper';
@@ -18,12 +18,13 @@ import NotFound from '@components/NotFound';
 
 const Notification = () => {
   const accessToken = useSelector(selectAccessToken);
+  const Notification = useSelector(selectNotification);
   const navigation = useNavigation();
   const { data, loading, error } = useGetRequest({
     url: 'https://docudash.net/api/get-notifications',
     token: accessToken,
   });
-  console.log('Dataa', data?.NotificationsDetailsList);
+  console.log('Dataa', Notification);
 
   return (
     <SafeAreaView style={tw`flex-1 `}>
@@ -55,7 +56,7 @@ const Notification = () => {
       <FlatList
         contentContainerStyle={tw`flex-grow gap-5`}
         ListEmptyComponent={<NotFound onPress={() => console.log('Hello')} />}
-        data={data?.NotificationsDetailsList}
+        data={Notification?.NotificationsDetailsList}
         // contentContainerStyle={tw`gap-5`}
         renderItem={({ item, i }) => {
           return (

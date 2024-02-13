@@ -1,4 +1,5 @@
 import { SignUpStackParamList } from './navigation';
+import { notificationType } from './notification';
 import { User } from './user';
 
 export interface IUserSlice {
@@ -9,4 +10,5 @@ export interface IUserSlice {
   userStep: number;
   notaryStep: number;
   signUpToken: string | null;
+  notification:notificationType
 }
