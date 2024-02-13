@@ -192,7 +192,7 @@ const DocumentViewer = () => {
 
   const fetchData = async () => {
     if (LinkToView) {
-      console.log('LinkToView', LinkToView, accessToken);
+      console.log('LinkToView', LinkToView);
 
       setLoading(true);
       axios
@@ -217,18 +217,18 @@ const DocumentViewer = () => {
               generateSignatureDetails?.length > 0 &&
               generateSignatureDetails[0]?.view_final_response != undefined
             ) {
-              const draggableObject: Array<DraggedElArr> = generateSignatureDetails.flatMap((x) =>
+              const draggableObject: Array<DraggedElArr> = generateSignatureDetails?.flatMap((x) =>
                 JSON.parse(x.view_final_response)
               );
               const draggable = {
-                signature: draggableObject.map((x) => x?.signature ?? []).flat() ?? [],
-                initial: draggableObject.map((x) => x?.initial ?? []).flat() ?? [],
-                stamp: draggableObject.map((x) => x?.stamp ?? []).flat() ?? [],
-                date: draggableObject.map((x) => x?.date ?? []).flat() ?? [],
-                name: draggableObject.map((x) => x?.name ?? []).flat() ?? [],
-                email: draggableObject.map((x) => x?.email ?? []).flat() ?? [],
-                company: draggableObject.map((x) => x?.company ?? []).flat() ?? [],
-                title: draggableObject.map((x) => x?.title ?? []).flat() ?? [],
+                signature: draggableObject?.map((x) => x?.signature ?? []).flat() ?? [],
+                initial: draggableObject?.map((x) => x?.initial ?? []).flat() ?? [],
+                stamp: draggableObject?.map((x) => x?.stamp ?? []).flat() ?? [],
+                date: draggableObject?.map((x) => x?.date ?? []).flat() ?? [],
+                name: draggableObject?.map((x) => x?.name ?? []).flat() ?? [],
+                email: draggableObject?.map((x) => x?.email ?? []).flat() ?? [],
+                company: draggableObject?.map((x) => x?.company ?? []).flat() ?? [],
+                title: draggableObject?.map((x) => x?.title ?? []).flat() ?? [],
               };
               // console.log('draggable', abayYAKiyahy);
               setDraggedElArr(draggable);
@@ -256,7 +256,7 @@ const DocumentViewer = () => {
             // console.log('generateSignatureDetails', generateSignatureDetails);
 
             setRecipients(generateSignatureDetails);
-            setImages(generateSignatureDetailsImages.map((x) => x.filesArr).flat());
+            setImages(generateSignatureDetailsImages?.map((x) => x.filesArr).flat());
           } else {
             alert(message);
           }
@@ -264,9 +264,10 @@ const DocumentViewer = () => {
         .catch((error) => {
           setLoading(false);
           console.log('Error---->>', error.message);
+          if (error.message === 'Request failed with status code 404') return navigation.goBack();
         });
     } else {
-      Alert.alert('else');
+      // Alert.alert('else');
       setLoading(true);
       const url = 'https://docudash.net/api/generate-signature/html-editor/';
       console.log('=>', url + envelope.uniqid + '/' + envelope.signature_id + '/' + envelope.id);
@@ -297,14 +298,14 @@ const DocumentViewer = () => {
                 JSON.parse(x.view_final_response)
               );
               const draggable = {
-                signature: draggableObject.map((x) => x?.signature ?? []).flat() ?? [],
-                initial: draggableObject.map((x) => x?.initial ?? []).flat() ?? [],
-                stamp: draggableObject.map((x) => x?.stamp ?? []).flat() ?? [],
-                date: draggableObject.map((x) => x?.date ?? []).flat() ?? [],
-                name: draggableObject.map((x) => x?.name ?? []).flat() ?? [],
-                email: draggableObject.map((x) => x?.email ?? []).flat() ?? [],
-                company: draggableObject.map((x) => x?.company ?? []).flat() ?? [],
-                title: draggableObject.map((x) => x?.title ?? []).flat() ?? [],
+                signature: draggableObject?.map((x) => x?.signature ?? []).flat() ?? [],
+                initial: draggableObject?.map((x) => x?.initial ?? []).flat() ?? [],
+                stamp: draggableObject?.map((x) => x?.stamp ?? []).flat() ?? [],
+                date: draggableObject?.map((x) => x?.date ?? []).flat() ?? [],
+                name: draggableObject?.map((x) => x?.name ?? []).flat() ?? [],
+                email: draggableObject?.map((x) => x?.email ?? []).flat() ?? [],
+                company: draggableObject?.map((x) => x?.company ?? []).flat() ?? [],
+                title: draggableObject?.map((x) => x?.title ?? []).flat() ?? [],
               };
               // console.log('draggable', abayYAKiyahy);
               setDraggedElArr(draggable);
@@ -332,7 +333,7 @@ const DocumentViewer = () => {
             // console.log('generateSignatureDetails', generateSignatureDetails);
 
             setRecipients(generateSignatureDetails);
-            setImages(generateSignatureDetailsImages.map((x) => x.filesArr).flat());
+            setImages(generateSignatureDetailsImages?.map((x) => x.filesArr).flat());
           } else {
             alert(message);
           }
@@ -340,6 +341,7 @@ const DocumentViewer = () => {
         .catch((error) => {
           setLoading(false);
           console.log('Error---->>', error.message);
+          if (error.message === 'Request failed with status code 404') return navigation.goBack();
           console.log('Error---->>', url + envelope.uniqid + '/' + envelope.signature_id);
         });
     }

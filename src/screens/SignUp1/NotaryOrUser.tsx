@@ -28,10 +28,10 @@ const NotaryOrUser = () => {
     <View style={tw`flex-1 justify-center items-center`}>
       <View style={tw`w-50 gap-4 `}>
         <Image style={tw`w-40 h-30 self-center`} source={require('@assets/adaptive-icon.png')} />
-        <Text variant="titleMedium" style={tw`font-bold text-center`}>
+        {/* <Text variant="titleMedium" style={tw`font-bold text-center`}>
           How do you want to proceed?
-        </Text>
-        <Menu
+        </Text> */}
+        {/* <Menu
           style={tw`w-50`}
           visible={showDropDown}
           anchorPosition="bottom"
@@ -67,17 +67,12 @@ const NotaryOrUser = () => {
               closeMenu();
             }}
           />
-        </Menu>
+        </Menu> */}
         <GreenButton
           loading={loading}
-          text={'Proceed'}
+          text={'Get Started'}
           onPress={() => {
-            if (dropDownVal === 'User') {
-              navigation.navigate('SignUpIndex');
-            } else if (dropDownVal === 'Notary') {
-              navigation.navigate('NotaryLoginStackNavigator');
-            }
-            dispatch(setUserType(dropDownVal));
+            navigation.navigate('SignUpIndex');
           }}
         />
       </View>

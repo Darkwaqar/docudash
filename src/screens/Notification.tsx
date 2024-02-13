@@ -59,9 +59,15 @@ const Notification = () => {
         data={Notification?.NotificationsDetailsList}
         // contentContainerStyle={tw`gap-5`}
         renderItem={({ item, i }) => {
+          console.log('link_redirect_app', item);
+
           return (
             <TouchableOpacity
-              onPress={() => navigation.navigate('DocumentViewer', { LinkToView: item.LinkToView })}
+              onPress={() =>
+                item.link_redirect_app === 'https://docudash.net/api/dashboard'
+                  ? navigation.navigate('HomeScreen')
+                  : navigation.navigate('DocumentViewer', { LinkToView: item.link_redirect_app })
+              }
               style={tw`flex-row items-center gap-2 justify-between px-4 border-b-2 border-b-gray-100 p-4`}
             >
               <View style={tw`flex-row items-center gap-2`}>

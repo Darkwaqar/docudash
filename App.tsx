@@ -16,61 +16,12 @@ import CreatePDF from '@screens/CreatePDF';
 import Call from '@screens/Call';
 import Calling from '@screens/Calling';
 import IncomingCall from '@screens/IncomingCall';
-import messaging from '@react-native-firebase/messaging';
-import notifee, { AndroidImportance, EventType } from '@notifee/react-native';
+
 import axios from 'axios';
 import Root from './Root';
 import { selectAccessToken } from '@stores/slices/UserSlice';
 export default function App({ navigation }) {
   const isLoadingComplete = useCachedResources();
-  const [notifi, setNotifi] = useState('');
-  const onMessageReceived = async (message: any) => {
-    // const {type, timestamp} = message.data;
-    // Request permissions (required for iOS)
-    // console.log('message', message);
-    setNotifi(message);
-    // Create a channel (required for Android)
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-      importance: AndroidImportance.HIGH,
-    });
-
-    // if (message !== null) {
-
-    notifee.displayNotification({
-      title: message.notification.title,
-      body: message.notification.body,
-      android: {
-        channelId,
-        importance: AndroidImportance.HIGH,
-      },
-    });
-    // }
-  };
-  messaging().onMessage(onMessageReceived);
-
-  // messaging().setBackgroundMessageHandler(onMessageReceived);
-  async function onAppBootstrap() {
-    // Register the device with FCM
-    await notifee.requestPermission();
-    if (!messaging().isDeviceRegisteredForRemoteMessages) {
-      await messaging().registerDeviceForRemoteMessages();
-    }
-    // Get the token
-
-    // Save the token
-    // await postToApi('/users/1234/tokens', { token });
-  }
-  useEffect(() => {
-    onAppBootstrap();
-  }, []);
-  notifee.onForegroundEvent(({ type, detail }) => {
-    if (type === EventType.PRESS) {
-      console.log('message.data', detail);
-      // navigation.navigate('DocumentViewer', { LinkToView: detail.LinkToView });
-    }
-  });
 
   const colorScheme = useColorScheme();
   const { theme } = useMaterial3Theme();

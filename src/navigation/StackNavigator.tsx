@@ -142,9 +142,9 @@ export default function StackNavigator() {
           </Stack.Group>
         ) : (
           <Stack.Group>
-            <Stack.Screen name="NotaryOrUser" component={NotaryOrUser} />
+            {/* <Stack.Screen name="NotaryOrUser" component={NotaryOrUser} /> */}
             <Stack.Screen name="SignUpIndex" component={LoginStackNavigator} />
-            <Stack.Screen name="NotaryLoginStackNavigator" component={NotaryLoginStackNavigator} />
+            {/* <Stack.Screen name="NotaryLoginStackNavigator" component={NotaryLoginStackNavigator} /> */}
           </Stack.Group>
         )}
       </Stack.Navigator>
