@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import LottieView from 'lottie-react-native';
 import image from '../../assets/Animation.json';
+import tw from 'twrnc';
 const NotFound = ({ onPress }) => {
   const animationRef = useRef<LottieView>(null);
   useEffect(() => {
@@ -11,8 +12,8 @@ const NotFound = ({ onPress }) => {
     animationRef.current?.play(30, 120);
   }, []);
   return (
-    <View>
-      <View
+    <View style={tw`justify-center items-center  flex-1`}>
+      {/* <View
         style={{
           //   flexGrow: 1,
           justifyContent: 'center',
@@ -30,7 +31,8 @@ const NotFound = ({ onPress }) => {
           loop
           resizeMode="cover"
         />
-      </View>
+      </View> */}
+      <Text style={tw`text-[5]`}>No Notification </Text>
     </View>
   );
 };

@@ -23,7 +23,7 @@ const Notification = () => {
     url: 'https://docudash.net/api/get-notifications',
     token: accessToken,
   });
-  console.log('Dataa', data.NotificationsDetailsList);
+  console.log('Dataa', data?.NotificationsDetailsList);
 
   return (
     <SafeAreaView style={tw`flex-1 `}>
