@@ -13,6 +13,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 // @ts-ignore
 import { Voximplant } from 'react-native-voximplant';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { selectProfileData } from '@stores/slices/UserSlice';
 // import { DocumentNavigationProps, DocumentRouteProps } from "../types";
 
 const permissions = [
@@ -25,7 +27,8 @@ const Calling = () => {
   const [callStatus, setCallStatus] = useState('Initializing...');
   const [localVideoStreamId, setLocalVideoStreamId] = useState('');
   const [remoteVideoStreamId, setRemoteVideoStreamId] = useState('');
-
+  const userInfo = useSelector(selectProfileData);
+  console.log('user StackNavigator', userInfo?.email?.split('@')[0]);
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -35,6 +38,8 @@ const Calling = () => {
   //   user_name: 'Abdul Qayyum',
   //   user_display_name: 'Abdul',
   // };
+
+  console.log(user);
 
   const voximplant = Voximplant.getInstance();
 
@@ -77,8 +82,8 @@ const Calling = () => {
     };
 
     const makeCall = async () => {
-      console.log(user.user_name);
-      call.current = await voximplant.call(user.user_name, callSettings);
+      console.log('makeCall', user.user_name);
+      call.current = await voximplant.call(user.user_name?.split('@')[0], callSettings);
       subscribeToCallEvents();
     };
 

@@ -11,7 +11,7 @@ import { time } from '@utils/requestTime';
 import { requestType } from '@utils/requestType';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import { Button, Divider, IconButton, Menu, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -163,9 +163,9 @@ const Details = () => {
           NotaryRequestsDetailsDocuments,
           generateSignature,
         }: RequestDetailsPage = response.data;
-        console.log('NotaryRequests', generateSignature);
         setGenerateSignature(generateSignature);
         setDetails(NotaryRequests);
+        console.log(NotaryRequestsDetails);
         setRecipients(NotaryRequestsDetails);
         setDocumentDetails(NotaryRequestsDetailsDocuments);
       })
@@ -302,6 +302,9 @@ const Details = () => {
                   {details?.individual_details.address1 || 'NO ADDRESS AVAILABLE'}
                 </Text>
               </Text>
+              <Text variant="labelLarge">
+                Notary Name: <Text style={tw`text-[#6FAC46]`}>{details?.notary_details?.name}</Text>
+              </Text>
               {details?.amount != null && (
                 <Text variant="labelLarge">
                   Amount: <Text style={tw`text-[#6FAC46]`}>{`$${details?.amount}`}</Text>
@@ -309,23 +312,56 @@ const Details = () => {
               )}
               {requestType.find((x) => x.value == details?.notary_request_status.toString())
                 ?.label === 'Accepted' && (
-                <Button
-                  style={tw`w-40`}
-                  mode="contained"
-                  loading={acceptLoading}
-                  disabled={acceptLoading}
-                  // onPress={Accept}
-                  onPress={() => {
-                    dispatch(setDestination(details.request_location_list));
-                    if (destination == null) {
-                      GetCurrentLocation();
-                    } else {
-                      GetCurrentLocation();
-                    }
-                  }}
-                >
-                  {user.user_type === 7 ? 'Navigate' : 'View Your Notary Location'}
-                </Button>
+                <View style={tw`flex-row items-center gap-2`}>
+                  <Button
+                    style={tw`w-40`}
+                    mode="contained"
+                    loading={acceptLoading}
+                    disabled={acceptLoading}
+                    // onPress={Accept}
+                    onPress={() => {
+                      dispatch(setDestination(details.request_location_list));
+                      if (destination == null) {
+                        GetCurrentLocation();
+                      } else {
+                        GetCurrentLocation();
+                      }
+                    }}
+                  >
+                    {user.user_type === 7 ? 'Navigate' : 'View Your Notary Location'}
+                  </Button>
+                  <Button
+                    style={[
+                      tw`  rounded-full items-center justify-center`,
+                      { width: 50, height: 45 },
+                    ]}
+                    mode="contained"
+                    loading={acceptLoading}
+                    disabled={acceptLoading}
+                    onPress={() => {
+                      const callingUser: {
+                        user_id: string;
+                        user_name: string;
+                        user_display_name: string;
+                      } = {
+                        user_id: '3',
+                        user_name:
+                          user.user_type == 7
+                            ? details?.individual_details.email
+                            : details?.notary_details?.email,
+                        user_display_name:
+                          user.user_type == 7
+                            ? details?.individual_details.name
+                            : details?.notary_details?.name,
+                      };
+                      console.log('log', details);
+
+                      navigation.navigate('Calling', { user: callingUser });
+                    }}
+                  >
+                    <Icon name="phone" size={20} />
+                  </Button>
+                </View>
               )}
             </View>
 
@@ -358,7 +394,7 @@ const Details = () => {
                   </>
                 ) : (
                   <>
-                    <View style={tw` items-center gap-5 py-2 justify-center`}>
+                    <View style={tw` items-center gap-5 py-2 justify-center `}>
                       <Button
                         mode="contained"
                         loading={doneLoading}
@@ -387,6 +423,7 @@ const Details = () => {
                 </Text>
               </Text>
             )}
+
             <View style={tw`py-10 gap-4`}>
               <Text style={styles.heading}>Uploaded Documents</Text>
               <View>

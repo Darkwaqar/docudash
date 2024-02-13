@@ -200,21 +200,25 @@ const DrawerNavigator = () => {
           options={{
             drawerIcon: ({ color }) => (
               <View>
+                <Icon name="bell-outline" size={25} style={{ marginRight: -20, color }} />
                 {data?.NotificationsCount != 0 && (
                   <View
                     style={{
                       backgroundColor: 'red',
-                      width: 20,
-                      height: 20,
+                      width: 16,
+                      height: 16,
                       borderRadius: 50,
+                      position: 'absolute',
+                      top: -7,
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}
                   >
-                    <Text style={tw`text-white`}>{data?.NotificationsCount}</Text>
+                    <Text style={[tw`text-white`, { fontSize: 9, fontWeight: 'bold' }]}>
+                      {data?.NotificationsCount}
+                    </Text>
                   </View>
                 )}
-                <Icon name="bell-outline" size={25} style={{ marginRight: -20, color }} />
               </View>
             ),
           }}

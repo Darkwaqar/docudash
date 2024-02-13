@@ -22,7 +22,7 @@ import AddSignature from '@screens/Signatures/AddSignature';
 import Signatures from '@screens/Signatures/List';
 import AddStamp from '@screens/Stamp/AddStamps';
 import Stamps from '@screens/Stamp/List';
-import { selectAccessToken, setUserStep } from '@stores/slices/UserSlice';
+import { selectAccessToken, selectProfileData, setUserStep } from '@stores/slices/UserSlice';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,12 +36,18 @@ import IncomingCallScreen from '@screens/IncomingCall';
 import { Voximplant } from 'react-native-voximplant';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const APP_NAME = 'docudash';
-const ACC_NAME = 'wizard.n2';
-const password = '123123';
-const username = 'urspecial1one';
+
 export default function StackNavigator() {
   const user = useSelector(selectAccessToken);
+  const userInfo = useSelector(selectProfileData);
+  console.log('user StackNavigator', userInfo?.email?.split('@')[0]);
+  const APP_NAME = 'docudash';
+  const ACC_NAME = 'wizard.n2';
+  // const ACC_NAME = userInfo?.email?.split('@')[0];
+  const password = '12345678';
+  // const password = '123123';
+  // const username = 'urspecial1one';
+  const username = userInfo?.email?.split('@')[0];
 
   const voximplant = Voximplant.getInstance();
   function convertCodeMessage(code: number) {
@@ -71,6 +77,7 @@ export default function StackNavigator() {
         }
       } catch (e: any) {
         let message;
+        console.log('Error on Voximplant', message);
         switch (e.name) {
           case Voximplant.ClientEvents.ConnectionFailed:
             message = 'Connection error, check your internet connection';
