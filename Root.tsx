@@ -6,14 +6,16 @@ import useGetRequest from './src/hooks/useGetRequest';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance, EventType } from '@notifee/react-native';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 const Root = () => {
   const accessToken = useSelector(selectAccessToken);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [notifi, setNotifi] = useState('');
   const onMessageReceived = async (message: any) => {
     // const {type, timestamp} = message.data;
     // Request permissions (required for iOS)
-    // console.log('message', message);
+    console.log('message ===><><', message);
     setNotifi(message);
     // Create a channel (required for Android)
     const channelId = await notifee.createChannel({
@@ -22,17 +24,16 @@ const Root = () => {
       importance: AndroidImportance.HIGH,
     });
 
-    // if (message !== null) {
-
-    notifee.displayNotification({
-      title: message.notification.title,
-      body: message.notification.body,
-      android: {
-        channelId,
-        importance: AndroidImportance.HIGH,
-      },
-    });
-    // }
+    if (message !== null) {
+      notifee.displayNotification({
+        title: message.notification.title,
+        body: message.notification.body,
+        android: {
+          channelId,
+          importance: AndroidImportance.HIGH,
+        },
+      });
+    }
   };
   messaging().onMessage(onMessageReceived);
 
@@ -54,8 +55,24 @@ const Root = () => {
   }, []);
   notifee.onForegroundEvent(({ type, detail }) => {
     if (type === EventType.PRESS) {
-      console.log('message.data', detail);
+      console.log('message.data', detail, type);
       // navigation.navigate('DocumentViewer', { LinkToView: detail.LinkToView });
+      // navigation?.navigate('Home');
+    }
+  });
+  notifee.onBackgroundEvent(async ({ type, detail }) => {
+    const { notification, pressAction } = detail;
+    console.log('message.data', detail, type);
+    // Check if the user pressed the "Mark as read" action
+    if (type === EventType.ACTION_PRESS && pressAction.id === 'mark-as-read') {
+      // Update external API
+      // await fetch(`https://my-api.com/chat/${notification.data.chatId}/read`, {
+      //   method: 'POST',
+      // });
+      navigation?.navigate('Home');
+
+      // Remove the notification
+      await notifee.cancelNotification(notification.id);
     }
   });
   const { data, loading, error } = useGetRequest({

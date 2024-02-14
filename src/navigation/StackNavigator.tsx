@@ -34,12 +34,15 @@ import Calling from '@screens/Calling';
 import Call from '@screens/Call';
 import IncomingCallScreen from '@screens/IncomingCall';
 import { Voximplant } from 'react-native-voximplant';
+import { useNavigation } from '@react-navigation/native';
+import calls from '@screens/Store';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function StackNavigator() {
   const user = useSelector(selectAccessToken);
   const userInfo = useSelector(selectProfileData);
+  const navigation = useNavigation();
   console.log('user StackNavigator', userInfo?.email?.split('@')[0]);
   const APP_NAME = 'docudash';
   const ACC_NAME = 'wizard.n2';
@@ -62,6 +65,17 @@ export default function StackNavigator() {
         return 'Try again later';
     }
   }
+  useEffect(() => {
+    voximplant.on(Voximplant.ClientEvents.IncomingCall, (incomingCallEvent) => {
+      calls.set(incomingCallEvent.call.callId, incomingCallEvent.call);
+      navigation.navigate('IncomingCall', {
+        call: incomingCallEvent.call,
+      });
+    });
+    return function cleanup() {
+      voximplant.off(Voximplant.ClientEvents.IncomingCall);
+    };
+  });
   useEffect(() => {
     const Login = async () => {
       try {
@@ -94,7 +108,7 @@ export default function StackNavigator() {
     };
 
     Login();
-  }, []);
+  }, [user]);
   return (
     <StripeProvider
       merchantIdentifier="merchant.com.Docudash"
