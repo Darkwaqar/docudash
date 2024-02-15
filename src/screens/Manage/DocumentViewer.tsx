@@ -263,10 +263,12 @@ const DocumentViewer = () => {
         })
         .catch((error) => {
           setLoading(false);
+          Alert.alert("Document Don't Exist");
+          navigation.goBack();
           console.log('Error---->>', error.message);
-        });
+        })
+        .finally(() => setLoading(false));
     } else {
-      Alert.alert('else');
       setLoading(true);
       const url = 'https://docudash.net/api/generate-signature/html-editor/';
       console.log('=>', url + envelope.uniqid + '/' + envelope.signature_id + '/' + envelope.id);
@@ -374,6 +376,7 @@ const DocumentViewer = () => {
       })
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
+        console.log(response.data);
         if (status) {
           alert(message);
           setLoading(false);
@@ -394,7 +397,6 @@ const DocumentViewer = () => {
       setSelectedRecipient(
         recipients.findIndex((x) => x.recEmail?.toLowerCase() == profileData.email?.toLowerCase())
       );
-      console.log(recipients?.[selectedRecipient].id);
     }
   }, [recipients]);
 
@@ -477,8 +479,6 @@ const DocumentViewer = () => {
           > */}
           <ScrollView>
             {images?.map((item, index) => {
-              console.log('item', item);
-
               return (
                 <View id={index + '_'} style={tw`my-2 relative`}>
                   <AutoHeightImage

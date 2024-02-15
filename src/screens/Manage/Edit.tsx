@@ -233,7 +233,13 @@ const Edit = () => {
       'Discard changes?',
       'You have unsaved changes. Are you sure to discard them and leave the screen?',
       [
-        { text: "Don't leave", style: 'cancel', onPress: () => {} },
+        {
+          text: 'Go Back',
+          style: 'cancel',
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
         {
           text: 'Discard',
           style: 'destructive',

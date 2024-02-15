@@ -305,11 +305,20 @@ const Details = () => {
               <Text variant="labelLarge">
                 Notary Name: <Text style={tw`text-[#6FAC46]`}>{details?.notary_details?.name}</Text>
               </Text>
+              {details?.individual_details.email != null && (
+                <Text variant="labelLarge">
+                  Sender{' '}
+                  <Text style={tw`text-[#6FAC46]`}>{`${details?.individual_details.email}`}</Text>
+                </Text>
+              )}
               {details?.amount != null && (
                 <Text variant="labelLarge">
                   Amount: <Text style={tw`text-[#6FAC46]`}>{`$${details?.amount}`}</Text>
                 </Text>
               )}
+
+              {console.log('details ====....', details)}
+
               {requestType.find((x) => x.value == details?.notary_request_status.toString())
                 ?.label === 'Accepted' && (
                 <View style={tw`flex-row items-center gap-2`}>

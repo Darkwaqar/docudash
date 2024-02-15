@@ -61,7 +61,9 @@ const Notification = () => {
         renderItem={({ item, i }) => {
           return (
             <TouchableOpacity
-              onPress={() => navigation.navigate('DocumentViewer', { LinkToView: item.LinkToView })}
+              onPress={() =>
+                navigation.navigate('DocumentViewer', { LinkToView: item.link_redirect_app })
+              }
               style={tw`flex-row items-center gap-2 justify-between px-4 border-b-2 border-b-gray-100 p-4`}
             >
               <View style={tw`flex-row items-center gap-2`}>

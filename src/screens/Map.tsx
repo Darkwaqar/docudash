@@ -19,9 +19,10 @@ import COLORS from '../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import moment from 'moment';
+import { log } from 'react-native-reanimated';
 
 const Map = ({ route }) => {
-  const { notary_id } = route?.params?.details;
+  const { notary_id, id } = route?.params?.details;
   const user = useSelector(selectProfileData);
   const type = user?.user_type;
   const GOOGLE_MAPS_APIKEY = 'AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc';
@@ -31,10 +32,10 @@ const Map = ({ route }) => {
   const navigation = useNavigation();
   const [notaryDetail, setNotaryDetail] = useState([]);
   const dispatch = useDispatch();
-  const snapPoints = useMemo(() => ['10', '67'], []);
+  const snapPoints = useMemo(() => ['10', '80'], []);
   const mapRef = useRef<MapView>(null);
   const panelRef = useRef(null);
-  console.log('notaryDetail', notaryDetail.first_name);
+  console.log('notaryDetail ==>>><', notaryDetail);
   const handleSheetChanges = useCallback((index: number) => {
     // console.log('handleSheetChanges', index);
   }, []);
@@ -48,7 +49,7 @@ const Map = ({ route }) => {
       });
     }, 5000);
   }, [origin, destination]);
-
+  console.log('notaryDetail?.NotaryRequests?.amoun', notaryDetail);
   useEffect(() => {
     if (!origin || !destination) return;
 
@@ -60,7 +61,7 @@ const Map = ({ route }) => {
       )
         .then((res) => res.json())
         .then((data) => {
-          // console.log('data', JSON.stringify(data));
+          console.log('data', JSON.stringify(data));
           dispatch(setTravelTimeInformation(data.rows[0].elements[0]));
         })
         .catch((error) => {
@@ -70,7 +71,10 @@ const Map = ({ route }) => {
     getTravelTime();
   }, [origin, destination, GOOGLE_MAPS_APIKEY]);
   useEffect(() => {
-    if (type === 7) GetCurrentLocation();
+    console.log('User Detail', user);
+
+    // if (type === 7)
+    GetCurrentLocation();
   }, []);
   const GetCurrentLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -94,7 +98,7 @@ const Map = ({ route }) => {
   const PostCurrentLocation = (region: any) => {
     // console.log(region);
     console.log('obj', {
-      NotaryRequestsReturnID: notary_id,
+      NotaryRequestsReturnID: id,
       long: region.lng,
       lat: region.lat,
       accessToken,
@@ -104,7 +108,7 @@ const Map = ({ route }) => {
       .post(
         'https://docudash.net/api/create-request-locations-update',
         {
-          NotaryRequestsReturnID: notary_id,
+          NotaryRequestsReturnID: id,
           long: region.lng,
           lat: region.lat,
         },
@@ -214,7 +218,8 @@ const Map = ({ route }) => {
           />
         )}
       </MapView>
-
+      {console.log('notaryDetail?.NotaryRequests', notaryDetail?.NotaryRequests)}
+      {/* {console.log('type ==><><', type)} */}
       <BottomSheet
         // animateOnMount={false}
         ref={panelRef}

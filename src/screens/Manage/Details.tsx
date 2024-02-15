@@ -85,6 +85,7 @@ const Details = () => {
   const [needToSignButton, setNeedToSignButton] = useState('Sign');
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+
   //@ts-ignore
   const generate: GenerateSignature = {
     signature_id: inbox.signature_id,

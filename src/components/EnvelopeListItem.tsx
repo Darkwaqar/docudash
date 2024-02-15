@@ -21,7 +21,7 @@ export default function EnvelopeListItem({ item, heading }: IEnvelopeListItem) {
       activeOpacity={0.5}
       style={tw`p-4 px-5 gap-3 bg-[${colors.white}]`}
       onPress={() =>
-        heading != 'Draft'
+        heading != 'Draft' && heading != 'Sent'
           ? navigation.navigate('Details', { Envelope: item, heading: heading })
           : navigation.navigate('Edit', { Envelope: item })
       }
