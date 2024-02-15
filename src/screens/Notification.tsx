@@ -64,13 +64,9 @@ const Notification = () => {
           return (
             <TouchableOpacity
               onPress={() =>
-<<<<<<< HEAD
-                navigation.navigate('DocumentViewer', { LinkToView: item.link_redirect_app })
-=======
                 item.link_redirect_app === 'https://docudash.net/api/dashboard'
                   ? navigation.navigate('HomeScreen')
                   : navigation.navigate('DocumentViewer', { LinkToView: item.link_redirect_app })
->>>>>>> 582c318c010d980c4f431db72a4c9bbc40eb9f6d
               }
               style={tw`flex-row items-center gap-2 justify-between px-4 border-b-2 border-b-gray-100 p-4`}
             >

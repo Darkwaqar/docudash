@@ -80,9 +80,9 @@ const Root = () => {
     token: accessToken,
   });
   useEffect(() => {
-    if (data?.status) {
-      dispatch(setNotification(data));
-    }
+    // if (data?.status) {
+    dispatch(setNotification(data));
+    // }
   }, []);
   useEffect(() => {
     console.log('accessToken', accessToken);

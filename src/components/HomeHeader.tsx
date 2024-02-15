@@ -81,7 +81,7 @@ export default function HomeHeader({
               }}
             >
               <Text style={[tw`text-white`, { fontSize: 9, fontWeight: 'bold' }]}>
-                {Notification?.NotificationsCount}
+                {Notification?.NotificationsCount ?? 0}
               </Text>
             </View>
             {/* )} */}

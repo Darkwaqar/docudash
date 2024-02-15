@@ -32,7 +32,7 @@ const Map = ({ route }) => {
   const navigation = useNavigation();
   const [notaryDetail, setNotaryDetail] = useState([]);
   const dispatch = useDispatch();
-  const snapPoints = useMemo(() => ['10', '80'], []);
+  const snapPoints = useMemo(() => ['30', '80'], []);
   const mapRef = useRef<MapView>(null);
   const panelRef = useRef(null);
   console.log('notaryDetail ==>>><', notaryDetail);
@@ -238,7 +238,7 @@ const Map = ({ route }) => {
           <View style={tw`flex-row items-center gap-2`}>
             <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Amount:</Text>
             <Text style={{ fontSize: 18, color: 'black' }}>
-              {notaryDetail?.NotaryRequests?.amount}
+              {`$${notaryDetail?.NotaryRequests?.amount}`}
             </Text>
           </View>
           <View style={tw`flex-row items-center gap-2`}>

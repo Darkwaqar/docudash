@@ -266,16 +266,10 @@ const DocumentViewer = () => {
           Alert.alert("Document Don't Exist");
           navigation.goBack();
           console.log('Error---->>', error.message);
-<<<<<<< HEAD
-        })
-        .finally(() => setLoading(false));
-    } else {
-=======
           if (error.message === 'Request failed with status code 404') return navigation.goBack();
         });
     } else {
       // Alert.alert('else');
->>>>>>> 582c318c010d980c4f431db72a4c9bbc40eb9f6d
       setLoading(true);
       const url = 'https://docudash.net/api/generate-signature/html-editor/';
       console.log('=>', url + envelope.uniqid + '/' + envelope.signature_id + '/' + envelope.id);
