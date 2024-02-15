@@ -21,6 +21,7 @@ export default function HomeHeader({
   const [visible, setVisible] = React.useState(false);
   const Notification = useSelector(selectNotification);
   const openMenu = () => setVisible(true);
+  console.log('Notification', Notification);
 
   const closeMenu = () => setVisible(false);
   const user = useSelector(selectProfileData);

@@ -23,7 +23,7 @@ const PasswordScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<SignUpStackScreenProps<'Step5'>['navigation']>();
   const route = useRoute<SignUpStackScreenProps<'Step5'>['route']>();
-  const { token, email } = route.params;
+  const { token, email } = route?.params;
   const [device_token, setDevice_token] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   useEffect(() => {
@@ -79,7 +79,7 @@ const PasswordScreen = () => {
         <View style={tw`flex-1 bg-white gap-2 px-10 justify-center`}>
           <View style={tw`flex-row items-center`}>
             <Button
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate('Index')}
               mode="outlined"
               icon={'arrow-left-thick'}
               style={tw``}

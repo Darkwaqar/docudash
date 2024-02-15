@@ -23,8 +23,8 @@ const EmailScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<SignUpStackScreenProps<'Index'>['navigation']>();
   const route = useNavigation<SignUpStackScreenProps<'Index'>['route']>();
-  // const [inputVal, setInputVal] = useState<string>('urspecial1one@gmail.com');
-  const [inputVal, setInputVal] = useState<string>('trisimamezeu-3703@yopmail.com');
+  const [inputVal, setInputVal] = useState<string>('urspecial1one@gmail.com');
+  // const [inputVal, setInputVal] = useState<string>('trisimamezeu-3703@yopmail.com');
   // const [inputVal, setInputVal] = useState<string>('thomas@yopmail.com');
   const [checked, setChecked] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -53,13 +53,13 @@ const EmailScreen = () => {
               });
             } else {
               // @ts-ignore
-              navigation.navigate('NotaryLoginStackNavigator', {
-                screen: 'Step' + data.steps,
-                params: {
-                  api: next,
-                  email: data.email,
-                },
-              });
+              // navigation.navigate('NotaryLoginStackNavigator', {
+              //   screen: 'Step' + data.steps,
+              //   params: {
+              //     api: next,
+              //     email: data.email,
+              //   },
+              // });
             }
           } else {
             if (data.steps === 6) {
