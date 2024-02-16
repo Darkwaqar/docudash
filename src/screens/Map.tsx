@@ -147,7 +147,7 @@ const Map = ({ route }) => {
         // }
       });
   };
-  if (destination === null || origin === null) return;
+  if (destination === null || origin === null || notaryDetail == undefined) return;
   return (
     <SafeAreaView style={tw`bg-white flex-1`}>
       <View
@@ -241,35 +241,38 @@ const Map = ({ route }) => {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
       >
-        {loader ? (
-          <View style={[tw`items-center justify-center `, { height: '35%' }]}>
-            <ActivityIndicator size="large" color="#000" />
-          </View>
-        ) : (
-          <BottomSheetScrollView showsVerticalScrollIndicator={false}>
-            <View style={[tw`gap-2`, { paddingHorizontal: 10 }]}>
-              <Text style={tw`text-lg text-center mb-2 mt-2 font-bold`}>{`See All Detail`}</Text>
-              <View style={tw`flex-row gap-3 mb-3 justify-between items-center `}>
-                <View style={tw`gap-4 flex-row items-center justify-center`}>
-                  <Image
-                    style={tw`w-14 h-14 rounded-full  `}
-                    source={{
-                      uri: `${
-                        'https://ui-avatars.com/api/' +
-                        notaryDetail?.NotaryRequests?.notary_details?.image
-                      }`,
-                    }}
-                  />
-                  <View style={tw`gap-2`}>
-                    <Text style={tw`text-[4] font-bold`}>
+        <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+          <View style={[tw`gap-2`, { paddingHorizontal: 10 }]}>
+            <Text style={tw`text-lg text-center mb-2 mt-2 font-bold`}>{`See All Detail`}</Text>
+            <View style={tw`flex-row gap-3 mb-3 justify-between items-center `}>
+              <View style={tw`gap-4 flex-row items-center justify-center`}>
+                <Image
+                  style={tw`w-14 h-14 rounded-full  `}
+                  source={{
+                    uri: `${
+                      'https://ui-avatars.com/api/' +
+                      notaryDetail?.NotaryRequests?.notary_details?.image
+                    }`,
+                  }}
+                />
+                <View style={tw`gap-2`}>
+                  <View style={tw`flex-row gap-2 items-center`}>
+                    <Text style={tw`text-[4] font-bold `}>
                       {notaryDetail?.NotaryRequests?.notary_details?.first_name}
                     </Text>
-                    <Text style={tw`text-[3] `}>
-                      {`+${notaryDetail?.NotaryRequests?.notary_details?.phone}`}
-                    </Text>
+                    <Image
+                      resizeMode="contain"
+                      source={require('@assets/verified-notary-badge.png')}
+                      style={{ width: 15, height: 15 }}
+                    />
                   </View>
+
+                  <Text style={tw`text-[3] `}>
+                    {`+${notaryDetail?.NotaryRequests?.notary_details?.phone}`}
+                  </Text>
                 </View>
-                <Button
+              </View>
+              {/* <Button
                   style={[
                     tw`  rounded-full items-center justify-center`,
                     { width: 50, height: 45, marginRight: 15 },
@@ -299,127 +302,104 @@ const Map = ({ route }) => {
                   }}
                 >
                   <Icon name="phone" size={20} />
-                </Button>
-              </View>
-              {/* <Text>{notaryDetail?.NotaryRequests?.notary_details?.profile_photo_url}</Text> */}
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Notary:</Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.notary_details?.first_name}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Amount:</Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {`$${notaryDetail?.NotaryRequests?.amount}`}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
-                  Create Date:
-                </Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {moment(notaryDetail?.NotaryRequests?.created_at).format('MMM Do YY')}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center `}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
-                  Create Date:
-                </Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.notary_details?.address1 +
-                    ',' +
-                    notaryDetail?.NotaryRequests?.notary_details?.city +
-                    ',' +
-                    notaryDetail?.NotaryRequests?.notary_details?.state}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center `}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
-                  Request Location:
-                </Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.reasonOfRequest}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
-                  Number of User To sign:
-                </Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.numOfRecipients}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
-                  Reason of the request:
-                </Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.numOfRecipients === 1
-                    ? 'Notary Document (legal Document)'
-                    : 'Hello'}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>User:</Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.individual_details?.first_name}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
-                  Availability Date:
-                </Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.requestDate}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
-                  Number of Documents:
-                </Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequestsDetailsDocuments?.length}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Employees:</Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.notary_details?.ProofOfEmployes}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>About:</Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.individual_details?.about_notary ?? 'null'}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Reviews:</Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryReviewCount}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>
-                  Hired times:
-                </Text>
-                <Text style={{ fontSize: 18, color: 'black' }}>
-                  {notaryDetail?.NotaryRequests?.individual_details?.hired_time === null
-                    ? 0
-                    : notaryDetail?.NotaryRequests?.individual_details?.hired_time}
-                </Text>
-              </View>
-              <View style={tw`flex-row items-center gap-2`}>
-                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}>Verified:</Text>
-                <Image
-                  source={require('@assets/verified-notary-badge.png')}
-                  style={{ width: 30, height: 30 }}
-                />
-              </View>
+                </Button> */}
             </View>
-          </BottomSheetScrollView>
-        )}
+            {/* <Text>{notaryDetail?.NotaryRequests?.notary_details?.profile_photo_url}</Text> */}
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Notary:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequests?.notary_details?.first_name}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Amount:</Text>
+              <Text style={{ color: '#6FAC46' }}>{`$${notaryDetail?.NotaryRequests?.amount}`}</Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Create Date:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {moment(notaryDetail?.NotaryRequests?.created_at).format('MMM Do YY')}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center `}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Request Location:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequests?.notary_details?.address1 +
+                  ',' +
+                  notaryDetail?.NotaryRequests?.notary_details?.city +
+                  ',' +
+                  notaryDetail?.NotaryRequests?.notary_details?.state}
+              </Text>
+            </View>
+            {/* <View style={tw`flex-row items-center `}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Number of Documents:</Text>
+              <Text style={{  color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequests?.reasonOfRequest}
+              </Text>
+            </View> */}
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Number of User To sign:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequests?.numOfRecipients}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Reason of the request:</Text>
+              <Text numberOfLines={1} style={{ color: '#6FAC46', width: '65%' }}>
+                {notaryDetail?.NotaryRequests?.numOfRecipients === 1
+                  ? 'Notary Document (legal Document)'
+                  : 'Hello'}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>User:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequests?.individual_details?.first_name}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Availability Date:</Text>
+              <Text style={{ color: '#6FAC46' }}>{notaryDetail?.NotaryRequests?.requestDate}</Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Number of Documents:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequestsDetailsDocuments?.length}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Employees:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequests?.notary_details?.ProofOfEmployes}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>About:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequests?.individual_details?.about_notary ?? 'null'}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Reviews:</Text>
+              <Text style={{ color: '#6FAC46' }}>{notaryDetail?.NotaryReviewCount}</Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Hired times:</Text>
+              <Text style={{ color: '#6FAC46' }}>
+                {notaryDetail?.NotaryRequests?.individual_details?.hired_time === null
+                  ? 0
+                  : notaryDetail?.NotaryRequests?.individual_details?.hired_time}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center gap-2`}>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>Verified:</Text>
+              <Image
+                source={require('@assets/verified-notary-badge.png')}
+                style={{ width: 20, height: 20 }}
+              />
+            </View>
+          </View>
+        </BottomSheetScrollView>
         {/* </View> */}
         {/* </View> */}
       </BottomSheet>

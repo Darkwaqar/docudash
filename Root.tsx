@@ -83,7 +83,7 @@ const Root = () => {
     // if (data?.status) {
     dispatch(setNotification(data));
     // }
-  }, []);
+  }, [loading]);
   useEffect(() => {
     console.log('accessToken', accessToken);
 
