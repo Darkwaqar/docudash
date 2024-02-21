@@ -1,16 +1,14 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackScreenProps } from '@type/index';
-import React, { useEffect } from 'react';
-import { SafeAreaView, ScrollView } from 'react-native';
+import React from 'react';
+import { SafeAreaView } from 'react-native';
 import tw from 'twrnc';
 // import EmailBar from '@components/EmailBar';
-import EnvelopeList from '@components/EnvelopeList';
+import DrawerScreenContainer from '@components/DrawerScreenContainer';
 import HomeHeader from '@components/HomeHeader';
-import { useDispatch } from 'react-redux';
+import RequestEnvelopeList from '@components/RequestEnvelopeList';
 import { SegmentedButtons } from 'react-native-paper';
 import { View } from 'react-native-ui-lib';
-import RequestEnvelopeList from '@components/RequestEnvelopeList';
-import DrawerScreenContainer from '@components/DrawerScreenContainer';
 
 const List = () => {
   const navigation = useNavigation<RootStackScreenProps<'RequestList'>['navigation']>();

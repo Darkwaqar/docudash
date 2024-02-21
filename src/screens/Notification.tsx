@@ -24,6 +24,7 @@ const Notification = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  console.log('noti', Notification);
   // console.log('Notification test', Notification);
   let onEndReachedCalledDuringMomentum = useRef(true);
   // console.log('id id id id ', Notification.NotificationsDetailsList);
@@ -63,9 +64,29 @@ const Notification = () => {
           },
         }
       );
-      // console.log('response', response.data);
       if (response?.data?.NotificationsDetailsList?.data?.length > 0) {
-        dispatch(setNotification(...Notification?.NotificationsDetailsList?.data));
+        dispatch(
+          setNotification({
+            ...Notification,
+            NotificationsDetailsList: {
+              ...Notification.NotificationsDetailsList,
+              current_page: response?.data?.NotificationsDetailsList?.current_page,
+              data: [
+                ...Notification.NotificationsDetailsList.data,
+                ...response?.data?.NotificationsDetailsList?.data,
+              ],
+              next_page_url: response?.data?.NotificationsDetailsList?.next_page_url,
+              prev_page_url: response?.data?.NotificationsDetailsList?.prev_page_url,
+              last_page: response?.data?.NotificationsDetailsList?.last_page,
+              from: response?.data?.NotificationsDetailsList?.from,
+              per_page: response?.data?.NotificationsDetailsList?.per_page,
+              to: response?.data?.NotificationsDetailsList?.to,
+              total: response?.data?.NotificationsDetailsList?.total,
+            },
+          })
+        );
+        console.log('response', response?.data?.NotificationsDetailsList?.next_page_url);
+        console.log('noti', Notification);
         setLoading(false);
       } else {
         setLoading(false);
@@ -149,7 +170,7 @@ const Notification = () => {
               onEndReachedCalledDuringMomentum.current = true;
             }
           }}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.2}
         />
       </SafeAreaView>
     </DrawerScreenContainer>
