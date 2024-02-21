@@ -1,3 +1,4 @@
+import DrawerScreenContainer from '@components/DrawerScreenContainer';
 import GettingStarted from '@components/GettingStarted';
 import HomeHeader from '@components/HomeHeader';
 import UploadView from '@components/UploadView';
@@ -20,7 +21,6 @@ import {
   Alert,
   Dimensions,
   Image,
-  Modal,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -60,9 +60,7 @@ const messages = [
 ];
 const HomeScreen = () => {
   const navigation = useNavigation<HomeDrawerScreenProps<'HomeScreen'>['navigation']>();
-  const route = useRoute<HomeDrawerScreenProps<'HomeScreen'>['route']>();
   const [documents, setDocuments] = useState<uploadType[]>(new Array());
-  const [modalVisible, setModalVisible] = useState(true);
   const dispatch = useDispatch();
   const [dashNumber, setDashNumber] = useState({
     actionRequired: 0,
@@ -87,15 +85,6 @@ const HomeScreen = () => {
     showFTE: false,
     currentTargetIndex: 0,
   });
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     showHighlight();
-  //   }, 1000);
-  // }, []);
-  // setTimeout(() => {
-  //   setModalVisible(false);
-  // }, 3000);
-
   const closeHighlight = () => {
     setState((prev) => ({ ...prev, showFTE: false }));
     () => {
@@ -163,8 +152,6 @@ const HomeScreen = () => {
         confirmButtonProps={{ label: 'Got It', onPress: moveNext }}
         onBackgroundPress={closeHighlight}
         getTarget={() => targets[currentTargetIndex]}
-        // highlightFrame={{x: 30, y: 70, width: 150, height: 30}}
-        // highlightFrame={{x: 160, y: 336, width: 150, height: 56}}
         borderRadius={_.includes([1, 2, 3, 4], currentTargetIndex) ? 4 : undefined}
         pageControlProps={currentTargetIndex < lastPage ? getPageControlProps() : undefined}
       />
@@ -303,6 +290,7 @@ const HomeScreen = () => {
   };
 
   return (
+    // <DrawerScreenContainer>
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <HomeHeader heading={'DASHBOARD'} addTarget={addTarget} />
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -401,6 +389,7 @@ const HomeScreen = () => {
       </View> */}
       {renderHighlighterOverlay()}
     </SafeAreaView>
+    // </DrawerScreenContainer>
   );
 };
 

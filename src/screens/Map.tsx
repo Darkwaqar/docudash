@@ -47,7 +47,7 @@ const Map = ({ route }) => {
   const mapRef = useRef<MapView>(null);
   const panelRef = useRef(null);
   const [loader, setLoader] = useState(false);
-  console.log('notaryDetail ==>>><', notaryDetail);
+  // console.log('notaryDetail ==>>><', notaryDetail);
   const handleSheetChanges = useCallback((index: number) => {
     // console.log('handleSheetChanges', index);
   }, []);
@@ -61,7 +61,7 @@ const Map = ({ route }) => {
       });
     }, 5000);
   }, [origin, destination]);
-  console.log('notaryDetail?.NotaryRequests?.amoun', notaryDetail);
+  // console.log('notaryDetail?.NotaryRequests?.amount', notaryDetail);
   useEffect(() => {
     if (!origin || !destination) return;
 
@@ -73,7 +73,7 @@ const Map = ({ route }) => {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log('data', JSON.stringify(data));
+          // console.log('data', JSON.stringify(data));
           dispatch(setTravelTimeInformation(data.rows[0].elements[0]));
         })
         .catch((error) => {
@@ -83,7 +83,7 @@ const Map = ({ route }) => {
     getTravelTime();
   }, [origin, destination, GOOGLE_MAPS_APIKEY]);
   useEffect(() => {
-    console.log('User Detail', user);
+    // console.log('User Detail', user);
 
     // if (type === 7)
     GetCurrentLocation();
@@ -110,12 +110,12 @@ const Map = ({ route }) => {
   const PostCurrentLocation = (region: any) => {
     // console.log(region);
     setLoader(true);
-    console.log('obj', {
-      NotaryRequestsReturnID: id,
-      long: region.lng,
-      lat: region.lat,
-      accessToken,
-    });
+    // console.log('obj', {
+    //   NotaryRequestsReturnID: id,
+    //   long: region.lng,
+    //   lat: region.lat,
+    //   accessToken,
+    // });
 
     axios
       .post(
@@ -135,7 +135,7 @@ const Map = ({ route }) => {
         setLoader(false);
         const data = response.data;
         setNotaryDetail(response.data);
-        console.log('PostCurrentLocation', data);
+        // console.log('PostCurrentLocation', data);
       })
       .catch((err) => {
         false;
@@ -296,7 +296,7 @@ const Map = ({ route }) => {
                           ? notaryDetail?.NotaryRequests.individual_details.name
                           : notaryDetail?.NotaryRequests.notary_details?.name,
                     };
-                    console.log('log', notaryDetail);
+                    // console.log('log', notaryDetail);
 
                     navigation.navigate('Calling', { user: callingUser });
                   }}

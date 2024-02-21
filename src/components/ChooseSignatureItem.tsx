@@ -1,7 +1,7 @@
 import { colors } from '@utils/Colors';
 import { useFonts } from 'expo-font';
 import React, { useRef } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ViewShot from 'react-native-view-shot';
 import tw from 'twrnc';
 
@@ -39,42 +39,42 @@ const ChooseSignatureItem = ({
     RockSalt: require('@assets/Fonts/RockSalt-Regular.ttf'),
     Sarina: require('@assets/Fonts/Sarina-Regular.ttf'),
   });
-  const RenderItem = ({ item, id }: any) => {
-    const ref = useRef(null);
-    const refInitial = useRef(null);
-    const onCapture = () => {
-      // @ts-ignore
-      ref.current?.capture().then((uri) => {
-        setList((prev) =>
-          prev.map((sign, i) =>
-            i === id ? { ...sign, selected: true } : { ...sign, selected: false }
-          )
-        );
+  const ref = useRef(null);
+  const refInitial = useRef(null);
+  const onCapture = () => {
+    // @ts-ignore
+    ref.current?.capture().then((uri) => {
+      setList((prev) =>
+        prev.map((sign, i) =>
+          i === id ? { ...sign, selected: true } : { ...sign, selected: false }
+        )
+      );
 
-        setSelectedUri(uri);
-      });
-      // @ts-ignore
-      refInitial.current?.capture().then((uri) => {
-        setSelectedInitialUri(uri);
-      });
-    };
-    return (
-      <View style={tw` p-2 py-4 flex-row items-center gap-2 mt-3 `}>
-        <Pressable
-          onPress={onCapture}
+      setSelectedUri(uri);
+    });
+    // @ts-ignore
+    refInitial.current?.capture().then((uri) => {
+      setSelectedInitialUri(uri);
+    });
+  };
+  if (!fontsLoaded) return null;
+  return (
+    <TouchableOpacity onPress={onCapture} key={id}>
+      <View style={tw`p-2 flex-row items-center gap-2 `}>
+        <View
           style={[
             tw`border-2 h-5 w-5 rounded-full border-gray-400 justify-center items-center`,
             item.selected ? tw`bg-[${colors.black}]` : tw`bg-white`,
           ]}
-        ></Pressable>
-        <View style={tw`flex-row items-center gap-2 h-25  w-[50%]`}>
+        ></View>
+        <View style={tw`flex-row items-center gap-2 h-25  flex-1`}>
           <Image
             style={[tw`h-25 w-3`, { tintColor: colors.green }]}
             resizeMode="contain"
             source={require('@assets/WhiteLine.png')}
           />
           <View style={tw`h-full justify-between  flex-1`}>
-            <Text style={styles.h2}>Sign by</Text>
+            <Text style={styles.h2}>signature</Text>
             <ViewShot
               ref={ref}
               options={{
@@ -118,14 +118,14 @@ const ChooseSignatureItem = ({
             <Text></Text>
           </View>
         </View>
-        <View style={tw`flex-row items-center gap-2  h-25 w-[50%]`}>
+        <View style={tw`flex-row items-center gap-2  h-25 w-[30%]`}>
           <Image
             style={[tw`h-25 w-3`, { tintColor: colors.green }]}
             resizeMode="contain"
             source={require('@assets/WhiteLine.png')}
           />
           <View style={tw`h-full justify-between flex-1`}>
-            <Text style={styles.h2}>Sign by</Text>
+            <Text style={styles.h2}>initial</Text>
             <ViewShot
               ref={refInitial}
               options={{
@@ -170,14 +170,12 @@ const ChooseSignatureItem = ({
           </View>
         </View>
       </View>
-    );
-  };
-  if (!fontsLoaded) return null;
-  return <RenderItem item={item} id={id} />;
+    </TouchableOpacity>
+  );
 };
 
 export default ChooseSignatureItem;
 
 const styles = StyleSheet.create({
-  h2: tw`font-bold text-4`,
+  h2: tw`font-semibold text-4 capitalize`,
 });

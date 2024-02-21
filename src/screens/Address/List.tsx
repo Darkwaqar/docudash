@@ -1,108 +1,75 @@
+import DrawerScreenContainer from '@components/DrawerScreenContainer';
 import HomeHeader from '@components/HomeHeader';
-import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
-import { selectAccessToken } from '@stores/slices/UserSlice';
-import {
-  Contact,
-  ContactList,
-  RootStackScreenProps,
-  SignaturePreview,
-  SignaturesListAPI,
-} from '@type/index';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useGetAddressesQuery } from '@services/address';
+import { RootStackScreenProps } from '@type/index';
 import { colors } from '@utils/Colors';
-import axios from 'axios';
 import SkeletonLoader from 'expo-skeleton-loader';
-import React, { useEffect, useState } from 'react';
-import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
-import { Chip, Switch, RadioButton, Divider } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { Divider, List as RN_LIST } from 'react-native-paper';
+import { Addresses } from 'src/types/AddressList';
 import tw from 'twrnc';
-import { List as RN_LIST } from 'react-native-paper';
-import { AddressList, Addresses } from 'src/types/AddressList';
 
 export default function List() {
-  const accessToken = useSelector(selectAccessToken);
-  const [data, setData] = useState<Addresses[]>();
-  const [loading, setLoading] = useState(false);
+  const { data, refetch, isFetching, isLoading } = useGetAddressesQuery();
   const navigation = useNavigation<RootStackScreenProps<'Addresses'>['navigation']>();
-  const focused = useIsFocused();
   const route = useRoute<RootStackScreenProps<'Addresses'>['route']>();
 
   const From = route.params?.From;
-  const fetchData = async () => {
-    setLoading(true);
-    await axios
-      .get('https://docudash.net/api/Address', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        setLoading(false);
-        const { data }: AddressList = response.data;
-        // console.log(data);
 
-        setData(data);
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.log('Error----', error);
-        setData([]);
-      });
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [focused]);
   const onRefresh = () => {
-    fetchData();
+    refetch();
   };
 
   return (
-    <SafeAreaView style={tw`flex-1`}>
-      <HomeHeader heading={'ADDRESSES'} />
-      <View style={tw`m-4 gap-1 `}>
-        <Text style={tw`text-black text-5 font-bold `}>ADDRESSES</Text>
-        <Text style={tw`text-[${colors.gray}] text-3`}>Add or update your address.</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AddAddress', {})}
-          style={tw`bg-[${colors.green}] justify-center items-center w-35 h-10 rounded-md self-end m-4`}
-        >
-          <Text style={tw`text-white`}>Add Address</Text>
-        </TouchableOpacity>
-      </View>
+    <DrawerScreenContainer>
+      <SafeAreaView style={tw`flex-1`}>
+        <HomeHeader heading={'ADDRESSES'} />
+        <View style={tw`m-4 gap-1 `}>
+          <Text style={tw`text-black text-5 font-bold `}>ADDRESSES</Text>
+          <Text style={tw`text-[${colors.gray}] text-3`}>Add or update your address.</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AddAddress', {})}
+            style={tw`bg-[${colors.green}] justify-center items-center w-35 h-10 rounded-md self-end m-4`}
+          >
+            <Text style={tw`text-white`}>Add Address</Text>
+          </TouchableOpacity>
+        </View>
 
-      <FlatList
-        data={loading ? new Array(7).fill({}) : data}
-        onRefresh={onRefresh}
-        refreshing={loading}
-        ItemSeparatorComponent={Divider}
-        contentContainerStyle={[tw`pb-25 py-5`, { alignSelf: 'stretch' }]}
-        ListEmptyComponent={
-          <View>
-            <Text style={tw`text-center text-gray-500`}>No address Found</Text>
-          </View>
-        }
-        //   keyExtractor={(item) => item.id + '_'}
-        renderItem={({ item }: { item: Addresses }) =>
-          loading ? (
-            <Skeleton />
-          ) : (
-            <RN_LIST.Item
-              onPress={() => {
-                From
-                  ? navigation.navigate('AddAddress', { Address: item })
-                  : navigation.navigate('AddAddress', { Address: item });
-              }}
-              title={item.name}
-              titleStyle={tw`text-black font-semibold`}
-              description={item.address}
-              descriptionStyle={tw`text-[${colors.gray}] font-thin`}
-              left={(props) => <RN_LIST.Icon {...props} icon="face-man" />}
-            />
-          )
-        }
-      />
-    </SafeAreaView>
+        <FlatList
+          data={isLoading ? new Array(7).fill({}) : data}
+          onRefresh={onRefresh}
+          refreshing={isLoading}
+          ItemSeparatorComponent={Divider}
+          contentContainerStyle={[tw`pb-25 py-5`, { alignSelf: 'stretch' }]}
+          ListEmptyComponent={
+            <View>
+              <Text style={tw`text-center text-gray-500`}>No address Found</Text>
+            </View>
+          }
+          //   keyExtractor={(item) => item.id + '_'}
+          renderItem={({ item }: { item: Addresses }) =>
+            isLoading ? (
+              <Skeleton />
+            ) : (
+              <RN_LIST.Item
+                onPress={() => {
+                  From
+                    ? navigation.navigate('AddAddress', { Address: item })
+                    : navigation.navigate('AddAddress', { Address: item });
+                }}
+                title={item.name}
+                titleStyle={tw`text-black font-semibold`}
+                description={item.address}
+                descriptionStyle={tw`text-[${colors.gray}] font-thin`}
+                left={(props) => <RN_LIST.Icon {...props} icon="face-man" />}
+              />
+            )
+          }
+        />
+      </SafeAreaView>
+    </DrawerScreenContainer>
   );
 }
 

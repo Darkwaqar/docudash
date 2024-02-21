@@ -62,7 +62,7 @@ const Details = () => {
   const [visible, setVisible] = React.useState(false);
   const [selectedDownload, setSelectedDownload] = useState('0');
   const openMenu = () => setVisible(true);
-  console.log('inbox', accessToken);
+  // console.log('inbox', accessToken);
   const [draggedElArr, setDraggedElArr] = useState<DraggedElArr>({
     signature: [],
     initial: [],
@@ -94,12 +94,12 @@ const Details = () => {
     emailSubject: inbox.emailSubject,
     email: inbox.recEmail,
   };
-  console.log('inbox', inbox);
+  // console.log('inbox', inbox);
 
   const fetchData = () => {
     setLoading(true);
     const url = 'https://docudash.net/api/generate-signature/html-editor/';
-    console.log('fetchData');
+    // console.log('fetchData');
 
     axios
       .get(url + generate.uniqid + '/' + generate.signature_id, {
@@ -162,7 +162,7 @@ const Details = () => {
   }, []);
   const Concern = () => {
     const url = 'https://docudash.net/api/getConcernedData';
-    console.log('generate.uniqid', generate.uniqid);
+    // console.log('generate.uniqid', generate.uniqid);
 
     axios
       .post(
@@ -175,7 +175,7 @@ const Details = () => {
         }
       )
       .then(async (response) => {
-        console.log('response.data ==>>', response.data);
+        // console.log('response.data ==>>', response.data);
         if (response.data.status) {
           if (response.data.data.length > 0) {
             const createPDFConcert = async () => {
@@ -244,7 +244,7 @@ const Details = () => {
 
               const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
 
-              console.log('page ==><><=', page);
+              // console.log('page ==><><=', page);
               const promises = response.data.data.map(async (element, index) => {
                 const arrayBuffer = await axios({
                   method: 'get',
@@ -276,7 +276,7 @@ const Details = () => {
                 //                     color: rgb(0, 0, 0),
                 //                   }
                 //                 );
-                console.log('width', width, 'height', height);
+                // console.log('width', width, 'height', height);
                 page.drawText(`Recipient:`, {
                   x: 25,
                   y: 400 - index * 100,
@@ -321,7 +321,7 @@ const Details = () => {
             createPDFConcert()
               .then((res) => {
                 const fileUri = `${FileSystem.documentDirectory}pdf1.pdf`;
-                console.log('fileUri', fileUri);
+                // console.log('fileUri', fileUri);
                 FileSystem.writeAsStringAsync(fileUri, res, {
                   encoding: FileSystem.EncodingType.Base64,
                 }).then((data) => {
@@ -438,7 +438,7 @@ const Details = () => {
   useEffect(() => {
     const url = 'https://docudash.net/api/generate-signature/manage-doc-view/';
     const id = heading === 'Sent' ? inbox.id : inbox.signature_id;
-    console.log("url + inbox.uniqid + '/' + id", url + inbox.uniqid + '/' + id);
+    // console.log("url + inbox.uniqid + '/' + id", url + inbox.uniqid + '/' + id);
 
     axios
       .get(url + inbox.uniqid + '/' + id, {
@@ -448,7 +448,7 @@ const Details = () => {
       })
       .then((response) => {
         const data: ViewDocument = response.data;
-        console.log('data', data.generateSignatureDetails);
+        // console.log('data', data.generateSignatureDetails);
 
         if (data.success) {
           setData(data);
@@ -786,7 +786,7 @@ const Details = () => {
               />
             </View>
             {data?.generateSignatureDetails.map((item, index) => (
-              <View id={String(index)} style={tw` mt-5 py-3 flex-row items-center  `}>
+              <View key={String(index)} style={tw` mt-5 py-3 flex-row items-center  `}>
                 <View style={tw`flex-1`}>
                   <View style={tw`flex-row items-center justify-between`}>
                     <Text style={styles.h2} numberOfLines={2}>

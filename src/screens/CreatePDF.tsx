@@ -16,7 +16,7 @@ const CreatePDF = () => {
     // console.log(file.filePath);
     // alert(file.filePath);
     setPdf(file.filePath);
-    console.log('file.filePath', file.filePath);
+    // console.log('file.filePath', file.filePath);
   };
 
   return (
@@ -27,7 +27,7 @@ const CreatePDF = () => {
           source={PdfResource}
           style={styles.pdf}
           onLoadComplete={(numberOfPages, filePath) => {
-            console.log(`number of pages: ${numberOfPages}`);
+            // console.log(`number of pages: ${numberOfPages}`);
           }}
         />
       ) : (

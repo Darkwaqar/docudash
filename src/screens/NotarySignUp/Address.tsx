@@ -80,11 +80,11 @@ const Address = () => {
       })
       .then((response) => {
         const { success, data, message }: NotraySignUpAPI = response.data;
-        console.log('optScreen-', response.data);
-        console.log('token ', token);
+        // console.log('optScreen-', response.data);
+        // console.log('token ', token);
 
         if (success) {
-          console.log(data.steps);
+          // console.log(data.steps);
 
           setLoading(false),
             //@ts-ignore
@@ -96,7 +96,7 @@ const Address = () => {
             }),
             dispatch(setNotaryStep(data.steps));
         } else {
-          console.log('else', message);
+          // console.log('else', message);
 
           // if (message) Object.values(message).map((x) => Alert.alert('Failed', x.toString()));
           setLoading(false);
@@ -218,7 +218,7 @@ const Address = () => {
                 let zip_code: any;
                 let re: any;
                 let filtersResCity = details.address_components.filter((val: any) => {
-                  console.log(val.types);
+                  // console.log(val.types);
 
                   if (val.types.includes('locality') || val.types.includes('sublocality')) {
                     setAddress((prev) => ({

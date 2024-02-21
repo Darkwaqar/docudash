@@ -1,3 +1,4 @@
+import DrawerScreenContainer from '@components/DrawerScreenContainer';
 import HomeHeader from '@components/HomeHeader';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { selectAccessToken } from '@stores/slices/UserSlice';
@@ -28,8 +29,8 @@ export default function List() {
       })
       .then((response) => {
         const { data, message, status } = response.data as StampListAPI;
-        console.log('status', status);
-        console.log('response.data', response.data);
+        // console.log('status', status);
+        // console.log('response.data', response.data);
 
         if (status) {
           setList(data.data);
@@ -138,28 +139,30 @@ export default function List() {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1`}>
-      <HomeHeader heading={'STAMPS'} />
-      <View style={tw`m-4 gap-1 `}>
-        <Text style={tw`text-black text-5 font-bold `}>Stamps</Text>
-        <Text style={tw`text-[${colors.gray}] text-3`}>Add or update your name and stamps.</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AddStamp', {})}
-          style={tw`bg-[${colors.green}] justify-center items-center w-35 h-10 rounded-md self-end m-4`}
-        >
-          <Text style={tw`text-white`}>Add Stamp</Text>
-        </TouchableOpacity>
-      </View>
+    <DrawerScreenContainer>
+      <SafeAreaView style={tw`flex-1`}>
+        <HomeHeader heading={'STAMPS'} />
+        <View style={tw`m-4 gap-1 `}>
+          <Text style={tw`text-black text-5 font-bold `}>Stamps</Text>
+          <Text style={tw`text-[${colors.gray}] text-3`}>Add or update your name and stamps.</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AddStamp', {})}
+            style={tw`bg-[${colors.green}] justify-center items-center w-35 h-10 rounded-md self-end m-4`}
+          >
+            <Text style={tw`text-white`}>Add Stamp</Text>
+          </TouchableOpacity>
+        </View>
 
-      <FlatList
-        data={list}
-        keyExtractor={(item) => item.id + '_'}
-        onRefresh={fetchList}
-        refreshing={isFetching}
-        ItemSeparatorComponent={Divider}
-        contentContainerStyle={tw`pb-50`}
-        renderItem={({ item }) => <RenderItem item={item} />}
-      />
-    </SafeAreaView>
+        <FlatList
+          data={list}
+          keyExtractor={(item) => item.id + '_'}
+          onRefresh={fetchList}
+          refreshing={isFetching}
+          ItemSeparatorComponent={Divider}
+          contentContainerStyle={tw`pb-50`}
+          renderItem={({ item }) => <RenderItem item={item} />}
+        />
+      </SafeAreaView>
+    </DrawerScreenContainer>
   );
 }

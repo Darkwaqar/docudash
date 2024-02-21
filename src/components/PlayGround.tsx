@@ -131,8 +131,6 @@ export default function PlayGround({
             .map((item: DraggedElement, elementIndex) => {
               const left = parseFloat((parseFloat(item.left) / 100) * imageRealSize.width + '');
               const top = parseFloat((parseFloat(item.top) / 100) * imageRealSize.height + '');
-              console.log('drawleft', left);
-              console.log('drawtop', top);
               // console.log('left', left, item.left, 'top', top, item.top);
               return (
                 <Draggable
@@ -140,7 +138,7 @@ export default function PlayGround({
                   y={top}
                   key={item.uuid}
                   onDragRelease={(event, gestureState, bounds) => {
-                    console.log('Release', gestureState);
+                    // console.log('Release', gestureState);
                     const nativeEvent = event.nativeEvent;
                     let top = nativeEvent.pageY - imageRealSize.pageY + scrollY;
                     const newLeft = parseFloat(
@@ -166,8 +164,8 @@ export default function PlayGround({
                     //left 11.58
                     // top:31.53
 
-                    console.log('top', top / imageRealSize.height);
-                    console.log('left', nativeEvent.pageX / imageRealSize.width);
+                    // console.log('top', top / imageRealSize.height);
+                    // console.log('left', nativeEvent.pageX / imageRealSize.width);
 
                     setDraggedElArr((prev) => ({
                       ...prev,

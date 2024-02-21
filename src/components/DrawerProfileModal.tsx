@@ -22,6 +22,7 @@ const DrawerProfileModal = () => {
   const user = useSelector(selectProfileData);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation<RootStackScreenProps<'Home'>['navigation']>();
+  console.log('Render in profile Model');
   // console.log('USER DrawerProfileModal', user);
   return (
     <>
@@ -50,7 +51,6 @@ const DrawerProfileModal = () => {
           </View>
         </Pressable>
       )}
-
       <Modal
         animationType="fade"
         transparent={true}
@@ -63,13 +63,13 @@ const DrawerProfileModal = () => {
         <View
           style={[tw`flex-1 justify-center items-center`, { backgroundColor: 'rgba(0,0,0,0.8)' }]}
         >
-          <View style={tw`py-20 w-75 bg-white justify-center items-center gap-4`}>
-            <Pressable
-              style={tw`absolute top-1 right-2 p-2`}
+          <View style={[tw`py-20 w-75 bg-white justify-center items-center gap-4`]}>
+            <TouchableOpacity
+              style={tw`absolute top-1 right-2 p-2 z-10`}
               onPress={() => setModalVisible(false)}
             >
               <MaterialCommunityIcons name="close-circle" size={30} />
-            </Pressable>
+            </TouchableOpacity>
             {/* content */}
             <View style={tw`gap-2 w-[80%] overflow-hidden`}>
               <Text style={tw`font-bold text-4`}>
@@ -97,7 +97,7 @@ const DrawerProfileModal = () => {
   );
 };
 
-export default DrawerProfileModal;
+export default React.memo(DrawerProfileModal);
 
 const styles = StyleSheet.create({
   profile_small_text: tw`text-[${colors.gray}]`,

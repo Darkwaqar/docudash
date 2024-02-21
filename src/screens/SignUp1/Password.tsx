@@ -31,7 +31,7 @@ const PasswordScreen = () => {
   }, []);
   const CreateToken = async () => {
     const device_token = await messaging().getToken();
-    console.log(device_token);
+    // console.log(device_token);
 
     setDevice_token(device_token);
   };

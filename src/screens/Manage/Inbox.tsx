@@ -9,6 +9,7 @@ import HomeHeader from '@components/HomeHeader';
 import { SegmentedButtons } from 'react-native-paper';
 import { View } from 'react-native-ui-lib';
 import { useDispatch } from 'react-redux';
+import DrawerScreenContainer from '@components/DrawerScreenContainer';
 
 const Inbox = () => {
   const navigation = useNavigation<RootStackScreenProps<'Inbox'>['navigation']>();
@@ -17,31 +18,33 @@ const Inbox = () => {
   const [value, setValue] = React.useState(heading);
 
   const dispatch = useDispatch();
-
+  console.log('render Inbox');
   return (
-    <SafeAreaView style={tw`flex-1`}>
-      <HomeHeader heading={heading} />
-      <View style={tw`px-4`}>
-        <SegmentedButtons
-          value={value}
-          onValueChange={setValue}
-          buttons={[
-            {
-              value: 'Inbox',
-              label: 'Inbox',
-            },
-            {
-              value: 'Draft',
-              label: 'Draft',
-            },
-            { value: 'Sent', label: 'Sent' },
+    <DrawerScreenContainer>
+      <SafeAreaView style={tw`flex-1`}>
+        <HomeHeader heading={heading} />
+        <View style={tw`px-4`}>
+          <SegmentedButtons
+            value={value}
+            onValueChange={setValue}
+            buttons={[
+              {
+                value: 'Inbox',
+                label: 'Inbox',
+              },
+              {
+                value: 'Draft',
+                label: 'Draft',
+              },
+              { value: 'Sent', label: 'Sent' },
 
-            { value: 'Trash', label: 'Trash' },
-          ]}
-        />
-      </View>
-      <EnvelopeList heading={value} />
-    </SafeAreaView>
+              { value: 'Trash', label: 'Trash' },
+            ]}
+          />
+        </View>
+        <EnvelopeList heading={value} />
+      </SafeAreaView>
+    </DrawerScreenContainer>
   );
 };
 

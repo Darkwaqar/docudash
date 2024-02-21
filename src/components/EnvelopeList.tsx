@@ -1,4 +1,5 @@
 import FilterModal from '@components/FilterModal';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { selectAccessToken } from '@stores/slices/UserSlice';
 import { Envelope, InboxApiResponse } from '@type/index';
 import axios from 'axios';
@@ -9,7 +10,6 @@ import { Divider } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import tw from 'twrnc';
 import EnvelopeListItem from './EnvelopeListItem';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
 export default function EnvelopeList({ heading }: { heading: string }) {
   const navigation = useNavigation();
   const focused = useIsFocused();
@@ -69,7 +69,7 @@ export default function EnvelopeList({ heading }: { heading: string }) {
       onRefresh={onRefresh}
       refreshing={loading}
       ItemSeparatorComponent={Divider}
-      contentContainerStyle={[tw`pb-25 py-5`, { alignSelf: 'stretch' }]}
+      // contentContainerStyle={[tw`pb-25 py-5`, { alignSelf: 'stretch' }]}
       ListEmptyComponent={
         <View>
           <Text style={tw`text-center text-gray-500`}>No {heading} items Found</Text>
@@ -77,7 +77,7 @@ export default function EnvelopeList({ heading }: { heading: string }) {
       }
       //   keyExtractor={(item) => item.id + '_'}
       renderItem={({ item }) =>
-        loading ? <Skeleton /> : <EnvelopeListItem item={item} heading={heading} />
+        loading ? <Skeleton /> : <EnvelopeListItem item={item} heading={heading} key={item.id} />
       }
     />
   );

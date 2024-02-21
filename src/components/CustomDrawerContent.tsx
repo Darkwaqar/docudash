@@ -14,9 +14,9 @@ import { useNavigation } from '@react-navigation/native';
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
   return (
     <DrawerContentScrollView
+      showsVerticalScrollIndicator={false}
       style={{
         paddingVertical: 30,
         paddingBottom: 100,
@@ -44,6 +44,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   );
 };
 
-export default CustomDrawerContent;
+export default React.memo(CustomDrawerContent);
 
 const styles = StyleSheet.create({});

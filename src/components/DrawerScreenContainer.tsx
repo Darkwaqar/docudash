@@ -26,7 +26,7 @@ function DrawerScreenContainer({ children }: { children: JSX.Element }) {
           flex: 1,
           backgroundColor: COLORS.white,
           // transform: [{ scale }],
-          overflow: 'hidden',
+          // overflow: 'hidden',
         },
         animatedStyle,
       ]}

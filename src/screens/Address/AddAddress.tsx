@@ -1,31 +1,22 @@
-import AddSignatureDraw from '@components/AddSignauteDraw';
 import { colors } from '@utils/Colors';
-import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Alert,
-  FlatList,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { Appbar, Button, SegmentedButtons, TextInput } from 'react-native-paper';
+import { Alert, ScrollView, Text, View } from 'react-native';
+import { Appbar, Button, TextInput } from 'react-native-paper';
 import tw from 'twrnc';
 
-import ChooseSignatureItem from '@components/ChooseSignatureItem';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useAddAddressMutation,
+  useDeleteAddressMutation,
+  useUpdateAddressMutation,
+} from '@services/address';
 import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
-import { Contact, RootStackScreenProps, SignaturePreview } from '@type/index';
+import { RootStackScreenProps } from '@type/index';
+import { placeTypeToDelta } from '@utils/placeTypeToDelta';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import MapView, { Marker, Region } from 'react-native-maps';
 import { useSelector } from 'react-redux';
 import { Addresses } from 'src/types/AddressList';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import { placeTypeToDelta } from '@utils/placeTypeToDelta';
 
 const AddAddress = () => {
   const user = useSelector(selectProfileData);
@@ -49,6 +40,9 @@ const AddAddress = () => {
   const route = useRoute<RootStackScreenProps<'AddAddress'>['route']>();
   const Address = route.params?.Address as Addresses;
   const From = route.params?.From as string;
+  const [updateUser, { isLoading }] = useUpdateAddressMutation();
+  const [addUser, { isLoading: isAddLoading }] = useAddAddressMutation();
+  const [deleteUser, { isLoading: isDeleteLoading }] = useDeleteAddressMutation();
 
   useEffect(() => {
     if (Address) {
@@ -56,7 +50,7 @@ const AddAddress = () => {
     }
   }, []);
 
-  const createOrUpdate = () => {
+  const createOrUpdate = async () => {
     if (adress.name.length == 0) {
       Alert.alert('Please add a name');
       return;
@@ -64,128 +58,61 @@ const AddAddress = () => {
     if (Address) {
       // update
       // console.log('Update');
-
-      axios
-        .post(
-          'https://docudash.net/api/Address/update/' + adress.id,
-          {
-            name: adress.name,
-            address: adress.address,
-            city: adress.city,
-            state: adress.state,
-            country: adress.country,
-            zip_code: adress.zip_code,
-            lat: adress.lat,
-            long: adress.long,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        )
-        .then((response) => {
-          const {
-            message,
-            success,
-          }: {
-            message: string;
-            success: boolean;
-          } = response.data;
-          // console.log('response.data', response.data);
-          if (success) {
-            navigation.goBack();
-            // navigation.navigate('Signatures', {});
-          } else {
-            Alert.alert(message);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      try {
+        const response = await updateUser({
+          id: adress.id,
+          name: adress.name,
+          address: adress.address,
+          city: adress.city,
+          state: adress.state,
+          country: adress.country,
+          zip_code: adress.zip_code,
+          lat: adress.lat,
+          long: adress.long,
+        }).unwrap();
+        navigation.goBack();
+      } catch (error) {
+        navigation.goBack();
+      }
     } else {
       // create
       // console.log('Create');
 
-      axios
-        .post(
-          'https://docudash.net/api/Address/create',
-          {
-            name: adress.name,
-            address: adress.address,
-            city: adress.city,
-            state: adress.state,
-            country: adress.country,
-            zip_code: adress.zip_code,
-            lat: adress.lat,
-            long: adress.long,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        )
-        .then((response) => {
-          const {
-            message,
-            success,
-          }: {
-            message: string;
-            success: boolean;
-          } = response.data;
-          // console.log(response.data);
-          if (success) {
-            if (From === 'create request') {
-              navigation.navigate('CreateARequest', { From: 'Address' });
-            } else navigation.goBack();
-            // navigation.navigate('Signatures', {});
-          } else {
-            Alert.alert(message);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      try {
+        const response = await addUser({
+          name: adress.name,
+          address: adress.address,
+          city: adress.city,
+          state: adress.state,
+          country: adress.country,
+          zip_code: adress.zip_code,
+          lat: adress.lat,
+          long: adress.long,
+        }).unwrap();
+        if (response?.success) {
+          if (From === 'create request') {
+            navigation.navigate('CreateARequest', { From: 'Address' });
+          } else navigation.goBack();
+          // navigation.navigate('Signatures', {});
+        } else {
+          navigation.goBack();
+          // Alert.alert(response.message[0]);
+        }
+      } catch (error) {
+        Alert.alert(error);
+      }
     }
   };
 
-  const deleteContact = () => {
+  const deleteContact = async () => {
     if (adress.id == undefined) {
       alert('Local Id Cannot Be Deleted');
       return;
     }
-    axios
-      .post(
-        'https://docudash.net/api/Address/delete',
-        {
-          deleteId: adress.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        const {
-          message,
-          status,
-        }: {
-          message: string;
-          status: boolean;
-        } = response.data;
-        // console.log(response.data);
-        if (status) {
-          navigation.goBack();
-          // navigation.navigate('Signatures', {});
-        } else {
-          Alert.alert(message);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      await deleteUser(adress.id);
+      navigation.goBack();
+    } catch (error) {}
   };
   return (
     <View style={tw`h-full `}>
@@ -358,7 +285,11 @@ const AddAddress = () => {
         </ScrollView>
       </View>
       <View style={tw`flex-row justify-end p-6 py-4`}>
-        <Button mode="contained" onPress={createOrUpdate}>
+        <Button
+          mode="contained"
+          disabled={isAddLoading || isDeleteLoading || isLoading}
+          onPress={createOrUpdate}
+        >
           {Address ? 'Update' : 'Add'}
         </Button>
       </View>

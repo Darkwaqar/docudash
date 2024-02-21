@@ -32,6 +32,7 @@ import { Notaries, NotaryList, locationNotary } from 'src/types/NoraryList';
 import { Searchbar, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import GreenButton from '@components/GreenButton';
+import DrawerScreenContainer from '@components/DrawerScreenContainer';
 
 const { width, height } = Dimensions.get('window');
 const types = [
@@ -66,6 +67,7 @@ const Map = () => {
 
   const onChangeSearch = (query) => setSearchQuery(query);
   const fetchData = (type: number) => {
+    console.log('fetch');
     axios
       .post('https://docudash.net/api/notarize-map', {
         notary_document_staus: type,
@@ -150,258 +152,263 @@ const Map = () => {
     map.current?.animateToRegion(region);
   }, [selectedPlaceId]);
   return (
-    <SafeAreaView style={tw`h-full bg-white`}>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View
-          style={{
-            paddingHorizontal: 10,
-            paddingVertical: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
+    <DrawerScreenContainer>
+      <SafeAreaView style={tw`h-full bg-white`}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
+          <View
             style={{
-              marginRight: 5,
+              paddingHorizontal: 10,
+              paddingVertical: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
             }}
           >
-            <EvilIcons name={'chevron-left'} size={30} color="black" />
-          </TouchableOpacity>
-          <GooglePlacesAutocomplete
-            styles={{
-              predefinedPlacesDescription: {
-                color: 'blue',
-              },
-              textInput: {
-                height: 38,
-                color: colors.black,
-                fontSize: 15,
-              },
-              listView: {
-                backgroundColor: colors.green,
-              },
-            }}
-            placeholder="Search for Notary"
-            debounce={400}
-            GooglePlacesDetailsQuery={{ fields: 'geometry' }}
-            fetchDetails={true}
-            renderRow={(rowData) => {
-              const title = rowData.structured_formatting.main_text;
-              const address = rowData.structured_formatting.secondary_text;
-              return (
-                <View style={{ height: 18 }}>
-                  <Text style={{ fontSize: 13, color: colors.black }}>
-                    {title} {address}
-                  </Text>
-                </View>
-              );
-            }}
-            query={{
-              key: 'AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc',
-              language: 'en',
-              components: 'country:us',
-            }}
-            onPress={async (data, details = null) => {
-              map.current.animateToRegion(
-                {
-                  latitude: details?.geometry?.location.lat,
-                  longitude: details?.geometry?.location.lng,
-                  latitudeDelta: 0.95,
-                  longitudeDelta: 0.21,
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                marginRight: 5,
+              }}
+            >
+              <EvilIcons name={'chevron-left'} size={30} color="black" />
+            </TouchableOpacity>
+            <GooglePlacesAutocomplete
+              styles={{
+                predefinedPlacesDescription: {
+                  color: 'blue',
                 },
-                2500
-              );
-              // 'details' is provided when fetchDetails = true
+                textInput: {
+                  height: 38,
+                  color: colors.black,
+                  fontSize: 15,
+                },
+                listView: {
+                  backgroundColor: colors.green,
+                },
+              }}
+              placeholder="Search for Notary"
+              debounce={400}
+              GooglePlacesDetailsQuery={{ fields: 'geometry' }}
+              fetchDetails={true}
+              renderRow={(rowData) => {
+                const title = rowData.structured_formatting.main_text;
+                const address = rowData.structured_formatting.secondary_text;
+                return (
+                  <View style={{ height: 18 }}>
+                    <Text style={{ fontSize: 13, color: colors.black }}>
+                      {title} {address}
+                    </Text>
+                  </View>
+                );
+              }}
+              query={{
+                key: 'AIzaSyCSEEKrvzM3-vFcLEoOUf256gzLG7tyWWc',
+                language: 'en',
+                components: 'country:us',
+              }}
+              onPress={async (data, details = null) => {
+                map.current.animateToRegion(
+                  {
+                    latitude: details?.geometry?.location.lat,
+                    longitude: details?.geometry?.location.lng,
+                    latitudeDelta: 0.95,
+                    longitudeDelta: 0.21,
+                  },
+                  2500
+                );
+                // 'details' is provided when fetchDetails = true
+              }}
+            />
+          </View>
+          <MapView
+            ref={map}
+            style={{ flex: 1 }}
+            // provider={PROVIDER_GOOGLE}
+            initialRegion={{
+              latitude: 35.6657425,
+              longitude: -116.9306027,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1,
             }}
-          />
-        </View>
-        <MapView
-          ref={map}
-          style={{ flex: 1 }}
-          // provider={PROVIDER_GOOGLE}
-          initialRegion={{
-            latitude: 35.6657425,
-            longitude: -116.9306027,
-            latitudeDelta: 0.1,
-            longitudeDelta: 0.1,
-          }}
-        >
-          {data?.map((place) => {
-            return (
-              <CustomMarker
-                coordinate={{
-                  latitude: parseFloat(place.lat),
-                  longitude: parseFloat(place.long),
-                }}
-                name={place.first_name}
-                key={place.id}
-                isSelected={place.id === selectedPlaceId}
-                onPress={() => setSelectedPlaceId(place.id)}
-              ></CustomMarker>
-            );
-          })}
-        </MapView>
+          >
+            {data?.map((place) => {
+              return (
+                <CustomMarker
+                  coordinate={{
+                    latitude: parseFloat(place.lat),
+                    longitude: parseFloat(place.long),
+                  }}
+                  name={place.first_name}
+                  key={place.id}
+                  isSelected={place.id === selectedPlaceId}
+                  onPress={() => setSelectedPlaceId(place.id)}
+                ></CustomMarker>
+              );
+            })}
+          </MapView>
 
-        <View style={{ position: 'absolute', bottom: insets.bottom + 20 }}>
-          <FlatList
-            ref={flatList}
-            data={data}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }: any) => <PostCarouselItem post={item} key={item.id} />}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            snapToInterval={width - 60}
-            snapToAlignment={'center'}
-            decelerationRate={'fast'}
-            viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-            // viewabilityConfig={viewConfig.current}
-            // onViewableItemsChanged={onViewChanged.current}
-          />
-        </View>
-        <BottomSheet
-          // animateOnMount={false}
-          ref={panelRef}
-          index={0}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
-        >
-          <Text variant="labelLarge" style={tw`text-lg text-center mb-2 mt-2 font-bold`}>
-            {`See All ${data?.length} Notary`}
-          </Text>
+          <View style={{ position: 'absolute', bottom: insets.bottom + 20 }}>
+            <FlatList
+              ref={flatList}
+              data={data}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }: any) => <PostCarouselItem post={item} key={item.id} />}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              snapToInterval={width - 60}
+              snapToAlignment={'center'}
+              decelerationRate={'fast'}
+              viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+              // viewabilityConfig={viewConfig.current}
+              // onViewableItemsChanged={onViewChanged.current}
+            />
+          </View>
+          <BottomSheet
+            // animateOnMount={false}
+            ref={panelRef}
+            index={0}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}
+          >
+            <Text variant="labelLarge" style={tw`text-lg text-center mb-2 mt-2 font-bold`}>
+              {`See All ${data?.length} Notary`}
+            </Text>
 
-          <BottomSheetFlatList
-            ListHeaderComponent={
-              <View>
-                <View style={tw`flex-row gap-4 px-2 items-center`}>
-                  <Searchbar
-                    mode="bar"
-                    style={tw`flex-1`}
-                    placeholder="Search"
-                    onChangeText={onChangeSearch}
-                    value={searchQuery}
-                  />
-                  <View style={tw`w-40`}>
-                    <DropDown
-                      label={'Select Type'}
-                      mode={'outlined'}
-                      visible={showDropDownType}
-                      showDropDown={() => setShowDropDownType(true)}
-                      onDismiss={() => setShowDropDownType(false)}
-                      value={typeValue}
-                      // setValue={setTypeValue}
-                      setValue={(val) => {
-                        if (val == 'in person') {
-                          setTypeValue(val);
-                          fetchData(0);
-                        } else {
-                          setTypeValue(val);
-                          fetchData(1);
-                        }
-                      }}
-                      list={types}
+            <BottomSheetFlatList
+              ListHeaderComponent={
+                <View>
+                  <View style={tw`flex-row gap-4 px-2 items-center`}>
+                    <Searchbar
+                      mode="bar"
+                      style={tw`flex-1`}
+                      placeholder="Search"
+                      onChangeText={onChangeSearch}
+                      value={searchQuery}
                     />
+                    <View style={tw`w-40`}>
+                      <DropDown
+                        label={'Select Type'}
+                        mode={'outlined'}
+                        visible={showDropDownType}
+                        showDropDown={() => setShowDropDownType(true)}
+                        onDismiss={() => setShowDropDownType(false)}
+                        value={typeValue}
+                        // setValue={setTypeValue}
+                        setValue={(val) => {
+                          if (val == 'in person') {
+                            setTypeValue(val);
+                            fetchData(0);
+                          } else {
+                            setTypeValue(val);
+                            fetchData(1);
+                          }
+                        }}
+                        list={types}
+                      />
+                    </View>
                   </View>
                 </View>
-              </View>
-            }
-            data={data}
-            renderItem={({ item }: { item: Notaries }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('NotaryProfile', { item: item })}
-                >
-                  <View style={tw`m-2 flex justify-center bg-white shadow-md rounded-lg`}>
-                    <Image
-                      source={{
-                        uri:
-                          'https://docudash.net/public/uploads/NotaryRequestBanner/' +
-                          item.BannerImage,
-                      }}
-                      resizeMode="contain"
-                      style={tw`w-full bg-[${colors.green}] h-16`}
-                    ></Image>
-                    <Image
-                      style={{
-                        width: 60,
-                        marginHorizontal: 20,
-                        borderRadius: 50,
-                        height: 60,
-                        bottom: 40,
-                      }}
-                      source={{
-                        uri: 'https://docudash.net/public/uploads/profile-pics/' + item.image,
-                      }}
-                      resizeMode="cover"
-                    />
-                    <View
-                      style={{
-                        width: '100%',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginTop: 10,
-                        paddingHorizontal: 20,
-                        bottom: 50,
-                      }}
-                    >
-                      <View>
-                        <Text style={{ fontSize: 20, color: 'black' }}>{item?.first_name}</Text>
-                        <Text style={{ fontSize: 15, fontWeight: '200' }}>{item?.email} </Text>
+              }
+              data={data}
+              renderItem={({ item }: { item: Notaries }) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('NotaryProfile', { item: item })}
+                  >
+                    <View style={tw`m-2 flex justify-center bg-white shadow-md rounded-lg`}>
+                      <Image
+                        source={{
+                          uri:
+                            'https://docudash.net/public/uploads/NotaryRequestBanner/' +
+                            item.BannerImage,
+                        }}
+                        resizeMode="contain"
+                        style={tw`w-full bg-[${colors.green}] h-16`}
+                      ></Image>
+                      <Image
+                        style={{
+                          width: 60,
+                          marginHorizontal: 20,
+                          borderRadius: 50,
+                          height: 60,
+                          bottom: 40,
+                        }}
+                        source={{
+                          uri: 'https://docudash.net/public/uploads/profile-pics/' + item.image,
+                        }}
+                        resizeMode="cover"
+                      />
+                      <View
+                        style={{
+                          width: '100%',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginTop: 10,
+                          paddingHorizontal: 20,
+                          bottom: 50,
+                        }}
+                      >
+                        <View>
+                          <Text style={{ fontSize: 20, color: 'black' }}>{item?.first_name}</Text>
+                          <Text style={{ fontSize: 15, fontWeight: '200' }}>{item?.email} </Text>
+                        </View>
+                      </View>
+                      <View style={{ position: 'absolute', top: 20, right: 20 }}>
+                        <TouchableOpacity>
+                          <Entypo
+                            name={heart === item?.id ? 'heart' : 'heart-outlined'}
+                            size={20}
+                            color={heart === item?.id ? 'red' : 'white'}
+                          />
+                        </TouchableOpacity>
                       </View>
                     </View>
-                    <View style={{ position: 'absolute', top: 20, right: 20 }}>
-                      <TouchableOpacity>
-                        <Entypo
-                          name={heart === item?.id ? 'heart' : 'heart-outlined'}
-                          size={20}
-                          color={heart === item?.id ? 'red' : 'white'}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
-          {/* </View> */}
-          {/* </View> */}
-        </BottomSheet>
-      </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={style.centeredView}>
-          <View style={style.modalView}>
-            <Text style={style.modalText}>Select the type of services your looking.</Text>
-            <View
-              style={[tw`flex-row items-center justify-between w-full `, { paddingHorizontal: 10 }]}
-            >
-              <GreenButton
-                text={'RON'}
-                onPress={() => {
-                  fetchData(1);
-                }}
-                styles={{ width: 150 }}
-              />
-              <GreenButton
-                text={'inperson'}
-                onPress={() => {
-                  fetchData(0);
-                }}
-                // onPress={() => setModalVisible(false)}
-                styles={{ width: 150 }}
-              />
+                  </TouchableOpacity>
+                );
+              }}
+            />
+            {/* </View> */}
+            {/* </View> */}
+          </BottomSheet>
+        </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={style.centeredView}>
+            <View style={style.modalView}>
+              <Text style={style.modalText}>Select the type of services your looking.</Text>
+              <View
+                style={[
+                  tw`flex-row items-center justify-between w-full `,
+                  { paddingHorizontal: 10 },
+                ]}
+              >
+                <GreenButton
+                  text={'RON'}
+                  onPress={() => {
+                    fetchData(1);
+                  }}
+                  styles={{ width: 150 }}
+                />
+                <GreenButton
+                  text={'inperson'}
+                  onPress={() => {
+                    fetchData(0);
+                  }}
+                  // onPress={() => setModalVisible(false)}
+                  styles={{ width: 150 }}
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    </DrawerScreenContainer>
   );
 };
 export default Map;

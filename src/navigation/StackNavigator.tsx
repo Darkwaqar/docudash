@@ -43,13 +43,9 @@ export default function StackNavigator() {
   const user = useSelector(selectAccessToken);
   const userInfo = useSelector(selectProfileData);
   const navigation = useNavigation();
-  console.log('user StackNavigator', userInfo?.email?.split('@')[0]);
   const APP_NAME = 'docudash';
   const ACC_NAME = 'wizard.n2';
-  // const ACC_NAME = userInfo?.email?.split('@')[0];
   const password = '12345678';
-  // const password = '123123';
-  // const username = 'urspecial1one';
   const username = userInfo?.email?.split('@')[0];
 
   const voximplant = Voximplant.getInstance();
@@ -124,11 +120,11 @@ export default function StackNavigator() {
             {/* <Stack.Screen name="Featured" component={FeatureHighlightScreen} /> */}
 
             <Stack.Screen name="Home" component={DrawerNavigator} />
-            <Stack.Screen name="Signatures" component={Signatures} />
+            {/* <Stack.Screen name="Signatures" component={Signatures} /> */}
             <Stack.Screen name="AddSignature" component={AddSignature} />
 
             <Stack.Screen name="AddContact" component={AddContact} />
-            <Stack.Screen name="Stamps" component={Stamps} />
+            {/* <Stack.Screen name="Stamps" component={Stamps} /> */}
             <Stack.Screen name="AddStamp" component={AddStamp} />
             <Stack.Screen name="Browser" component={Browser} />
             <Stack.Screen name="Details" component={Details} />

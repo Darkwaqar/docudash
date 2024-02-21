@@ -165,7 +165,7 @@ const Details = () => {
         }: RequestDetailsPage = response.data;
         setGenerateSignature(generateSignature);
         setDetails(NotaryRequests);
-        console.log(NotaryRequestsDetails);
+        // console.log(NotaryRequestsDetails);
         setRecipients(NotaryRequestsDetails);
         setDocumentDetails(NotaryRequestsDetailsDocuments);
       })
@@ -317,7 +317,7 @@ const Details = () => {
                 </Text>
               )}
 
-              {console.log('details ====....', details)}
+              {/* {console.log('details ====....', details)} */}
 
               {requestType.find((x) => x.value == details?.notary_request_status.toString())
                 ?.label === 'Accepted' && (
@@ -363,7 +363,7 @@ const Details = () => {
                             ? details?.individual_details.name
                             : details?.notary_details?.name,
                       };
-                      console.log('log', details);
+                      // console.log('log', details);
 
                       navigation.navigate('Calling', { user: callingUser });
                     }}

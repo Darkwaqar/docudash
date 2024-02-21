@@ -1,3 +1,4 @@
+import { notificationType } from './../../types/notification.d';
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { IUserSlice } from '../../types/userSlice';
 import { SignUpStackParamList, User } from '@type/*';
@@ -10,11 +11,11 @@ const initialState: IUserSlice = {
   notaryStep: 0,
   userStep: 0,
   signUpToken: null,
-  notification:{
-    NotificationsCount:0,
-    NotificationsDetailsList:[],
-    status:false
-   }
+  notification: {
+    NotificationsCount: 0,
+    NotificationsDetailsList: {},
+    status: false,
+  },
 };
 
 // Define an async thunk to handle registration
@@ -31,7 +32,7 @@ const userSlice = createSlice({
     setAccessToken: (state, action: PayloadAction<string | null>) => {
       state.accessToken = action.payload;
     },
-    setNotification: (state, action: PayloadAction<[]>) => {
+    setNotification: (state, action: PayloadAction<notificationType>) => {
       state.notification = action.payload;
     },
     logoutUser: (state) => {

@@ -10,7 +10,6 @@ import { useNavigation } from '@react-navigation/native';
 const onMessageReceived = async (message: any) => {
   // const {type, timestamp} = message.data;
   // Request permissions (required for iOS)
-  console.log('message ===><><', message);
   // setNotifi(message);
   // Create a channel (required for Android)
   const channelId = await notifee.createChannel({
@@ -55,14 +54,12 @@ const Root = () => {
   }, []);
   notifee.onForegroundEvent(({ type, detail }) => {
     if (type === EventType.PRESS) {
-      console.log('message.data', detail, type);
       // navigation.navigate('DocumentViewer', { LinkToView: detail.LinkToView });
       // navigation?.navigate('Home');
     }
   });
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction } = detail;
-    console.log('message.data', detail, type);
     // Check if the user pressed the "Mark as read" action
     if (type === EventType.ACTION_PRESS && pressAction.id === 'mark-as-read') {
       // Update external API
@@ -85,19 +82,12 @@ const Root = () => {
     // }
   }, [loading]);
   useEffect(() => {
-    console.log('accessToken', accessToken);
-
     if (accessToken) {
       store_token();
     }
   }, [accessToken]);
-
-  console.log('data', data);
-
   const store_token = async () => {
     const token = await messaging().getToken();
-    // alert('store_token');
-    console.log('token ==><><', token);
     const obj = {
       token: token,
     };
@@ -108,7 +98,7 @@ const Root = () => {
         },
       })
       .then((response) => {
-        console.log('store_token', response.data);
+        // console.log('store_token', response.data);
       })
       .catch((error) => {
         console.log('Error----', error);

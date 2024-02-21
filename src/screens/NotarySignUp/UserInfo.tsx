@@ -45,7 +45,7 @@ const UserInfoScreen = () => {
     }
     // console.log('form.phone 1', form);
     if (phoneCode.toString() == '+1') {
-      console.log('form.phone', form);
+      // console.log('form.phone', form);
       setLoading(true);
 
       axios
@@ -59,15 +59,14 @@ const UserInfoScreen = () => {
 
           // console.log('NameScreen', data);
           if (success) {
-            setLoading(false), console.log('data.steps', data.steps);
-
-            // @ts-ignore
-            navigation.replace('NotaryLoginStackNavigator', {
-              screen: ('Step' + data.steps) as any,
-              params: {
-                api: next,
-              },
-            }),
+            setLoading(false),
+              // @ts-ignore
+              navigation.replace('NotaryLoginStackNavigator', {
+                screen: ('Step' + data.steps) as any,
+                params: {
+                  api: next,
+                },
+              }),
               dispatch(setNotaryStep(data.steps));
           } else {
             if (message.first_name) {
@@ -162,7 +161,7 @@ const UserInfoScreen = () => {
               setForm({ ...form, phone: text });
             }}
             onChangeFormattedText={(text) => {
-              console.log('text', text.slice(0, 2).toString());
+              // console.log('text', text.slice(0, 2).toString());
               setPhoneCode(text.slice(0, 2));
               //  setFormattedValue(text.slice(0,2));
             }}

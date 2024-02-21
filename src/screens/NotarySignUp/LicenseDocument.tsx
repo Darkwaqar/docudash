@@ -28,7 +28,7 @@ const LicenseDocument = () => {
     axios
       .post('https://docudash.net/api/notary-sign-up-3/' + token, formData, {})
       .then((response) => {
-        console.log('optScreen-', response.data);
+        // console.log('optScreen-', response.data);
         const { success = true, data, message, next }: NotarySignUpStep5 = response.data;
 
         if (success) {

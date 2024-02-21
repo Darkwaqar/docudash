@@ -39,7 +39,7 @@ const EmailScreen = () => {
       })
       .then((response) => {
         const { data, success, next_access, message, next }: SignUpAPI = response.data;
-        console.log('emailScreen', response.data);
+        // console.log('emailScreen', response.data);
         if (success) {
           if (data.user_type === 7) {
             if (data.steps === 6) {
@@ -91,7 +91,7 @@ const EmailScreen = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.log('err', err);
         setLoading(false);
       });
   };

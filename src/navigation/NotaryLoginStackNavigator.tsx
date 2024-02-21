@@ -19,9 +19,14 @@ export default function NotaryLoginStackNavigator() {
   const dispatch = useDispatch();
   // console.log('step', step);
   dispatch(setNotaryStep(0));
+  // @ts-ignore
+  const initialRouteName: keyof SignUpStackParamList = 'Step' + step;
 
   return (
-    <LoginStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={'Step' + step}>
+    <LoginStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={initialRouteName}
+    >
       <LoginStack.Screen name="Index" component={EmailScreen} />
       <LoginStack.Screen name="Step1" component={UserInfoScreen} />
       <LoginStack.Screen name="Step2" component={OptScreen} />

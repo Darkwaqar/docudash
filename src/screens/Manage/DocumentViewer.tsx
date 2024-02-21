@@ -192,7 +192,7 @@ const DocumentViewer = () => {
 
   const fetchData = async () => {
     if (LinkToView) {
-      console.log('LinkToView', LinkToView);
+      // console.log('LinkToView', LinkToView);
 
       setLoading(true);
       axios
@@ -210,7 +210,7 @@ const DocumentViewer = () => {
             generateSignatureDetails,
             generateSignatureDetailsImages,
           }: HtmlEditorAPI = response.data;
-          console.log('html-editor', response.data);
+          // console.log('html-editor', response.data);
 
           if (status) {
             if (
@@ -272,7 +272,7 @@ const DocumentViewer = () => {
       // Alert.alert('else');
       setLoading(true);
       const url = 'https://docudash.net/api/generate-signature/html-editor/';
-      console.log('=>', url + envelope.uniqid + '/' + envelope.signature_id + '/' + envelope.id);
+      // console.log('=>', url + envelope.uniqid + '/' + envelope.signature_id + '/' + envelope.id);
 
       axios
         .get(url + envelope.uniqid + '/' + envelope.signature_id, {
@@ -289,7 +289,7 @@ const DocumentViewer = () => {
             generateSignatureDetails,
             generateSignatureDetailsImages,
           }: HtmlEditorAPI = response.data;
-          console.log('html-editor', response.data);
+          // console.log('html-editor', response.data);
 
           if (status) {
             if (
@@ -344,7 +344,7 @@ const DocumentViewer = () => {
           setLoading(false);
           console.log('Error---->>', error.message);
           if (error.message === 'Request failed with status code 404') return navigation.goBack();
-          console.log('Error---->>', url + envelope.uniqid + '/' + envelope.signature_id);
+          // console.log('Error---->>', url + envelope.uniqid + '/' + envelope.signature_id);
         });
     }
   };
@@ -363,12 +363,12 @@ const DocumentViewer = () => {
     // console.log('viewFinalResponseArr', draggedElArr);
 
     const data = new FormData();
-    console.log('ya id hay', recipients[selectedRecipient].id);
+    // console.log('ya id hay', recipients[selectedRecipient].id);
     data.append('id', recipients[selectedRecipient].id);
     // data.append('signature_id', envelope.signature_id);
     data.append('viewFinalResponseArr', JSON.stringify(draggedElArr));
     // data.append('save_type', '0');
-    console.log('data', data);
+    // console.log('data', data);
     axios
       .post(url + envelope.signature_id, data, {
         headers: {
@@ -378,7 +378,7 @@ const DocumentViewer = () => {
       })
       .then((response) => {
         const { status, message }: { status: boolean; message: string } = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         if (status) {
           alert(message);
           setLoading(false);

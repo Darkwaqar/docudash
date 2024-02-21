@@ -243,7 +243,7 @@ const DocumentEditor = () => {
         },
       })
       .then((response) => {
-        console.log('response', response);
+        // console.log('response', response);
 
         const { status, message }: { status: boolean; message: string } = response.data;
         if (status) {

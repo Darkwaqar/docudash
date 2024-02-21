@@ -28,7 +28,7 @@ const Calling = () => {
   const [localVideoStreamId, setLocalVideoStreamId] = useState('');
   const [remoteVideoStreamId, setRemoteVideoStreamId] = useState('');
   const userInfo = useSelector(selectProfileData);
-  console.log('user StackNavigator', userInfo?.email?.split('@')[0]);
+  // console.log('user StackNavigator', userInfo?.email?.split('@')[0]);
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -39,7 +39,7 @@ const Calling = () => {
   //   user_display_name: 'Abdul',
   // };
 
-  console.log(user);
+  // console.log(user);
 
   const voximplant = Voximplant.getInstance();
 
@@ -82,7 +82,7 @@ const Calling = () => {
     };
 
     const makeCall = async () => {
-      console.log('makeCall', user.user_name);
+      // console.log('makeCall', user.user_name);
       call.current = await voximplant.call(user.user_name?.split('@')[0], callSettings);
       subscribeToCallEvents();
     };
@@ -96,7 +96,7 @@ const Calling = () => {
 
     const subscribeToCallEvents = () => {
       call.current.on(Voximplant.CallEvents.Failed, (callEvent: any) => {
-        console.log(callEvent);
+        // console.log(callEvent);
         showError(callEvent.reason);
       });
       call.current.on(Voximplant.CallEvents.ProgressToneStart, (callEvent: any) => {

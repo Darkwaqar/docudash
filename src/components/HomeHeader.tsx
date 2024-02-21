@@ -21,10 +21,11 @@ export default function HomeHeader({
   const [visible, setVisible] = React.useState(false);
   const Notification = useSelector(selectNotification);
   const openMenu = () => setVisible(true);
-  console.log('Notification', Notification);
 
   const closeMenu = () => setVisible(false);
   const user = useSelector(selectProfileData);
+  // console.log('HomeHeader', Notification);
+
   return (
     <View style={style.header}>
       <View
@@ -32,21 +33,21 @@ export default function HomeHeader({
           addTarget && addTarget(r, '0');
         }}
       >
-        {navigation.canGoBack() ? (
+        {/* {navigation.canGoBack() ? (
           <Icon
             // style={{ width: 28, height: 28 }}
             name="arrow-left"
             size={28}
             onPress={navigation.goBack}
           />
-        ) : (
-          <Icon
-            // style={{ width: 28, height: 28 }}
-            name="sort-variant"
-            size={28}
-            onPress={navigation.toggleDrawer}
-          />
-        )}
+        ) : ( */}
+        <Icon
+          // style={{ width: 28, height: 28 }}
+          name="sort-variant"
+          size={28}
+          onPress={navigation.toggleDrawer}
+        />
+        {/* )} */}
       </View>
       <Text style={{ color: COLORS.primary, fontWeight: 'bold', fontSize: 16 }}>{heading}</Text>
 

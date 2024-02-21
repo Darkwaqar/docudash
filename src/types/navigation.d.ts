@@ -60,6 +60,8 @@ export type RootStackParamList = {
   RequestDetails: { id: number };
   Calling: { user: {} };
   ApproveRequest: { id?: number; Envelope: GenerateSignature };
+  IncomingCall: { call: any };
+  Call: undefined;
 };
 
 export type SignUpStackParamList = {

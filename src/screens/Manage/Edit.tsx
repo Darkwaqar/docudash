@@ -80,7 +80,7 @@ const Edit = () => {
   const accessToken = useSelector(selectAccessToken);
   const navigation = useNavigation<RootStackScreenProps<'Edit'>['navigation']>();
   const route = useRoute<RootStackScreenProps<'Edit'>['route']>();
-  console.log('route', route);
+  // console.log('route', route);
   const [state, setState] = useState<State>({
     activeIndex: route?.params?.activeIndex ?? 0,
     completedStepIndex: undefined,
@@ -264,7 +264,7 @@ const Edit = () => {
                 else {
                   alert(message);
                   navigation.navigate('Home');
-                  console.log('message', message);
+                  // console.log('message', message);
                 }
               })
               .catch((error) => {

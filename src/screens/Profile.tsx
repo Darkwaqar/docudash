@@ -18,6 +18,7 @@ import { Avatar, Button, Divider, Text, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import tw from 'twrnc';
 import UploadView from '@components/UploadView';
+import DrawerScreenContainer from '@components/DrawerScreenContainer';
 
 const Profile = () => {
   const user = useSelector(selectProfileData);
@@ -175,185 +176,187 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1`}>
-      <HomeHeader heading={'PROFILE'} />
-      <ScrollView
-        contentContainerStyle={tw`pb-20`}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
-        <View style={tw`m-4 gap-1 `}>
-          <Text style={tw`text-black text-5 font-bold `}>Profile</Text>
-          <Text style={tw`text-[${colors.gray}] text-3`}>
-            Manage your personal profile information to control what details are shared with other
-            Docudash users.
-          </Text>
-        </View>
-        <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-          <View style={tw`flex-row justify-between`}>
-            <Text variant="titleMedium">Profile Image</Text>
-            <Button mode="contained" style={tw`rounded-lg`} onPress={pickImage}>
-              Update
-            </Button>
+    <DrawerScreenContainer>
+      <SafeAreaView style={tw`flex-1`}>
+        <HomeHeader heading={'PROFILE'} />
+        <ScrollView
+          contentContainerStyle={tw`pb-20`}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
+          <View style={tw`m-4 gap-1 `}>
+            <Text style={tw`text-black text-5 font-bold `}>Profile</Text>
+            <Text style={tw`text-[${colors.gray}] text-3`}>
+              Manage your personal profile information to control what details are shared with other
+              Docudash users.
+            </Text>
           </View>
+          <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+            <View style={tw`flex-row justify-between`}>
+              <Text variant="titleMedium">Profile Image</Text>
+              <Button mode="contained" style={tw`rounded-lg`} onPress={pickImage}>
+                Update
+              </Button>
+            </View>
 
-          <Avatar.Image size={60} style={tw`m-2`} source={{ uri: user.profile_photo }} />
-        </View>
-        <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-          <View style={tw`flex-row justify-between`}>
-            <Text variant="titleMedium">Name</Text>
-            <NameEditModal />
+            <Avatar.Image size={60} style={tw`m-2`} source={{ uri: user.profile_photo }} />
           </View>
-          <Text>
-            {user.first_name} {user.last_name}
-          </Text>
-        </View>
-        <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-          <View style={tw`flex-row justify-between`}>
-            <Text variant="titleMedium">Email address</Text>
-            <Button
-              mode="contained"
-              style={tw`rounded-lg`}
-              onPress={() => {
-                alert('You Cannot Change Your Email');
-              }}
-            >
-              Update
-            </Button>
-          </View>
-          <Text>{user.email}</Text>
-        </View>
-        <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-          <View style={tw`flex-row justify-between`}>
-            <Text variant="titleMedium">Contact Information</Text>
-            <InfoEditModal />
-          </View>
-          <View style={tw`gap-2`}>
-            <View style={tw`flex-row gap-2 items-center`}>
-              <Text variant="titleSmall">Phone:</Text>
-              <Text>{user.phone}</Text>
+          <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+            <View style={tw`flex-row justify-between`}>
+              <Text variant="titleMedium">Name</Text>
+              <NameEditModal />
             </View>
-            <View style={tw`flex-row gap-2 items-center`}>
-              <Text>Company:</Text>
-              <Text>{user.company}</Text>
-            </View>
-            <View style={tw`flex-row gap-2 items-center`}>
-              <Text>Address:</Text>
-              <Text>{user.address1}</Text>
-            </View>
+            <Text>
+              {user.first_name} {user.last_name}
+            </Text>
           </View>
-        </View>
-        <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-          <View style={tw`flex-row justify-between`}>
-            <Text variant="titleMedium">Date Created:</Text>
-            <Button
-              mode="contained"
-              style={tw`rounded-lg`}
-              onPress={() => {
-                alert('You Cannot Change Your Email');
-              }}
-            >
-              Update
-            </Button>
-          </View>
-
-          <Text>{new Date(user.created_at).toUTCString().slice(0, 17)}</Text>
-        </View>
-        {user.user_type === 7 ? (
-          <>
-            <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-              <View style={tw`flex-row justify-between`}>
-                <Text variant="titleMedium">Banner</Text>
-                <Button mode="contained" style={tw`rounded-lg`} onPress={bannerImageUpload}>
-                  Update
-                </Button>
-              </View>
-              <Image
-                source={{
-                  uri:
-                    'https://docudash.net/public/uploads/NotaryRequestBanner/' + user.BannerImage,
+          <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+            <View style={tw`flex-row justify-between`}>
+              <Text variant="titleMedium">Email address</Text>
+              <Button
+                mode="contained"
+                style={tw`rounded-lg`}
+                onPress={() => {
+                  alert('You Cannot Change Your Email');
                 }}
-                style={tw`w-full h-14`}
-                resizeMode={'contain'}
-              ></Image>
+              >
+                Update
+              </Button>
             </View>
-            <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-              <View style={tw`flex-row justify-between`}>
-                <Text variant="titleMedium">Bio description:</Text>
-                <BioEditModal />
-              </View>
-              <Text>{user.BioDescription}</Text>
+            <Text>{user.email}</Text>
+          </View>
+          <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+            <View style={tw`flex-row justify-between`}>
+              <Text variant="titleMedium">Contact Information</Text>
+              <InfoEditModal />
             </View>
-            <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-              <View style={tw`flex-row justify-between`}>
-                <Text variant="titleMedium">Short Description:</Text>
-                <ShortDescriptionModal />
+            <View style={tw`gap-2`}>
+              <View style={tw`flex-row gap-2 items-center`}>
+                <Text variant="titleSmall">Phone:</Text>
+                <Text>{user.phone}</Text>
               </View>
-              <Text>{user.ShortDescription}</Text>
+              <View style={tw`flex-row gap-2 items-center`}>
+                <Text>Company:</Text>
+                <Text>{user.company}</Text>
+              </View>
+              <View style={tw`flex-row gap-2 items-center`}>
+                <Text>Address:</Text>
+                <Text>{user.address1}</Text>
+              </View>
             </View>
-            <View style={tw`border border-gray-300 m-4 p-4 rounded-lg gap-4 `}>
-              <View style={tw`flex-row justify-between`}>
-                <Text variant="titleMedium">Verification Status:</Text>
-              </View>
-              <Text>{user?.verification_status === 1 ? 'Verified' : 'Not Verified'}</Text>
+          </View>
+          <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+            <View style={tw`flex-row justify-between`}>
+              <Text variant="titleMedium">Date Created:</Text>
+              <Button
+                mode="contained"
+                style={tw`rounded-lg`}
+                onPress={() => {
+                  alert('You Cannot Change Your Email');
+                }}
+              >
+                Update
+              </Button>
             </View>
-            <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
-              <View style={tw`flex-row justify-between`}>
-                <Text variant="titleMedium">Upload Proof of Employees:</Text>
-                <Button
-                  mode="contained"
-                  style={tw`rounded-lg`}
-                  onPress={() => {
-                    setModalVisible(true);
-                  }}
-                >
-                  Update
-                </Button>
-              </View>
-              <View style={tw`gap-2`}>
-                <Text>Proof of Employees: {user.ProofOfEmployes}</Text>
-                <TouchableOpacity>
-                  <Text style={tw`text-green-500 text-4`}>Click to View</Text>
-                </TouchableOpacity>
-                {modalVisible ? (
-                  <View style={tw`flex-1 justify-center items-center  `}>
-                    <View style={tw`bg-white m-2 p-2 gap-2 w-72 rounded-lg`}>
-                      <View style={tw`flex-row items-center justify-between`}>
-                        <Text style={tw`text-xl`}>Update Number of Employees</Text>
-                      </View>
-                      <Divider></Divider>
-                      <View style={tw`gap-2`}>
-                        <TextInput
-                          label="Enter Number of Employees"
-                          value={firstName}
-                          keyboardType="number-pad"
-                          onChangeText={(text) => setFirstName(text)}
-                          style={tw`h-20`}
-                        />
-                        <UploadView documents={documents} setDocuments={setDocuments} />
-                      </View>
 
-                      <Divider></Divider>
-                      <View style={tw`flex-row items-center gap-4 justify-between`}>
-                        <Button style={tw`rounded-lg`} mode="contained" onPress={onSave}>
-                          Update
-                        </Button>
-                        <Button
-                          style={tw`rounded-lg`}
-                          mode="outlined"
-                          onPress={() => setModalVisible(false)}
-                        >
-                          Cancel
-                        </Button>
+            <Text>{new Date(user.created_at).toUTCString().slice(0, 17)}</Text>
+          </View>
+          {user.user_type === 7 ? (
+            <>
+              <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+                <View style={tw`flex-row justify-between`}>
+                  <Text variant="titleMedium">Banner</Text>
+                  <Button mode="contained" style={tw`rounded-lg`} onPress={bannerImageUpload}>
+                    Update
+                  </Button>
+                </View>
+                <Image
+                  source={{
+                    uri:
+                      'https://docudash.net/public/uploads/NotaryRequestBanner/' + user.BannerImage,
+                  }}
+                  style={tw`w-full h-14`}
+                  resizeMode={'contain'}
+                ></Image>
+              </View>
+              <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+                <View style={tw`flex-row justify-between`}>
+                  <Text variant="titleMedium">Bio description:</Text>
+                  <BioEditModal />
+                </View>
+                <Text>{user.BioDescription}</Text>
+              </View>
+              <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+                <View style={tw`flex-row justify-between`}>
+                  <Text variant="titleMedium">Short Description:</Text>
+                  <ShortDescriptionModal />
+                </View>
+                <Text>{user.ShortDescription}</Text>
+              </View>
+              <View style={tw`border border-gray-300 m-4 p-4 rounded-lg gap-4 `}>
+                <View style={tw`flex-row justify-between`}>
+                  <Text variant="titleMedium">Verification Status:</Text>
+                </View>
+                <Text>{user?.verification_status === 1 ? 'Verified' : 'Not Verified'}</Text>
+              </View>
+              <View style={tw`border border-gray-300 m-4 p-4 rounded-lg `}>
+                <View style={tw`flex-row justify-between`}>
+                  <Text variant="titleMedium">Upload Proof of Employees:</Text>
+                  <Button
+                    mode="contained"
+                    style={tw`rounded-lg`}
+                    onPress={() => {
+                      setModalVisible(true);
+                    }}
+                  >
+                    Update
+                  </Button>
+                </View>
+                <View style={tw`gap-2`}>
+                  <Text>Proof of Employees: {user.ProofOfEmployes}</Text>
+                  <TouchableOpacity>
+                    <Text style={tw`text-green-500 text-4`}>Click to View</Text>
+                  </TouchableOpacity>
+                  {modalVisible ? (
+                    <View style={tw`flex-1 justify-center items-center  `}>
+                      <View style={tw`bg-white m-2 p-2 gap-2 w-72 rounded-lg`}>
+                        <View style={tw`flex-row items-center justify-between`}>
+                          <Text style={tw`text-xl`}>Update Number of Employees</Text>
+                        </View>
+                        <Divider></Divider>
+                        <View style={tw`gap-2`}>
+                          <TextInput
+                            label="Enter Number of Employees"
+                            value={firstName}
+                            keyboardType="number-pad"
+                            onChangeText={(text) => setFirstName(text)}
+                            style={tw`h-20`}
+                          />
+                          <UploadView documents={documents} setDocuments={setDocuments} />
+                        </View>
+
+                        <Divider></Divider>
+                        <View style={tw`flex-row items-center gap-4 justify-between`}>
+                          <Button style={tw`rounded-lg`} mode="contained" onPress={onSave}>
+                            Update
+                          </Button>
+                          <Button
+                            style={tw`rounded-lg`}
+                            mode="outlined"
+                            onPress={() => setModalVisible(false)}
+                          >
+                            Cancel
+                          </Button>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                ) : null}
+                  ) : null}
+                </View>
               </View>
-            </View>
-          </>
-        ) : null}
-      </ScrollView>
-    </SafeAreaView>
+            </>
+          ) : null}
+        </ScrollView>
+      </SafeAreaView>
+    </DrawerScreenContainer>
   );
 };
 
