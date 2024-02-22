@@ -59,6 +59,7 @@ export default function List() {
       StatusUpdate(item.id, value ? 1 : 0);
       // fetchList();
     };
+
     return (
       <View style={tw` bg-white p-2 my-1 gap-4 px-3 shadow-md rounded-lg m-2`}>
         <View style={tw`flex-row items-center gap-2`}>

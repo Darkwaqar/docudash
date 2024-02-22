@@ -18,6 +18,7 @@ const selectUserState = (state: RootState) => state.user;
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  whitelist: ['user'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

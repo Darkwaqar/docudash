@@ -30,18 +30,13 @@ const baseQueryWithInterceptor: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
+  console.log(args);
   // console.log(result);
   if (result.error && result.error.status === 401) {
   }
   return result;
 };
-function isHydrateAction(action: Action): action is Action<typeof REHYDRATE> & {
-  key: string;
-  payload: RootState;
-  err: unknown;
-} {
-  return action.type === REHYDRATE;
-}
+
 export const api = createApi({
   baseQuery: baseQueryWithInterceptor,
   // extractRehydrationInfo(action, { reducerPath }): any {
@@ -54,6 +49,6 @@ export const api = createApi({
   //     return action.payload[api.reducerPath];
   //   }
   // },
-  tagTypes: ['Addresses', 'Contacts', 'Signatures'],
+  tagTypes: ['Addresses', 'Contacts', 'Signatures', 'Stamps'],
   endpoints: () => ({}),
 });

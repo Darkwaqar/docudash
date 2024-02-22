@@ -82,17 +82,15 @@ const DrawerNavigator = () => {
           component={SignatureList}
         />
 
-        {type === 7 && (
-          <Drawer.Screen
-            name="STAMPS"
-            options={{
-              drawerIcon: ({ color }) => (
-                <Icon name="stamper" size={25} style={{ marginRight: -20, color }} />
-              ),
-            }}
-            component={StampList}
-          />
-        )}
+        <Drawer.Screen
+          name="STAMPS"
+          options={{
+            drawerIcon: ({ color }) => (
+              <Icon name="stamper" size={25} style={{ marginRight: -20, color }} />
+            ),
+          }}
+          component={StampList}
+        />
         <Drawer.Screen
           name="CONTACTS"
           options={{

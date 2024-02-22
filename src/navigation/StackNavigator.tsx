@@ -43,10 +43,6 @@ export default function StackNavigator() {
   const user = useSelector(selectAccessToken);
   const userInfo = useSelector(selectProfileData);
   const navigation = useNavigation();
-  const APP_NAME = 'docudash';
-  const ACC_NAME = 'wizard.n2';
-  const password = '12345678';
-  const username = userInfo?.email?.split('@')[0];
 
   const voximplant = Voximplant.getInstance();
   function convertCodeMessage(code: number) {
@@ -74,6 +70,10 @@ export default function StackNavigator() {
   });
   useEffect(() => {
     const Login = async () => {
+      const APP_NAME = 'docudash';
+      const ACC_NAME = 'wizard.n2';
+      const password = '12345678';
+      const username = userInfo?.email?.split('@')[0];
       try {
         let clientState = await voximplant.getClientState();
         if (clientState === Voximplant.ClientState.DISCONNECTED) {
@@ -102,9 +102,10 @@ export default function StackNavigator() {
         // showLoginError(message);
       }
     };
-
-    Login();
-  }, [user]);
+    if (userInfo) {
+      Login();
+    }
+  }, [userInfo]);
   return (
     <StripeProvider
       merchantIdentifier="merchant.com.Docudash"

@@ -10,6 +10,7 @@ import { selectAccessToken, selectProfileData } from '@stores/slices/UserSlice';
 import { RootStackScreenProps, StampPreview } from '@type/index';
 import FormData from 'form-data';
 import { useSelector } from 'react-redux';
+import { useAddStampMutation } from '@services/stamp';
 
 const AddStamp = () => {
   const user = useSelector(selectProfileData);
@@ -20,7 +21,8 @@ const AddStamp = () => {
   const [base64, setBase64] = useState('');
   const [name, setName] = useState('');
   const [stampId, setStampId] = useState('0');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const [addStamp, { isLoading }] = useAddStampMutation();
 
   const [image, setImage] = useState<{
     uri: string;
@@ -65,7 +67,7 @@ const AddStamp = () => {
     }
   };
 
-  const create = () => {
+  const create = async () => {
     if (name.length < 0 || name.length > 20) {
       Alert.alert('Name length should be between 0 and 20');
       return;
@@ -75,6 +77,12 @@ const AddStamp = () => {
       Alert.alert('Please select an image');
       return;
     }
+    const data = {
+      updateID: stampId,
+      title: name,
+      imageName: image.name,
+      stampCroppedImg: 'data:image/png;base64,' + base64,
+    };
 
     formData.append('updateID', stampId);
     formData.append('title', name);
@@ -84,31 +92,33 @@ const AddStamp = () => {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'multipart/form-data',
     };
-    setLoading(true);
 
-    axios
-      .post('https://docudash.net/api/stamps/create', formData, { headers })
-      .then((response) => {
-        const { status, message }: { status: boolean; message: string } = response.data;
-        if (status) {
-          navigation.goBack();
-          // navigation.navigate('Stamps', {});
-        } else {
-          // @ts-ignore
-          if (message.stamp_photo) {
-            // @ts-ignore
-            Alert.alert(message.stamp_photo[0]);
-          } else {
-            Alert.alert(message);
-          }
-        }
-        // console.log(response.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    await addStamp(data).unwrap();
+    navigation.goBack();
+
+    // axios
+    //   .post('https://docudash.net/api/stamps/create', formData, { headers })
+    //   .then((response) => {
+    //     const { status, message }: { status: boolean; message: string } = response.data;
+    //     if (status) {
+    //       navigation.goBack();
+    //       // navigation.navigate('Stamps', {});
+    //     } else {
+    //       // @ts-ignore
+    //       if (message.stamp_photo) {
+    //         // @ts-ignore
+    //         Alert.alert(message.stamp_photo[0]);
+    //       } else {
+    //         Alert.alert(message);
+    //       }
+    //     }
+    //     // console.log(response.data);
+    //     setLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     setLoading(false);
+    //   });
   };
   return (
     <View style={tw`h-full`}>
@@ -155,7 +165,7 @@ const AddStamp = () => {
           </View>
         )}
         <View style={tw`flex-row items-center gap-2`}>
-          <Button loading={loading} onPress={base64 ? create : uploadStamp} mode="contained">
+          <Button loading={isLoading} onPress={base64 ? create : uploadStamp} mode="contained">
             {base64 ? 'Upload' : 'Browse'}
           </Button>
         </View>

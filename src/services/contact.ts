@@ -86,6 +86,7 @@ export const postApi = api.injectEndpoints({
       invalidatesTags: (result, error, id) => [{ type: 'Contacts', id }],
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {

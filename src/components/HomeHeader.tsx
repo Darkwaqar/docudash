@@ -35,18 +35,12 @@ export default function HomeHeader({
       >
         {/* {navigation.canGoBack() ? (
           <Icon
-            // style={{ width: 28, height: 28 }}
             name="arrow-left"
             size={28}
             onPress={navigation.goBack}
           />
         ) : ( */}
-        <Icon
-          // style={{ width: 28, height: 28 }}
-          name="sort-variant"
-          size={28}
-          onPress={navigation.toggleDrawer}
-        />
+        <Icon name="sort-variant" size={28} onPress={navigation.toggleDrawer} />
         {/* )} */}
       </View>
       <Text style={{ color: COLORS.primary, fontWeight: 'bold', fontSize: 16 }}>{heading}</Text>

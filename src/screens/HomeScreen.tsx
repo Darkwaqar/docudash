@@ -290,90 +290,90 @@ const HomeScreen = () => {
   };
 
   return (
-    // <DrawerScreenContainer>
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <HomeHeader heading={'DASHBOARD'} addTarget={addTarget} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={style.mainContainer}>
-          <GettingStarted addTarget={addTarget} />
-          <View style={tw`-mx-5 items-center mt-10 bg-[${colors.green}] py-10 gap-2`}>
-            <View style={tw`flex-row items-center h-25`}>
-              {loading ? (
-                <ActivityIndicator size={100} animating={true} />
-              ) : (
-                <TouchableOpacity onPress={pickImage} ref={(r) => addTarget(r, '3')}>
-                  <Avatar.Image
-                    size={100}
-                    style={tw`m-2`}
-                    source={{ uri: userData?.profile_photo }}
-                  />
-                </TouchableOpacity>
-              )}
-
-              <Image
-                style={tw`w-2.1 h-24 rounded-full mt-5 top--2 mx-2`}
-                source={require('@assets/WhiteLine.png')}
-              />
-              <View style={tw`h-full flex-1 justify-between items-start px-1 `}>
-                <Text style={tw`font-semibold text-white text-4 w-50`}>Signed by:</Text>
-
-                {signature ? (
-                  <>
-                    <Image
-                      style={[tw`h-12 w-full`, { tintColor: 'white' }]}
-                      source={{
-                        uri: signature?.signature.replace(/(\r\n|\n|\r)/gm, ''),
-                      }}
-                      resizeMode="contain"
-                    />
-                    <Text style={tw`text-white text-4 w-50`}>{signature.signature_code}</Text>
-                  </>
+    <DrawerScreenContainer>
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
+        <HomeHeader heading={'DASHBOARD'} addTarget={addTarget} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={style.mainContainer}>
+            <GettingStarted addTarget={addTarget} />
+            <View style={tw`-mx-5 items-center mt-10 bg-[${colors.green}] py-10 gap-2`}>
+              <View style={tw`flex-row items-center h-25`}>
+                {loading ? (
+                  <ActivityIndicator size={100} animating={true} />
                 ) : (
+                  <TouchableOpacity onPress={pickImage} ref={(r) => addTarget(r, '3')}>
+                    <Avatar.Image
+                      size={100}
+                      style={tw`m-2`}
+                      source={{ uri: userData?.profile_photo }}
+                    />
+                  </TouchableOpacity>
+                )}
+
+                <Image
+                  style={tw`w-2.1 h-24 rounded-full mt-5 top--2 mx-2`}
+                  source={require('@assets/WhiteLine.png')}
+                />
+                <View style={tw`h-full flex-1 justify-between items-start px-1 `}>
+                  <Text style={tw`font-semibold text-white text-4 w-50`}>Signed by:</Text>
+
+                  {signature ? (
+                    <>
+                      <Image
+                        style={[tw`h-12 w-full`, { tintColor: 'white' }]}
+                        source={{
+                          uri: signature?.signature.replace(/(\r\n|\n|\r)/gm, ''),
+                        }}
+                        resizeMode="contain"
+                      />
+                      <Text style={tw`text-white text-4 w-50`}>{signature.signature_code}</Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={tw`text-white text-4 w-50`}>Needs to sign</Text>
+                      <Text style={tw`text-white text-4 w-50`}>
+                        Sign id will generate after signature
+                      </Text>
+                    </>
+                  )}
+                </View>
+              </View>
+              <View
+                style={tw`flex-row  p-4 bg-[${colors.green}] flex-wrap justify-center items-center gap-6`}
+              >
+                <Box text={'Action Required'} num={0} />
+                <Box text={'Waiting for Others'} num={dashNumber.waitingForOthers} />
+                <Box text={'Expiring Soon'} num={dashNumber.expiringSoon} />
+                <Box text={'Completed'} num={dashNumber.completed} />
+                {type === 7 && (
                   <>
-                    <Text style={tw`text-white text-4 w-50`}>Needs to sign</Text>
-                    <Text style={tw`text-white text-4 w-50`}>
-                      Sign id will generate after signature
-                    </Text>
+                    <Box text={'Requests'} num={dashNumber.Requests} />
+                    <Box text={'Accepted List'} num={dashNumber.AcceptedList} />
+                    <Box text={'Rejected'} num={dashNumber.Rejected} />
+                    <Box text={'Done'} num={dashNumber.Done} />
                   </>
                 )}
               </View>
             </View>
-            <View
-              style={tw`flex-row  p-4 bg-[${colors.green}] flex-wrap justify-center items-center gap-6`}
-            >
-              <Box text={'Action Required'} num={0} />
-              <Box text={'Waiting for Others'} num={dashNumber.waitingForOthers} />
-              <Box text={'Expiring Soon'} num={dashNumber.expiringSoon} />
-              <Box text={'Completed'} num={dashNumber.completed} />
-              {type === 7 && (
-                <>
-                  <Box text={'Requests'} num={dashNumber.Requests} />
-                  <Box text={'Accepted List'} num={dashNumber.AcceptedList} />
-                  <Box text={'Rejected'} num={dashNumber.Rejected} />
-                  <Box text={'Done'} num={dashNumber.Done} />
-                </>
-              )}
-            </View>
-          </View>
 
-          <UploadView documents={documents} setDocuments={setDocuments} />
-          {[...documents].length > 0 ? (
-            <Button
-              mode="contained"
-              onPress={() => {
-                if (signature?.signature) {
-                  navigation.navigate('Edit', { files: documents });
-                } else {
-                  alert('Please Add Your Signature');
-                }
-              }}
-            >
-              Start Now
-            </Button>
-          ) : null}
-        </View>
-      </ScrollView>
-      {/* <View center padding-25>
+            <UploadView documents={documents} setDocuments={setDocuments} />
+            {[...documents].length > 0 ? (
+              <Button
+                mode="contained"
+                onPress={() => {
+                  if (signature?.signature) {
+                    navigation.navigate('Edit', { files: documents });
+                  } else {
+                    alert('Please Add Your Signature');
+                  }
+                }}
+              >
+                Start Now
+              </Button>
+            ) : null}
+          </View>
+        </ScrollView>
+        {/* <View center padding-25>
         <View ref={viewRef}>
           <Text marginT-20>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
@@ -387,9 +387,9 @@ const HomeScreen = () => {
           <Button onPress={showHighlight}>Show Overlay</Button>
         </View>
       </View> */}
-      {renderHighlighterOverlay()}
-    </SafeAreaView>
-    // </DrawerScreenContainer>
+        {renderHighlighterOverlay()}
+      </SafeAreaView>
+    </DrawerScreenContainer>
   );
 };
 
