@@ -54,6 +54,7 @@ export default function EnvelopeList({ heading }: { heading: string }) {
     fetchData();
   };
   return (
+    // <Skeleton />
     <FlatList
       data={loading ? new Array(7).fill({}) : filter(Name) ? filter(Name) : data}
       ListHeaderComponent={
@@ -86,19 +87,21 @@ export default function EnvelopeList({ heading }: { heading: string }) {
 const Skeleton = () => {
   return (
     <SkeletonLoader boneColor={'#D3D3D3'}>
-      <SkeletonLoader.Container style={tw`my-2`}>
-        <SkeletonLoader.Container style={tw`flex-row overflow-hidden gap-2 items-center px-5 `}>
+      <SkeletonLoader.Container style={tw`my-2 px-4`}>
+        <SkeletonLoader.Container style={tw`flex-row overflow-hidden gap-2 items-center `}>
           {/*  @ts-ignore */}
           <SkeletonLoader.Item style={tw`w-10 h-10 rounded-full`} />
-          <SkeletonLoader.Container style={tw`overflow-hidden w-70`}>
+          <SkeletonLoader.Container style={tw`overflow-hidden w-full gap-1`}>
             {/*  @ts-ignore */}
-            <SkeletonLoader.Item style={tw`flex-1 h-5 my-1`} />
+            <SkeletonLoader.Item style={tw`w-full h-4 mb-1 `} />
+            <SkeletonLoader.Item style={tw`w-full h-2`} />
             {/*  @ts-ignore */}
             <SkeletonLoader.Item style={tw`w-100 h-2`} />
           </SkeletonLoader.Container>
         </SkeletonLoader.Container>
         {/*  @ts-ignore */}
-        <SkeletonLoader.Item style={tw`w-80 h-5 self-center mt-5`} />
+        <SkeletonLoader.Item style={tw`w-full h-5 self-center mt-4`} />
+        <SkeletonLoader.Item style={tw`w-full h-0.5 self-center mt-4`} />
       </SkeletonLoader.Container>
     </SkeletonLoader>
   );

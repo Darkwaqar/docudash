@@ -21,7 +21,7 @@ const Inbox = () => {
   console.log('render Inbox');
   return (
     <DrawerScreenContainer>
-      <SafeAreaView style={tw`flex-1`}>
+      <SafeAreaView style={tw`flex-1 gap-2`}>
         <HomeHeader heading={heading} />
         <View style={tw`px-4`}>
           <SegmentedButtons

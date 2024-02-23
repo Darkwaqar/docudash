@@ -1,5 +1,5 @@
 // Or from '@reduxjs/toolkit/query' if not using the auto-generated hooks
-import { StampListAPI } from '@type/*';
+import { StampListAPI, StampPreview } from '@type/*';
 import { api } from './api';
 
 export interface Stamp {
@@ -48,16 +48,16 @@ export const stampApi = api.injectEndpoints({
       // Provides a list of `Stamps` by `id`.
       // If any mutation is executed that `invalidate`s any of these tags, this query will re-run to be always up-to-date.
       // The `LIST` id is a "virtual id" we just made up to be able to invalidate this query specifically if a new `Stamps` element was added.
-      // providesTags: (result) =>
-      //   // is result available?
-      //   result
-      //     ? // successful query
-      //       [
-      //         ...result.map(({ id }) => ({ type: 'Stamps', id } as const)),
-      //         { type: 'Stamps', id: 'LIST' },
-      //       ]
-      //     : // an error occurred, but we still want to refetch this query when `{ type: 'Stamps', id: 'LIST' }` is invalidated
-      //       [{ type: 'Stamps', id: 'LIST' }],
+      providesTags: (result) =>
+        // is result available?
+        result
+          ? // successful query
+            [
+              ...result.data.map(({ id }) => ({ type: 'Stamps', id } as const)),
+              { type: 'Stamps', id: 'LIST' },
+            ]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Stamps', id: 'LIST' }` is invalidated
+            [{ type: 'Stamps', id: 'LIST' }],
       transformResponse: (returnValue: StampListAPI) => {
         console.log(returnValue);
         return returnValue.data;
@@ -78,17 +78,35 @@ export const stampApi = api.injectEndpoints({
       // that newly created Stamps could show up in any lists.
       invalidatesTags: [{ type: 'Stamps', id: 'LIST' }],
     }),
-    updateStampStatus: build.mutation<Stamp, Partial<Stamp>>({
+    updateStampStatus: build.mutation<Stamp, { id: number; status: number }>({
       query(body) {
+        console.log(body);
         return {
           url: `stamps/statusUpdate`,
           method: 'POST',
           body,
         };
       },
+      async onQueryStarted(body, { dispatch, queryFulfilled }) {
+        try {
+          const patchResult = dispatch(
+            stampApi.util.updateQueryData('getStamps', body.id, (draft) => {
+              Object.assign(draft, {
+                ...draft,
+                data: [
+                  ...draft.data.map((x) =>
+                    x.id == body.id ? { ...x, ...body } : { ...x, status: false }
+                  ),
+                ],
+              });
+            })
+          );
+        } catch {}
+      },
+
       // Invalidates all Stamp-type queries providing the `LIST` id - after all, depending of the sort order,
       // that newly created Stamps could show up in any lists.
-      invalidatesTags: (result, error, body) => [{ type: 'Stamps', id: body.id }],
+      invalidatesTags: (result, error, { id }) => [{ type: 'Stamps', id: id }],
     }),
     getStamp: build.query<EditStampResponse['data'], number>({
       query: (id) => `Stamps/${id}`,

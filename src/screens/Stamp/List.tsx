@@ -1,12 +1,13 @@
 import DrawerScreenContainer from '@components/DrawerScreenContainer';
 import HomeHeader from '@components/HomeHeader';
-import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useGetStampsQuery, useUpdateStampStatusMutation } from '@services/stamp';
 import { selectAccessToken } from '@stores/slices/UserSlice';
-import { RootStackScreenProps, StampListAPI, StampPreview } from '@type/index';
+import { RootStackScreenProps, StampPreview } from '@type/index';
 import { colors } from '@utils/Colors';
 import axios from 'axios';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import SkeletonLoader from 'expo-skeleton-loader';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -16,7 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Chip, Divider, Switch } from 'react-native-paper';
+import { ActivityIndicator, Chip, Divider, Switch } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import tw from 'twrnc';
 
@@ -25,7 +26,7 @@ export default function List() {
   const navigation = useNavigation<RootStackScreenProps<'Stamps'>['navigation']>();
   const [page, setPage] = useState(1);
   const { data, isLoading, isFetching, refetch } = useGetStampsQuery(page);
-  const [updateStampStatus, { isLoading: loading }] = useUpdateStampStatusMutation();
+  const [updateStampStatus, { isLoading: loading, originalArgs }] = useUpdateStampStatusMutation();
   const loadMore = () => {
     if (data && data.next_page_url != null && !isFetching) {
       setPage(data?.next_page_url?.split('page=')[1]);
@@ -50,9 +51,12 @@ export default function List() {
         // console.log(data);
       });
   };
+  const LoadingComponent = () => {
+    return Array(5)
+      .fill('')
+      .map((x, index) => <Skeleton key={index} />);
+  };
   const RenderItem: ListRenderItem<StampPreview> = ({ item }) => {
-    console.log('render');
-
     return (
       <View style={tw` bg-white p-2 my-1 gap-2 px-3`} key={item.id}>
         <View style={tw`flex-row gap-2 overflow-hidden`}>
@@ -70,15 +74,17 @@ export default function List() {
             <Text style={tw`font-medium overflow-hidden`}>{item.stamp_code}</Text>
           </View>
           <View style={tw` p-2 justify-between`}>
-            <View style={tw`gap-2`}>
+            <View style={tw`gap-2 flex-row items-center`}>
               <Text style={tw`font-medium`}>Status:</Text>
               <Switch
                 value={item.status == 1}
                 onValueChange={(val) => {
-                  updateStampStatus({
-                    id: item.id,
-                    status: val ? 1 : 0,
-                  });
+                  if (val != undefined) {
+                    updateStampStatus({
+                      id: item.id,
+                      status: val ? 1 : 0,
+                    });
+                  }
                 }}
               />
             </View>
@@ -100,8 +106,6 @@ export default function List() {
       </View>
     );
   };
-  // if (isLoading) return <Text>Loading...</Text>;
-  // if (!data) return <Text>Missing post!</Text>;
 
   return (
     <DrawerScreenContainer>
@@ -117,21 +121,49 @@ export default function List() {
             <Text style={tw`text-white`}>Add Stamp</Text>
           </TouchableOpacity>
         </View>
-
-        <FlatList
-          data={data?.data}
-          keyExtractor={(item) => item.id + '_'}
-          onRefresh={() => {
-            setPage(1);
-          }}
-          refreshing={isFetching}
-          ItemSeparatorComponent={Divider}
-          contentContainerStyle={tw`pb-50`}
-          onEndReached={loadMore}
-          onEndReachedThreshold={0.1}
-          renderItem={RenderItem}
-        />
+        {isLoading ? (
+          <LoadingComponent />
+        ) : (
+          <FlatList
+            data={data?.data}
+            keyExtractor={(item) => item.id + '_'}
+            onRefresh={() => {
+              setPage(1);
+            }}
+            refreshing={isLoading}
+            ItemSeparatorComponent={Divider}
+            contentContainerStyle={tw`pb-50`}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.1}
+            renderItem={RenderItem}
+          />
+        )}
       </SafeAreaView>
     </DrawerScreenContainer>
   );
 }
+const Skeleton = () => {
+  return (
+    <SkeletonLoader boneColor={'#D3D3D3'}>
+      <SkeletonLoader.Container style={tw`flex-row`}>
+        {/* <SkeletonLoader.Container style={tw` overflow-hidden gap-4 items-center p-5`}> */}
+        {/*  @ts-ignore */}
+        <SkeletonLoader.Container style={tw`w-1/2  gap-4  p-5`}>
+          <SkeletonLoader.Item style={tw`w-20 h-20  rounded-full`} />
+          <SkeletonLoader.Item style={tw`w-full h-4 `} />
+          <SkeletonLoader.Item style={tw`w-full h-4 `} />
+        </SkeletonLoader.Container>
+        <SkeletonLoader.Container style={tw`w-1/2  gap-2  p-5`}>
+          <SkeletonLoader.Container style={tw`flex-1`}>
+            <SkeletonLoader.Item style={tw`w-full h-10 self-center `} />
+          </SkeletonLoader.Container>
+          <SkeletonLoader.Container style={tw`flex-row gap-2 `}>
+            <SkeletonLoader.Item style={tw`flex-1 h-10 self-center`} />
+            <SkeletonLoader.Item style={tw`flex-1 h-10 self-center`} />
+          </SkeletonLoader.Container>
+        </SkeletonLoader.Container>
+      </SkeletonLoader.Container>
+      {/* </SkeletonLoader.Container> */}
+    </SkeletonLoader>
+  );
+};

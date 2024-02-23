@@ -37,6 +37,16 @@ const AddContact = () => {
       Alert.alert('Please add a name');
       return;
     }
+    if (
+      !String(contact.email)
+        .toLowerCase()
+        .match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+    ) {
+      Alert.alert('Please input valid Email');
+      return;
+    }
     if (Contact) {
       // update
       // console.log(contact.name, contact.email);
@@ -104,6 +114,7 @@ const AddContact = () => {
       <View style={tw`flex-row justify-end p-6 py-10`}>
         <Button
           mode="contained"
+          loading={addContactLoading || updateContactLoading || deleteContactLoading}
           disabled={addContactLoading || updateContactLoading || deleteContactLoading}
           onPress={createOrUpdate}
         >
