@@ -17,7 +17,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { ActivityIndicator, Chip, Divider, Switch } from 'react-native-paper';
+import { ActivityIndicator, Avatar, Chip, Divider, Switch } from 'react-native-paper';
+import { AnimatedImage } from 'react-native-ui-lib';
 import { useSelector } from 'react-redux';
 import tw from 'twrnc';
 
@@ -61,9 +62,11 @@ export default function List() {
       <View style={tw` bg-white p-2 my-1 gap-2 px-3`} key={item.id}>
         <View style={tw`flex-row gap-2 overflow-hidden`}>
           <View style={tw`flex-1 gap-3 p-2 items-start overflow-hidden `}>
-            <Image
+            <AnimatedImage
+              loader={<ActivityIndicator />}
               style={tw`w-20 h-20 rounded-full overflow-hidden `}
               resizeMode="contain"
+              // size={80}
               source={{
                 uri: item.image_base64,
               }}
@@ -73,6 +76,7 @@ export default function List() {
 
             <Text style={tw`font-medium overflow-hidden`}>{item.stamp_code}</Text>
           </View>
+
           <View style={tw` p-2 justify-between`}>
             <View style={tw`gap-2 flex-row items-center`}>
               <Text style={tw`font-medium`}>Status:</Text>

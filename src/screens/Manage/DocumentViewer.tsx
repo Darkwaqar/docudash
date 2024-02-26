@@ -370,7 +370,7 @@ const DocumentViewer = () => {
     // data.append('save_type', '0');
     // console.log('data', data);
     axios
-      .post(url + envelope.signature_id, data, {
+      .post(url + envelope?.signature_id, data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'multipart/form-data',
