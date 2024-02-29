@@ -12,4 +12,5 @@ export interface Recipient {
   visible: boolean;
   showAccessCode: boolean;
   showPrivateMessage: boolean;
+  isValid: boolean;
 }

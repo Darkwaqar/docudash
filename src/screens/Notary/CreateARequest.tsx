@@ -60,8 +60,25 @@ const CreateARequest = () => {
     requestTime: '1',
     requestLocation: '1',
     requestMessage: 'Message Demo',
-    numOfRecipients: 0,
-    Recipients: [],
+    numOfRecipients: 1,
+    Recipients: [
+      {
+        id: String(1),
+        recName: '',
+        recEmail: '',
+        sign_type: '1',
+        hostName: '',
+        hostEmail: '',
+        access_code: '',
+        private_message: '',
+        recipients_update_id: '',
+        showDropDown: false,
+        visible: false,
+        showAccessCode: false,
+        showPrivateMessage: false,
+        isValid: true,
+      },
+    ],
   });
 
   useEffect(() => {
@@ -249,7 +266,10 @@ const CreateARequest = () => {
 
         <View style={tw` gap-2`}>
           {value === 'Reason' && <RequestReason data={data} setData={setData} />}
-          {value === 'Recipient' && <RequestRecipient data={data} setData={setData} />}
+
+          <View style={tw`${value === 'Recipient' ? 'block' : 'hidden'}`}>
+            <RequestRecipient data={data} setData={setData} />
+          </View>
           {value === 'Documents' && (
             <UploadView documents={documents} setDocuments={setDocuments} />
           )}
@@ -303,6 +323,9 @@ const CreateARequest = () => {
                 setNextDisabled(false);
                 setPreviousDisabled(false);
               } else if (value === 'Recipient') {
+                if (data.numOfRecipients === 0) return alert('Number of Recipient is Required');
+                if (data.Recipients.find((x) => !x.isValid)) return alert('Please Fix the Error');
+
                 setProgress(0.6);
                 setValue('Documents');
                 setNextDisabled(false);

@@ -82,12 +82,12 @@ const Map = ({ route }) => {
     };
     getTravelTime();
   }, [origin, destination, GOOGLE_MAPS_APIKEY]);
-  useEffect(() => {
-    // console.log('User Detail', user);
+  // useEffect(() => {
+  //   // console.log('User Detail', user);
 
-    // if (type === 7)
-    GetCurrentLocation();
-  }, []);
+  //   // if (type === 7)
+  //   GetCurrentLocation();
+  // }, []);
   const GetCurrentLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -147,7 +147,8 @@ const Map = ({ route }) => {
         // }
       });
   };
-  if (destination === null || origin === null || notaryDetail == undefined) return;
+  // if (destination === null || origin === null || notaryDetail == undefined) return;
+  if (destination === null || origin === null) return;
   return (
     <SafeAreaView style={tw`bg-white flex-1`}>
       <View

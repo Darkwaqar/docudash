@@ -1,9 +1,11 @@
 import { FlatList, ScrollView, TouchableOpacity, View } from 'react-native';
-import { Divider, IconButton, Menu, Text, TextInput } from 'react-native-paper';
+import { Button, Divider, IconButton, Menu, Text } from 'react-native-paper';
+
 import React, { useEffect, useState } from 'react';
 import tw from 'twrnc';
 import DropDown from 'react-native-paper-dropdown';
 import { IRequest } from 'src/types/request';
+import { TextField } from 'react-native-ui-lib';
 
 interface recipient {
   id: number;
@@ -39,32 +41,36 @@ export default function RequestRecipient({
   data: IRequest;
   setData: React.Dispatch<React.SetStateAction<IRequest>>;
 }) {
-  useEffect(() => {
-    setData((prev) => ({
-      ...prev,
-      Recipients: [...new Array(data.numOfRecipients)].map((x, i) => ({
-        id: String(i),
-        recName: '',
-        recEmail: '',
-        sign_type: '1',
-        hostName: '',
-        hostEmail: '',
-        access_code: '',
-        private_message: '',
-        recipients_update_id: '',
-        showDropDown: false,
-        visible: false,
-        showAccessCode: false,
-        showPrivateMessage: false,
-      })),
-    }));
-  }, [data.numOfRecipients]);
-
   const Delete = (id) => {
     setData((prev) => ({
       ...prev,
       Recipients: prev.Recipients.filter((x, index) => index != id),
-      numOfRecipients: prev.numOfRecipients - 1,
+      numOfRecipients: prev.Recipients.length - 1,
+    }));
+  };
+  const addNewItem = () => {
+    setData((prev) => ({
+      ...prev,
+      numOfRecipients: prev.Recipients.length + 1,
+      Recipients: [
+        ...prev.Recipients,
+        ...[...new Array(1)].map((x, i) => ({
+          id: String(i),
+          recName: '',
+          recEmail: '',
+          sign_type: '1',
+          hostName: '',
+          hostEmail: '',
+          access_code: '',
+          private_message: '',
+          recipients_update_id: '',
+          showDropDown: false,
+          visible: false,
+          showAccessCode: false,
+          showPrivateMessage: false,
+          isValid: true,
+        })),
+      ],
     }));
   };
 
@@ -72,108 +78,156 @@ export default function RequestRecipient({
     <>
       <View style={tw` mx-2`}>
         <Text variant="labelLarge">Number of Recipients:</Text>
-        <TextInput
-          mode="outlined"
-          value={String(data.numOfRecipients)}
-          onChangeText={(text) =>
-            setData((prev) => ({
-              ...prev,
-              numOfRecipients: Number(text.replace(/[^0-9]/g, '')),
-            }))
-          }
-        />
+        <View style={tw`flex-row justify-between items-center`}>
+          <TextField
+            containerStyle={tw`flex-1`}
+            editable={false}
+            fieldStyle={tw`rounded-lg border border-gray-700 p-4 `}
+            value={String(data.numOfRecipients)}
+            onChangeText={(text) =>
+              setData((prev) => ({
+                ...prev,
+                numOfRecipients: Number(text.replace(/[^0-9]/g, '')),
+              }))
+            }
+          />
+          <Button mode="contained" style={tw`h-10`} children={'Add'} onPress={addNewItem} />
+        </View>
       </View>
       <ScrollView nestedScrollEnabled>
         <View style={tw` gap-2`}>
-          {data.Recipients?.map((item) => (
-            <View style={tw`h-50`} key={item.id}>
-              <View style={tw`border-2  border-gray-300 p-4 flex-row flex-1 items-center gap-4`}>
-                <Text>{Number(item.id) + 1}</Text>
-
+          {data.Recipients?.map((item, index) => (
+            <View style={tw``} key={index}>
+              <View style={tw`border-2  border-gray-300 p-4 flex-row items-center gap-4`}>
+                <Text>{Number(index) + 1}</Text>
                 <View style={tw`gap-2 flex-1`}>
                   {item.sign_type == '2' ? (
-                    <>
-                      <View style={tw`flex-row items-center`}>
-                        <Text variant="labelLarge" style={tw`w-15`}>
-                          Host name:
-                        </Text>
-                        <TextInput
-                          mode="outlined"
-                          style={tw`ml-2 flex-1`}
-                          // placeholder="Name"
-                          value={item.hostName}
-                          onChangeText={(text) =>
-                            setData((prev) => ({
-                              ...prev,
-                              Recipients: prev.Recipients.map((x) =>
-                                x.id == item.id ? { ...x, hostName: text } : x
-                              ),
-                            }))
-                          }
-                        ></TextInput>
-                      </View>
+                    <View style={tw`gap-2`}>
+                      <Text variant="labelLarge" style={tw`w-full`}>
+                        Host name:
+                      </Text>
+                      <TextField
+                        validateOnStart
+                        enableErrors
+                        validate={['required', (value) => value.length > 6]}
+                        validationMessage={['Name is required', 'Name is too short']}
+                        validateOnChange
+                        fieldStyle={tw`rounded-lg border border-gray-700 p-4`}
+                        value={item.hostName}
+                        onChangeText={(text) =>
+                          setData((prev) => ({
+                            ...prev,
+                            Recipients: prev.Recipients.map((x) =>
+                              x.id == item.id ? { ...x, hostName: text } : x
+                            ),
+                          }))
+                        }
+                        onChangeValidity={(isValid) =>
+                          setData((prev) => ({
+                            ...prev,
+                            Recipients: prev.Recipients.map((x) =>
+                              x.id == item.id ? { ...x, isValid: isValid } : x
+                            ),
+                          }))
+                        }
+                      />
 
-                      <View style={tw`flex-row items-center`}>
-                        <Text variant="labelLarge" style={tw`w-15`}>
-                          Host email:
-                        </Text>
-                        <TextInput
-                          mode="outlined"
-                          style={tw`ml-2 flex-1`}
-                          // placeholder="Name"
-                          value={item.hostEmail}
-                          onChangeText={(text) =>
-                            setData((prev) => ({
-                              ...prev,
-                              Recipients: prev.Recipients.map((x) =>
-                                x.id == item.id ? { ...x, hostEmail: text } : x
-                              ),
-                            }))
-                          }
-                        ></TextInput>
-                      </View>
-                    </>
+                      <Text variant="labelLarge" style={tw`w-full`}>
+                        Host email:
+                      </Text>
+                      <TextField
+                        validateOnStart
+                        fieldStyle={tw`rounded-lg border border-gray-700 p-4`}
+                        enableErrors
+                        validate={['required', 'email', (value) => value.length > 6]}
+                        validationMessage={[
+                          'Email is required',
+                          'Email is invalid',
+                          'Email is too short',
+                        ]}
+                        validateOnChange
+                        value={item.hostEmail}
+                        onChangeText={(text) =>
+                          setData((prev) => ({
+                            ...prev,
+                            Recipients: prev.Recipients.map((x) =>
+                              x.id == item.id ? { ...x, hostEmail: text } : x
+                            ),
+                          }))
+                        }
+                        onChangeValidity={(isValid) =>
+                          setData((prev) => ({
+                            ...prev,
+                            Recipients: prev.Recipients.map((x) =>
+                              x.id == item.id ? { ...x, isValid: isValid } : x
+                            ),
+                          }))
+                        }
+                      />
+                    </View>
                   ) : (
-                    <>
-                      <View style={tw`flex-row items-center`}>
-                        <Text variant="labelLarge" style={tw`w-15`}>
-                          Receiver Name:
-                        </Text>
-                        <TextInput
-                          mode="outlined"
-                          // placeholder="Email"
-                          style={tw`ml-2 flex-1`}
-                          value={item.recName}
-                          onChangeText={(text) =>
-                            setData((prev) => ({
-                              ...prev,
-                              Recipients: prev.Recipients.map((x) =>
-                                x.id == item.id ? { ...x, recName: text } : x
-                              ),
-                            }))
-                          }
-                        ></TextInput>
-                      </View>
-                      <View style={tw`flex-row items-center`}>
-                        <Text variant="labelLarge" style={tw`w-15`}>
-                          Receiver Email:
-                        </Text>
-                        <TextInput
-                          mode="outlined"
-                          // placeholder="Email"
-                          style={tw`ml-2 flex-1`}
-                          value={item.recEmail}
-                          onChangeText={(text) =>
-                            setData((prev) => ({
-                              ...prev,
-                              Recipients: prev.Recipients.map((x) =>
-                                x.id == item.id ? { ...x, recEmail: text } : x
-                              ),
-                            }))
-                          }
-                        ></TextInput>
-                      </View>
-                    </>
+                    <View style={tw`gap-1`}>
+                      <Text variant="labelLarge" style={tw`w-full`}>
+                        Receiver Name:
+                      </Text>
+                      <TextField
+                        validateOnStart
+                        fieldStyle={tw`rounded-lg border border-gray-700 p-4 `}
+                        enableErrors
+                        validate={['required', (value) => value.length > 6]}
+                        validationMessage={['Name is required', 'Name is too short']}
+                        validateOnChange
+                        value={item.recName}
+                        onChangeText={(text) =>
+                          setData((prev) => ({
+                            ...prev,
+                            Recipients: prev.Recipients.map((x) =>
+                              x.id == item.id ? { ...x, recName: text } : x
+                            ),
+                          }))
+                        }
+                        onChangeValidity={(isValid) =>
+                          setData((prev) => ({
+                            ...prev,
+                            Recipients: prev.Recipients.map((x) =>
+                              x.id == item.id ? { ...x, isValid: isValid } : x
+                            ),
+                          }))
+                        }
+                      />
+                      <Text variant="labelLarge" style={tw`w-full`}>
+                        Receiver Email:
+                      </Text>
+                      <TextField
+                        validateOnStart
+                        fieldStyle={tw`rounded-lg border border-gray-700 p-4`}
+                        enableErrors
+                        validate={['required', 'email', (value) => value.length > 6]}
+                        validationMessage={[
+                          'Email is required',
+                          'Email is invalid',
+                          'Email is too short',
+                        ]}
+                        validateOnChange
+                        value={item.recEmail}
+                        onChangeText={(text) =>
+                          setData((prev) => ({
+                            ...prev,
+                            Recipients: prev.Recipients.map((x) =>
+                              x.id == item.id ? { ...x, recEmail: text } : x
+                            ),
+                          }))
+                        }
+                        onChangeValidity={(isValid) =>
+                          setData((prev) => ({
+                            ...prev,
+                            Recipients: prev.Recipients.map((x) =>
+                              x.id == item.id ? { ...x, isValid: isValid } : x
+                            ),
+                          }))
+                        }
+                      />
+                    </View>
                   )}
                   <View style={tw`items-center flex-row gap-2`}>
                     <Text variant="labelLarge" style={tw`w-15`}>

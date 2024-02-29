@@ -16,7 +16,6 @@ const Notification = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  console.log('noti', Notification);
   let onEndReachedCalledDuringMomentum = useRef(true);
 
   const loadMore = async () => {

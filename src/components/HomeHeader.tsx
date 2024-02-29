@@ -33,15 +33,11 @@ export default function HomeHeader({
           addTarget && addTarget(r, '0');
         }}
       >
-        {/* {navigation.canGoBack() ? (
-          <Icon
-            name="arrow-left"
-            size={28}
-            onPress={navigation.goBack}
-          />
-        ) : ( */}
-        <Icon name="sort-variant" size={28} onPress={navigation.toggleDrawer} />
-        {/* )} */}
+        {navigation.canGoBack() ? (
+          <Icon name="arrow-left" size={28} onPress={navigation.goBack} />
+        ) : (
+          <Icon name="sort-variant" size={28} onPress={navigation.toggleDrawer} />
+        )}
       </View>
       <Text style={{ color: COLORS.primary, fontWeight: 'bold', fontSize: 16 }}>{heading}</Text>
 
