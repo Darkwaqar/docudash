@@ -41,6 +41,7 @@ export type RootStackParamList = {
   Stamps: {} | undefined;
   AddStamp: { Stamp?: StampPreview };
   Profile: undefined;
+  Pricing: undefined;
   SignUpIndex: undefined;
   NotaryLoginStackNavigator: undefined;
   Template: undefined;

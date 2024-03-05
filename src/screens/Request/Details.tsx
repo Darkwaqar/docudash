@@ -437,7 +437,10 @@ const Details = () => {
               <Text style={styles.heading}>Uploaded Documents</Text>
               <View>
                 {documentDetails?.map((e, i) => (
-                  <View style={tw` mt-2 border-2 border-[${colors.green}] rounded-lg p-3  gap-1`}>
+                  <View
+                    key={i}
+                    style={tw` mt-2 border-2 border-[${colors.green}] rounded-lg p-3  gap-1`}
+                  >
                     <Text style={tw`text-black text-4 font-semibold`}>{e.document}</Text>
                     <Text style={tw`text-gray-400`}> {new Date(e?.created_at).toUTCString()}</Text>
                   </View>
@@ -449,7 +452,7 @@ const Details = () => {
                 <Text style={styles.heading}>Recipients</Text>
               </View>
               {recipients.map((item, index) => (
-                <View id={String(index)} style={tw` mt-5 py-3 flex-row items-center  `}>
+                <View key={String(index)} style={tw` mt-5 py-3 flex-row items-center  `}>
                   <View style={tw`flex-1`}>
                     <View style={tw`flex-row items-center justify-between`}>
                       <Text style={styles.h2} numberOfLines={2}>

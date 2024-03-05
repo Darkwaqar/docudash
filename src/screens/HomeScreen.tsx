@@ -8,6 +8,8 @@ import {
   selectAccessToken,
   selectProfileData,
   setProfileData,
+  setUserData,
+  selectUserData,
 } from '@stores/slices/UserSlice';
 import { DashboardAPI, HomeDrawerScreenProps, User } from '@type/index';
 import { colors } from '@utils/Colors';
@@ -73,8 +75,9 @@ const HomeScreen = () => {
     Done: 0,
   });
   const user = useSelector(selectProfileData);
+  const userData = useSelector(selectUserData);
   const type = user?.user_type;
-  const [userData, setUserData] = useState<User>();
+  // const [userData, setUserData] = useState<User>();
   const [loading, setLoading] = useState(false);
   const [signature, setSignature] = useState<any>();
   const accessToken = useSelector(selectAccessToken);
@@ -169,7 +172,7 @@ const HomeScreen = () => {
         const data: DashboardAPI = response.data;
         // console.log('data =>><><>', data);
 
-        // console.log('DashboardAPI', data);
+        console.log('DashboardAPI', data.UserPackagesRemains);
         setDashNumber({
           ...dashNumber,
           waitingForOthers: data.WaitingForOthers,
@@ -181,7 +184,8 @@ const HomeScreen = () => {
           Done: data.Done,
         });
         dispatch(setProfileData(data.user));
-        setUserData(data.user);
+        dispatch(setUserData(data));
+        // setUserData(data.user);
         if (data.signature?.signature) {
           setSignature(data.signature);
         } else {

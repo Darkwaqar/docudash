@@ -36,6 +36,7 @@ import IncomingCallScreen from '@screens/IncomingCall';
 import { Voximplant } from 'react-native-voximplant';
 import { useNavigation } from '@react-navigation/native';
 import calls from '@screens/Store';
+import Pricing from '@screens/Pricing';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -87,7 +88,6 @@ export default function StackNavigator() {
         }
       } catch (e: any) {
         let message;
-        console.log('Error on Voximplant', message);
         switch (e.name) {
           case Voximplant.ClientEvents.ConnectionFailed:
             message = 'Connection error, check your internet connection';
@@ -143,6 +143,7 @@ export default function StackNavigator() {
             <Stack.Screen name="CreateARequest" component={CreateARequest} />
             <Stack.Screen name="RequestDetails" component={RequestDetails} />
             <Stack.Screen name="ApproveRequest" component={ApproveRequest} />
+            <Stack.Screen name="Pricing" component={Pricing} />
             <Stack.Screen name="Map" component={Map} />
             <Stack.Screen name="Call" component={Call} />
             <Stack.Screen name="Calling" component={Calling} />

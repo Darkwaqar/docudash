@@ -786,7 +786,7 @@ const Details = () => {
               />
             </View>
             {data?.generateSignatureDetails.map((item, index) => (
-              <View key={String(index)} style={tw` mt-5 py-3 flex-row items-center  `}>
+              <View key={index + 'recipient'} style={tw` mt-5 py-3 flex-row items-center  `}>
                 <View style={tw`flex-1`}>
                   <View style={tw`flex-row items-center justify-between`}>
                     <Text style={styles.h2} numberOfLines={2}>
@@ -828,8 +828,11 @@ const Details = () => {
           (item) => item?.recEmail?.toLowerCase() == user?.email?.toLowerCase()
           // && item.complete_incomplete === 0
         )
-        .map((item) => (
-          <View style={tw`h-15 bg-gray-200  flex-row justify-between items-center px-10`}>
+        .map((item, index) => (
+          <View
+            key={index}
+            style={tw`h-15 bg-gray-200  flex-row justify-between items-center px-10`}
+          >
             <Text style={tw`text-4 font-semibold`}>
               {item.sign_type == '1'
                 ? 'Need to Sign'

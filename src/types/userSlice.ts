@@ -5,10 +5,11 @@ import { User } from './user';
 export interface IUserSlice {
   accessToken: string | null;
   profile: User | null;
+  userData: User | null;
   wishList: Array<string>;
   userType: null | 'User' | 'Notary';
   userStep: number;
   notaryStep: number;
   signUpToken: string | null;
-  notification:notificationType
+  notification: notificationType;
 }

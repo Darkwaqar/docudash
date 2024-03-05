@@ -32,6 +32,7 @@ export interface User {
   location_sign_up: string;
   ip_sign_in: string;
   location_sign_in: string;
+  UserPackagesRemains: number;
   email_verified_at: null;
   about_notary: null;
   hired_time: null;

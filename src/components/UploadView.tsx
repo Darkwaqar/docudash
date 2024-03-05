@@ -22,7 +22,7 @@ import { Badge, Divider, List } from 'react-native-paper';
 import DocumentScanner from 'react-native-document-scanner-plugin';
 import tw from 'twrnc';
 import { useSelector } from 'react-redux';
-import { selectProfileData } from '@stores/slices/UserSlice';
+import { selectProfileData, selectUser, selectUserData } from '@stores/slices/UserSlice';
 
 interface uploadType {
   uri: string;
@@ -32,6 +32,7 @@ interface uploadType {
 
 export default function UploadView({ documents, setDocuments }) {
   const user = useSelector(selectProfileData);
+  const userData = useSelector(selectUserData);
   const type = user?.user_type;
   const navigation = useNavigation<RootStackScreenProps<'Home'>['navigation']>();
   const bottomSheetRef = useRef(null);
@@ -39,6 +40,7 @@ export default function UploadView({ documents, setDocuments }) {
   const handleSheetChanges = useCallback((index: number) => {}, []);
   const handlePresentModalPress = useCallback(() => {
     // @ts-ignore
+
     bottomSheetRef.current?.present();
   }, []);
   const uploadFile = async () => {
@@ -135,7 +137,15 @@ export default function UploadView({ documents, setDocuments }) {
   return (
     <View style={tw`bg-white px-8 py-8 gap-4`}>
       <Pressable
-        onPress={handlePresentModalPress}
+        onPress={() => {
+          console.log('user.UserPackagesRemains', userData.UserPackagesRemains);
+
+          if (userData.UserPackagesRemains == 0) {
+            navigation.navigate('Pricing');
+          } else {
+            handlePresentModalPress();
+          }
+        }}
         style={tw`border-2 py-10  rounded-xl border-dashed border-[${colors.blue}] justify-center items-center`}
       >
         <View style={tw`p-1`}>

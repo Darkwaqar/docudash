@@ -6,6 +6,7 @@ import { SignUpStackParamList, User } from '@type/*';
 const initialState: IUserSlice = {
   accessToken: null,
   profile: null,
+  userData: null,
   wishList: [],
   userType: null,
   notaryStep: 0,
@@ -40,6 +41,9 @@ const userSlice = createSlice({
     },
     setProfileData: (state, action: PayloadAction<User>) => {
       state.profile = action.payload;
+    },
+    setUserData: (state, action: PayloadAction<User>) => {
+      state.userData = action.payload;
     },
     removeProfileData: (state) => {
       state.profile = {} as User;
@@ -82,12 +86,14 @@ export const {
   setNotaryStep,
   setSignUpToken,
   setNotification,
+  setUserData,
 } = userSlice.actions;
 
 export default userSlice.reducer;
 
 // Selectors
 export const selectUser = (state: { user: IUserSlice }) => state.user;
+export const selectUserData = (state: { user: IUserSlice }) => state.user.userData;
 export const selectAccessToken = (state: { user: IUserSlice }) => state.user.accessToken;
 export const selectNotification = (state: { user: IUserSlice }) => state.user.notification;
 export const selectProfileData = (state: { user: IUserSlice }) => state.user.profile;
