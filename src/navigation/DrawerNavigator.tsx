@@ -19,7 +19,8 @@ import { colors } from '@utils/Colors';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import DrawerScreenContainer from '@components/DrawerScreenContainer';
-
+import Pricing from '@screens/Pricing';
+import { Foundation } from '@expo/vector-icons';
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
@@ -90,6 +91,15 @@ const DrawerNavigator = () => {
             ),
           }}
           component={StampList}
+        />
+        <Drawer.Screen
+          name="Plans"
+          options={{
+            drawerIcon: ({ color }) => (
+              <Foundation name="price-tag" size={25} style={{ marginRight: -20, color }} />
+            ),
+          }}
+          component={Pricing}
         />
         <Drawer.Screen
           name="CONTACTS"

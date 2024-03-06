@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { View, Text, SafeAreaView, ScrollView, Alert, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import HomeHeader from '@components/HomeHeader';
@@ -32,46 +33,48 @@ const Pricing = () => {
         name: 'Jane Doe',
       },
     });
-    openPaymentSheet();
+    openPaymentSheet(data);
     if (!error) {
       setLoading(true);
       //have to implement cancel logic here/ ask sufe
     }
   };
-  const openPaymentSheet = async () => {
+  const openPaymentSheet = async (data) => {
     const { error } = await presentPaymentSheet();
 
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
       Alert.alert('Success', 'Your order is confirmed!');
-      navigation.navigate('Home');
+      PaymentApprove(data);
     }
   };
   const PaymentApprove = (data) => {
     let formDataNew = new FormData();
 
     // formData.append('NotaryRequestsReturnID', NotaryRequestsReturnID);
-    // formDataNew.append('pending_payment_id', responseData?.detailsArr?.paymentIntent);
-    // formDataNew.append('envelop_limit', amount == 0.99 ? 1 : amount == 3.0 ? 3 : 10);
-    const obj = {
-      pending_payment_id: data?.client_secret,
-      envelop_limit: data.amount == 0.99 ? 1 : data.amount == 3.0 ? 3 : 10,
-    };
-    console.log('formDataNew', obj);
-    console.log('responseData', responseData);
+    // formDataNew.append('pending_payment_id', data?.paymentIntent);
+    var limit: number = data.amount == 0.99 ? 1 : data.amount == 3.0 ? 3 : 10;
+    formDataNew.append('envelop_limit', limit);
+    // const obj = {
+    //   pending_payment_id: data?.client_secret,
+    //   envelop_limit: data.amount == 0.99 ? 1 : data.amount == 3.0 ? 3 : 10,
+    // };
+    console.log('formDataNew', data);
+    // console.log('responseData', responseData);
     let headers = {
       Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data',
     };
     axios
-      .post('https://docudash.net/api/create-request-payment-envelope-approve', obj, {
+      .post('https://docudash.net/api/create-request-payment-envelope-approve', formDataNew, {
         headers,
       })
       .then((response) => {
         console.log('envelope', response.data);
         if (response.data.status) {
-          initializePaymentSheet(responseData);
+          // initializePaymentSheet(responseData);
+          navigation.navigate('Home');
         }
       })
       .catch((error) => {
@@ -83,11 +86,12 @@ const Pricing = () => {
     let formData = new FormData();
     // formData.append('NotaryRequestsReturnID', NotaryRequestsReturnID);
     formData.append('amount', amount);
+    // formData.append('envelop_limit', amount == 0.99 ? 1 : amount == 3.0 ? 3 : 10);
     let headers = {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'multipart/form-data',
     };
-    console.log('formData', formData);
+    console.log('formData createRequestPayment', formData);
 
     axios
       .post('https://docudash.net/api/create-request-payment-envelope', formData, { headers })
@@ -95,8 +99,11 @@ const Pricing = () => {
         setLoading(false);
         if (response.data.status) {
           setResponseData(response.data.detailsArr);
+          console.log('response.data', response.data);
+
           if (response.data.detailsArr) {
-            PaymentApprove(response.data.detailsArr);
+            // PaymentApprove(response.data.detailsArr);
+            initializePaymentSheet(response.data.detailsArr);
           }
         }
       })
