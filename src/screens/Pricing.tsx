@@ -44,6 +44,7 @@ const Pricing = () => {
 
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
+      setLoading(false);
     } else {
       Alert.alert('Success', 'Your order is confirmed!');
       PaymentApprove(data);
@@ -71,10 +72,10 @@ const Pricing = () => {
         headers,
       })
       .then((response) => {
-        console.log('envelope', response.data);
         if (response.data.status) {
-          // initializePaymentSheet(responseData);
-          navigation.navigate('Home');
+          console.log('envelope', response.data);
+          setLoading(false);
+          navigation.goBack();
         }
       })
       .catch((error) => {
@@ -83,6 +84,7 @@ const Pricing = () => {
       });
   };
   const createRequestPayment = (amount) => {
+    setLoading(true);
     let formData = new FormData();
     // formData.append('NotaryRequestsReturnID', NotaryRequestsReturnID);
     formData.append('amount', amount);
@@ -117,6 +119,7 @@ const Pricing = () => {
       <HomeHeader heading={'Pricing'} />
       <ScrollView>
         <Pressable
+          disabled={loading ? true : false}
           onPress={() => createRequestPayment(0.99)}
           style={tw`bg-white shadow-md rounded-lg p-2 m-2 gap-2`}
         >

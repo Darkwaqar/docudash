@@ -30,7 +30,7 @@ interface uploadType {
   type: 'image' | 'video' | undefined | string;
 }
 
-export default function UploadView({ documents, setDocuments }) {
+export default function UploadView({ documents, setDocuments, Home }) {
   const user = useSelector(selectProfileData);
   const userData = useSelector(selectUserData);
   const type = user?.user_type;
@@ -139,9 +139,12 @@ export default function UploadView({ documents, setDocuments }) {
       <Pressable
         onPress={() => {
           console.log('user.UserPackagesRemains', userData.UserPackagesRemains);
-
-          if (userData.UserPackagesRemains == 0) {
-            navigation.navigate('Pricing');
+          if (Home) {
+            if (userData.UserPackagesRemains == 0 || userData.UserPackagesRemains <= 0) {
+              navigation.navigate('Pricing');
+            } else {
+              handlePresentModalPress();
+            }
           } else {
             handlePresentModalPress();
           }

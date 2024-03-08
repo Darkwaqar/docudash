@@ -361,7 +361,7 @@ const HomeScreen = () => {
               </View>
             </View>
 
-            <UploadView documents={documents} setDocuments={setDocuments} />
+            <UploadView documents={documents} Home setDocuments={setDocuments} />
             {[...documents].length > 0 ? (
               <Button
                 mode="contained"
